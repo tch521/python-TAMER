@@ -1,0 +1,2 @@
+include LICENSE README.rst HISTORY.rst AUTHORS.rst
+include python_tamer/config/python_tamer.conf
