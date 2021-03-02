@@ -28,7 +28,7 @@ setup(
     use_scm_version=True,
     author="Todd C. Harris",
     author_email='todd.harris@meteoswiss.ch',
-    description="Dummy Python library.",
+    description="Python library.",
     url='https://gitlab.meteoswiss.ch/htc/python-tamer',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',

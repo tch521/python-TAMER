@@ -15,7 +15,7 @@ Types of Contributions
 Report Bugs
 ~~~~~~~~~~~
 
-Report bugs at https://gitlab.meteoswiss.ch/htc/python_tamer/issues.
+Report bugs at https://github.com/tch521/python-TAMER/issues.
 
 If you are reporting a bug, please include:
 
@@ -45,7 +45,7 @@ articles, and such.
 Submit Feedback
 ~~~~~~~~~~~~~~~
 
-The best way to send feedback is to file an issue at https://gitlab.meteoswiss.ch/htc/python_tamer/issues.
+The best way to send feedback is to file an issue at https://github.com/tch521/python-TAMER/issues.
 
 If you are proposing a feature:
 
@@ -61,7 +61,7 @@ Ready to contribute? Here's how to set up `python_tamer` for local development.
 
 1. Clone `python_tamer` repo from GitLab.
 
-    $ git clone gitlab@gitlab.meteoswiss.ch/htc/python_tamer.git
+    $ git clone https://github.com/tch521/python-TAMER.git
 
 2. Install dependencies into a virtualenv. Assuming you have pipenv installed, this is how you set up your fork for local development::
 
@@ -100,5 +100,5 @@ Before you submit a merge request, check that it meets these guidelines:
    your new functionality into a function with a docstring, and add the
    feature to the list in README.rst.
 3. The merge request should work for Python 3.7 (or greater). Check
-   https://gitlab.meteoswiss.ch/htc/python_tamer/merge_requests
+   https://github.com/tch521/python-TAMER
    and make sure that the tests pass for all supported Python versions.
