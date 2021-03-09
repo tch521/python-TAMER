@@ -57,6 +57,8 @@ If you are proposing a feature:
 Get Started!
 ------------
 
+**NOTE**: the details below come from a template and are not valid at this early stage of development.
+
 Ready to contribute? Here's how to set up `python_tamer` for local development.
 
 1. Clone `python_tamer` repo from GitLab.

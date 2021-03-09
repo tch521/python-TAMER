@@ -4,7 +4,15 @@ import pandas as pd
 import datetime as dt
 from python_tamer import *
 
-testmap = ExposureMap(date_selection=pd.date_range(start="2005-01-01",end="2005-12-31")).calculate_pix_hist().calculate_map().plot_map()
+testmap = ExposureMap(date_selection=pd.date_range(start="2005-01-01",end="2005-12-31"),
+    statistic="std",
+    units="UVI",
+    exposure_schedule=np.concatenate([np.zeros(10),np.ones(4),np.zeros(10)])
+    )
+    
+"""
+
+testmap.calculate_pix_hist().calculate_map().plot_map()
 
 data_directory = "C:/Data/UV/"
 
@@ -55,3 +63,4 @@ yearsmonths = pd.date_range(start="2015-01-02",end="2017-12-31")
 msg="Hello World!"
 print(msg)
 
+"""

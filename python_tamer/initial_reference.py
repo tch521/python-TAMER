@@ -5,13 +5,16 @@ default_data_directory = 'C:/Data/UV/'
 
 default_map_options = {
     "title" : "Test map",
-    "resolution" : [1600,900],
+    "size" : [20,15],
+    "save" : True,
+    "img_dir" : "",
+    "img_filename" : "default",
+    "img_filetype" : "png",
     "brdr_nation" : True,
     "brdr_nation_rgba" : [0,0,0,0],
     "brdr_state" : False,
     "brdr_state_rgba" : [0,0,0,0.67],
     "cmap" : "jet",
-    "cmap_n" : 64,
     "cmap_limits" : None,
     "cbar" : True,
     "cbar_limits" : None
