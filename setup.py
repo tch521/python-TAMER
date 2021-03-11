@@ -1,8 +1,8 @@
 from setuptools import setup, find_packages
+import os
 
 requirements = [
     'yaconfigobject',
-    'netCDF4',
     'pandas',
     'numpy',
     'cartopy',
@@ -11,6 +11,9 @@ requirements = [
     'datetime',
     'regex',
 ]
+
+if not os.getenv('READTHEDOCS'):
+    requirements.append('netCDF')
 
 setup_requirements = [
     'setuptools_scm',
