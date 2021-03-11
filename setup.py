@@ -2,6 +2,14 @@ from setuptools import setup, find_packages
 
 requirements = [
     'yaconfigobject',
+    'netCDF4',
+    'pandas',
+    'numpy',
+    'cartopy',
+    'matplotlib',
+    'os',
+    'datetime',
+    'regex',
 ]
 
 setup_requirements = [
@@ -17,19 +25,19 @@ extras = {
     'test': test_requirements,
 }
 
-packages = find_packages(include=['python_tamer'])
+packages = find_packages(include=['python_tamer'],exclude=['test','doc'])
 
-package_dir = {}
+package_dir = {'python-TAMER': 'python_tamer'}
 
-package_data = {}
+package_data = {'test': "UV_test_data_2018.nc"}
 
 setup(
-    name='python-tamer',
+    name='python-TAMER',
     use_scm_version=True,
     author="Todd C. Harris",
     author_email='todd.harris@meteoswiss.ch',
-    description="Python library.",
-    url='https://gitlab.meteoswiss.ch/htc/python-tamer',
+    description="Toolkit for Analysis and Maps of Exposure Risk",
+    url='https://github.com/tch521/python-TAMER',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
@@ -37,7 +45,7 @@ setup(
         'Natural Language :: English',
         'Programming Language :: Python :: 3.6-3.7-3.8',
     ],
-    keywords='python_tamer',
+    keywords='python-TAMER',
     entry_points={},
     scripts=[],
     license="BSD-3-Clause license",
@@ -46,7 +54,6 @@ setup(
     include_package_data=True,
     zip_safe=False,
     test_suite='test',
-    py_modules=['python-tamer'],
     packages=packages,
     install_requires=requirements,
     package_dir=package_dir,

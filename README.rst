@@ -1,5 +1,5 @@
 =======================
-python-tamer
+python-TAMER
 =======================
 
 Python library containing functions as part of the Toolkit for Analysis and Maps of Exposure Risk (TAMER) project.

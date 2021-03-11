@@ -1,6 +1,6 @@
 import numpy as np
 
-def assert_data_shape_24(data,reverse=False) :
+def assert_data_shape_24(data,reverse=False,force_second_dim=True) :
     """Simple function to check if first dimension is 24 hours and, if not, reshapes accordingly
     """
     datashape = np.shape(data)
@@ -9,6 +9,11 @@ def assert_data_shape_24(data,reverse=False) :
         new_shape = (24, datashape[0]//24) + datashape[1:]
     elif reverse :
         new_shape = [datashape[0] * datashape[1]] + list(datashape[2:])
+    elif force_second_dim :
+        new_shape = (24, 1) + datashape[1:]
+    else :
+        # option in case no reshaping necessary
+        return data
     data = np.reshape(data,new_shape,order='F')
     return data
 

@@ -16,6 +16,7 @@ import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 import cartopy.feature as cfeat
 import datetime as dt
+import regex as re
 from .subroutines import *
 from .initial_reference import *
 
@@ -51,8 +52,6 @@ class SpecificDoses(pd.DataFrame):
     nc_filename_format = default_nc_filename_format
     data_directory = default_data_directory # TO DO: set up __init__ for these options
     # It feels like this should be declared with __init__ as well but idk
-
-
 
     def schedule_constant_exposure(self) :
         """schedule_constant_exposure generates exposure schedules given start and end times.
@@ -200,10 +199,21 @@ class SpecificDoses(pd.DataFrame):
                 return_inverse=True)
             temp_table['unique_days_idx'] = unique_days_idx
 
-            time_subset = [False for i in range(dataset.dimensions['time'].size)] 
-            time_subset = assert_data_shape_24(time_subset) 
-            time_subset[:,unique_days] = True 
-            time_subset = time_subset.flatten(order='F') # This is 'Fortran' ordering
+            #pd.DatetimeIndex(nc.num2date(dataset.variables["time"][:],dataset.variables["time"].units,only_use_cftime_datetimes=False))
+
+            if dataset.dimensions['time'].size == 24 :
+                # needed if just a single day
+                time_subset = [True for i in range(dataset.dimensions['time'].size)]
+            else :
+                # Next we pull a subset from the netCDF file
+                # declare false array with same length of time dimension from netCDF
+                time_subset = [False for i in range(dataset.dimensions['time'].size)] 
+                # reshape false array to have first dimension 24 (hours in day)
+                time_subset = assert_data_shape_24(time_subset) 
+                # set the appropriate days as true
+                time_subset[:,unique_days] = True 
+                # flatten time_subset array back to one dimension
+                time_subset = time_subset.flatten(order='F')
 
             data = assert_data_shape_24(dataset['UV_AS'][time_subset,:,:]*40) 
             # *40 converts it to uv index
@@ -218,6 +228,7 @@ class SpecificDoses(pd.DataFrame):
             temp_table['pixel_lon'] = temp_table.apply(lambda x: 
                 find_nearest(lon,x['Longitude']),axis='columns')
 
+            
             # calculate doses
             temp_table['Ambient_dose'] = temp_table.apply(lambda x: 
                 np.sum(data[:,x['unique_days_idx'],x['pixel_lat'],x['pixel_lon']] * 
@@ -229,6 +240,8 @@ class SpecificDoses(pd.DataFrame):
             # extra step necessary to ensure correct assignment
             self.loc[temp_table.index,'Ambient_dose'] = temp_table['Ambient_dose'].values
             self.loc[temp_table.index,'Personal_dose'] = temp_table['Personal_dose'].values
+
+        # TO DO: improve units options here
         self['Ambient_dose'] = self['Ambient_dose']/40*3600/100 # SED
         return self        
 
@@ -294,7 +307,7 @@ class ExposureMap:
         if bin_width == "default" :
             self.bin_width = default_bin_widths[self.units]
         else :
-            self.bin_wdith = bin_width
+            self.bin_width = bin_width
     
     def collect_data(self, data_directory=None,nc_filename_format=None,
     date_selection=None,units=None,exposure_schedule=None,bin_width=None) :
@@ -361,9 +374,10 @@ class ExposureMap:
 
         # first we read the data_directory to check the total number of unique years available
         data_dir_contents = os.listdir(self.data_directory)
+        # TO DO: improve jankiness of this format-matching search for filenames
         char_year = self.nc_filename_format.find('yyyy')
-        # TO DO: improve this search to actually check format match
-        dataset_years = [ int(x[char_year:char_year+4]) for x in data_dir_contents ]
+        dataset_years = [ x for x in data_dir_contents if re.findall(self.nc_filename_format.replace("yyyy","[0-9]{4}"),x)]
+        dataset_years = [ int(x[char_year:char_year+4]) for x in dataset_years ]
 
         # Now we can handle default options like "all"
         if type(self.date_selection) == str and self.date_selection == "all" :
@@ -381,15 +395,19 @@ class ExposureMap:
             dataset=nc.Dataset(self.data_directory+self.nc_filename_format.replace('yyyy',str(year))) 
             dataset.set_auto_mask(False) #to get normal arrays (faster than default masked arrays)
 
-            # Next we pull a subset from the netCDF file
-            # declare false array with same length of time dimension from netCDF
-            time_subset = [False for i in range(dataset.dimensions['time'].size)] 
-            # reshape false array to have first dimension 24 (hours in day)
-            time_subset = assert_data_shape_24(time_subset) 
-            # set the appropriate days as true
-            time_subset[:,date_selection[date_selection.year == year].dayofyear-1] = True 
-            # flatten time_subset array back to one dimension
-            time_subset = time_subset.flatten(order='F')
+            if dataset.dimensions['time'].size == 24 :
+                # needed if just a single day
+                time_subset = [True for i in range(dataset.dimensions['time'].size)]
+            else :
+                # Next we pull a subset from the netCDF file
+                # declare false array with same length of time dimension from netCDF
+                time_subset = [False for i in range(dataset.dimensions['time'].size)] 
+                # reshape false array to have first dimension 24 (hours in day)
+                time_subset = assert_data_shape_24(time_subset) 
+                # set the appropriate days as true
+                time_subset[:,date_selection[date_selection.year == year].dayofyear-1] = True 
+                # flatten time_subset array back to one dimension
+                time_subset = time_subset.flatten(order='F')
 
             # load subset of data
             print("   Slicing netcdf data with time subset")

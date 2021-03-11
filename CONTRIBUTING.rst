@@ -26,13 +26,13 @@ If you are reporting a bug, please include:
 Fix Bugs
 ~~~~~~~~
 
-Look through the GitLab issues for bugs. Anything tagged with "bug" and "help
+Look through the Github issues for bugs. Anything tagged with "bug" and "help
 wanted" is open to whoever wants to implement it.
 
 Implement Features
 ~~~~~~~~~~~~~~~~~~
 
-Look through the GitLab issues for features. Anything tagged with "enhancement"
+Look through the Github issues for features. Anything tagged with "enhancement"
 and "help wanted" is open to whoever wants to implement it.
 
 Write Documentation
@@ -61,7 +61,7 @@ Get Started!
 
 Ready to contribute? Here's how to set up `python_tamer` for local development.
 
-1. Clone `python_tamer` repo from GitLab.
+1. Clone `python_tamer` repo from Github.
 
     $ git clone https://github.com/tch521/python-TAMER.git
 
@@ -84,13 +84,13 @@ Ready to contribute? Here's how to set up `python_tamer` for local development.
     $ pytest
     $ tox
 
-5. Commit your changes and push your branch to GitLab::
+5. Commit your changes and push your branch to Github::
 
     $ git add <files to add>
     $ git commit -m "Your detailed description of your changes."
     $ git push origin name-of-your-bugfix-or-feature
 
-6. Submit a merge request through the GitLab website.
+6. Submit a merge request through the Github website.
 
 Merge Request Guidelines
 ------------------------

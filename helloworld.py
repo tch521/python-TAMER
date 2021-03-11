@@ -3,6 +3,11 @@ import netCDF4 as nc
 import pandas as pd
 import datetime as dt
 from python_tamer import *
+from test.test_dummy_library import *
+
+#test_ExposureMap_max()
+
+test_SpecificDoses()
 
 testmap = ExposureMap(date_selection=pd.date_range(start="2005-01-01",end="2005-12-31"),
     statistic="std",
