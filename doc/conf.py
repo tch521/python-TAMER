@@ -16,6 +16,8 @@ sys.path.insert(0, os.path.abspath('..'))
 
 autodoc_mock_imports = ['python_tamer']
 
+import python_tamer
+
 # -- Project information -----------------------------------------------------
 
 project = 'python-TAMER'
