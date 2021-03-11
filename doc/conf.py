@@ -33,6 +33,8 @@ release = '0.2'
 # ones.
 extensions = ['sphinx.ext.autodoc', 'sphinx.ext.viewcode', 'sphinx.ext.napoleon']
 
+autodoc_mock_imports = ['netCDF4']
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
