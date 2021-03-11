@@ -33,13 +33,7 @@ You can either clone the public repository:
 
 .. code-block:: console
 
-    $ git clone gitlab@gitlab.meteoswiss.ch:htc/python-tamer.git
-
-Or download the `tarball`_:
-
-.. code-block:: console
-
-    $ curl  -OL  https://gitlab.meteoswiss.ch/Todd C. Harris/python-tamer/-/archive/master/python-tamer-master.tar.gz
+    $ git clone https://github.com/tch521/python-TAMER
 
 Once you have a copy of the source, you can install it with:
 
@@ -48,5 +42,4 @@ Once you have a copy of the source, you can install it with:
     $ python setup.py install
 
 
-.. _GitLab repo: https://gitlab.meteoswiss.ch/htc/python-tamer
-.. _tarball: https://gitlab.meteoswiss.ch/Todd C. Harris/python-tamer/-/archive/master/python-tamer-master.tar.gz
+.. _GitLab repo: https://github.com/tch521/python-TAMER

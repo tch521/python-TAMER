@@ -2,6 +2,7 @@ from setuptools import setup, find_packages
 
 requirements = [
     'yaconfigobject',
+    'netCDF4',
     'pandas',
     'numpy',
     'cartopy',

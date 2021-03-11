@@ -14,7 +14,7 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('..'))
 
-import python_tamer
+autodoc_mock_imports = ['python_tamer']
 
 # -- Project information -----------------------------------------------------
 
@@ -33,7 +33,6 @@ release = '0.2'
 # ones.
 extensions = ['sphinx.ext.autodoc', 'sphinx.ext.viewcode', 'sphinx.ext.napoleon']
 
-autodoc_mock_imports = ['netCDF4']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
