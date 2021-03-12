@@ -14,7 +14,6 @@ requirements = [
 ]
 
 setup_requirements = [
-    'setuptools_scm',
     'pytest-runner',
 ]
 
@@ -34,7 +33,7 @@ package_data = {'test': ["UV_test_data_2018.nc"]}
 
 setup(
     name='python-TAMER',
-    use_scm_version=True,
+    version="0.2.12",
     author="Todd C. Harris",
     author_email='todd.harris@meteoswiss.ch',
     description="Toolkit for Analysis and Maps of Exposure Risk",
