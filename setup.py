@@ -4,6 +4,7 @@ import os
 requirements = [
     'yaconfigobject',
     'pandas',
+    'netcdf4',
     'numpy',
     'cartopy',
     'matplotlib',
@@ -11,9 +12,6 @@ requirements = [
     'datetime',
     'regex',
 ]
-
-if not os.getenv('READTHEDOCS'):
-    requirements.append('netCDF')
 
 setup_requirements = [
     'setuptools_scm',
@@ -32,7 +30,7 @@ packages = find_packages(include=['python_tamer'],exclude=['test','doc'])
 
 package_dir = {'python-TAMER': 'python_tamer'}
 
-package_data = {'test': "UV_test_data_2018.nc"}
+package_data = {'test': ["UV_test_data_2018.nc"]}
 
 setup(
     name='python-TAMER',
@@ -42,13 +40,14 @@ setup(
     description="Toolkit for Analysis and Maps of Exposure Risk",
     url='https://github.com/tch521/python-TAMER',
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
+        'Intended Audience :: Science/Research',
         'License :: OSI Approved :: BSD-3-Clause License',
         'Natural Language :: English',
         'Programming Language :: Python :: 3.6-3.7-3.8',
     ],
-    keywords='python-TAMER',
+    keywords='python-TAMER UV',
     entry_points={},
     scripts=[],
     license="BSD-3-Clause license",

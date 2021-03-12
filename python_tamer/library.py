@@ -18,7 +18,6 @@ import cartopy.feature as cfeat
 import datetime as dt
 import regex as re
 from .subroutines import *
-from .initial_reference import *
 
 class SpecificDoses(pd.DataFrame):
     """SpecificDoses is the class for replicating dosimetry measurements
@@ -49,8 +48,8 @@ class SpecificDoses(pd.DataFrame):
     
     # This adds some useful metadata (self-explanatory)
     _metadata = ["nc_filename_format","data_directory"]
-    nc_filename_format = default_nc_filename_format
-    data_directory = default_data_directory # TO DO: set up __init__ for these options
+    nc_filename_format = 'UVery.AS_ch02.lonlat_yyyy01010000.nc'
+    data_directory = 'C:/Data/UV/' # TO DO: set up __init__ for these options
     # It feels like this should be declared with __init__ as well but idk
 
     def schedule_constant_exposure(self) :
@@ -133,12 +132,40 @@ class SpecificDoses(pd.DataFrame):
 
         # This chunk of code checks if the default Vis table should be used or if the user enters some alternative table.
         if Vis_table is None and Vis_table_path is None :
-            Vis_table = Vernez_2015_vis_table
+            Vis_table = pd.DataFrame.from_records(
+                columns=['Seated','Kneeling','Standing erect arms down','Standing erect arms up','Standing bowing'],
+                index=['Face','Skull','Forearm','Upper arm','Neck','Top of shoulders','Belly','Upper back','Hand','Shoulder','Upper leg','Lower leg','Lower back'],
+                data=[[53.7,28.7,46.6,44.9,19.2],
+                    [56.2,66.6,61.1,58.4,67.5],
+                    [62.3,56.5,49.4,53.1,62.1],
+                    [51.7,60.5,45.9,65.3,61.6],
+                    [58.3,84.3,67.6,65.2,81.6],
+                    [35.9,50.3,48.6,45.7,85.3],
+                    [58.1,45.1,50.3,49.6,15.2],
+                    [35.9,50.3,48.6,45.7,85.3],
+                    [59.2,58.8,42.4,55,58.5],
+                    [68,62,63,67.1,64],
+                    [65.4,45.4,50.9,51,43.5],
+                    [32.8,63.4,49.7,50.3,50],
+                    [44.9,51.6,56.6,53.4,86.9]])
             # The 'standing moving' posture must be dealt with somehow...
             # Vis_table['Standing moving']= (Vis_table['Standing erect arms down'] + Vis_table['Standing bowing']) / 2
+            # TO DO: add interpeter or force users to conform?
             Vis_table['Standing moving']= Vis_table['Standing erect arms down'] 
         elif Vis_table is None :
             Vis_table = pd.read_csv(Vis_table_path)
+
+        # Below is a dictionary describing a range of synonyms for the anatomical zones defined in the Vis table.
+        Anatomic_zone_synonyms_reverse = {'Forearm' : ['wrist','Left extern radial','Right extern radial','Left wrist: radius head','Right wrist: radius head','Left wrist','Right wrist'],
+            'Face' : ['Forehead'],
+            'Upper back' : ['Right trapezoid','Left trapezoid','trapezius'],
+            'Belly' : ['Chest'],
+            'Shoulder' : ['Left deltoid','Right deltoid','Left shoulder','Right shoulder'],
+            'Upper arm' : ['Left elbow','Right elbow','Left biceps','Right biceps'],
+            'Upper leg' : ['Left thigh','Right thigh','Left knee','Right knee'],
+            'Lower back' : ['Low back']}
+        # The dictionary is reversed so that the multiple synonyms can be mapped to the few correct terms for the Vis table.
+        Anatomic_zone_synonyms = {keys: old_keys for old_keys, old_values in Anatomic_zone_synonyms_reverse.items() for keys in old_values}
 
         self = self.replace({'Anatomic_zone' : Anatomic_zone_synonyms})
 
@@ -290,24 +317,57 @@ class ExposureMap:
     """
 
     def __init__(self,units="SED",
-    exposure_schedule=np.ones(24),
+    exposure_schedule=1,
     statistic="mean",
     bin_width = "default",
     date_selection="all",
-    map_options=default_map_options,
-    nc_filename_format=default_nc_filename_format,
-    data_directory=default_data_directory):
+    map_options="default",
+    nc_filename_format='UVery.AS_ch02.lonlat_yyyy01010000.nc',
+    data_directory='C:/Data/UV/'):
+        # assigning options to fields in class with a few basic checks
         self.units = units
+
         self.exposure_schedule=exposure_schedule
+        if len(self.exposure_schedule) == 1 :
+            self.exposure_schedule = np.repeat(self.exposure_schedule,24)
+
         self.statistic = statistic
-        self.map_options = map_options
+
+        self.map_options = {
+            "title" : "Test map",
+            "size" : [20,15],
+            "save" : True,
+            "img_dir" : "",
+            "img_filename" : "default",
+            "img_filetype" : "png",
+            "brdr_nation" : True,
+            "brdr_nation_rgba" : [0,0,0,0],
+            "brdr_state" : False,
+            "brdr_state_rgba" : [0,0,0,0.67],
+            "cmap" : "jet",
+            "cmap_limits" : None,
+            "cbar" : True,
+            "cbar_limits" : None
+        }
+        if not (map_options is "default") :
+            self.map_options = self.map_options.update(map_options)
+
         self.nc_filename_format = nc_filename_format
         self.data_directory = data_directory
+
         self.date_selection = date_selection
-        if bin_width == "default" :
-            self.bin_width = default_bin_widths[self.units]
+
+        if bin_width is "default" :
+            self.bin_width = {
+                "SED" : 0.1, 
+                "J m-2" : 10, 
+                "UVI" : 0.1, 
+                "W m-2" : 0.0025, 
+                "mW m-2" : 2.5
+            }[self.units]
         else :
             self.bin_width = bin_width
+        
     
     def collect_data(self, data_directory=None,nc_filename_format=None,
     date_selection=None,units=None,exposure_schedule=None,bin_width=None) :
