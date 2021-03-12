@@ -1,3 +1,0 @@
-include LICENSE README.rst HISTORY.rst AUTHORS.rst
-include python_tamer/config/python_tamer.conf
-include test/UV_test_data_2018.nc
