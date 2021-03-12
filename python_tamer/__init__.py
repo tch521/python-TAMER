@@ -13,6 +13,6 @@ from .library import *
 
 __author__ = """Todd C. Harris"""
 __email__ = 'todd.harris@meteoswiss.ch'
-__version__ = "0.2.12"
+__version__ = "0.2.13"
 
 # CONFIG = Config(name='python_tamer.conf')

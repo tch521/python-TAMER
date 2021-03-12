@@ -33,7 +33,7 @@ package_data = {'test': ["UV_test_data_2018.nc"]}
 
 setup(
     name='python-TAMER',
-    version="0.2.12",
+    version="0.2.13",
     author="Todd C. Harris",
     author_email='todd.harris@meteoswiss.ch',
     description="Toolkit for Analysis and Maps of Exposure Risk",
@@ -42,9 +42,9 @@ setup(
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
         'Intended Audience :: Science/Research',
-        'License :: OSI Approved :: BSD-3-Clause License',
+        'License :: OSI Approved :: BSD License',
         'Natural Language :: English',
-        'Programming Language :: Python :: 3.6-3.7-3.8',
+        'Programming Language :: Python :: 3',
     ],
     keywords='python-TAMER UV',
     entry_points={},
