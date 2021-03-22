@@ -27,7 +27,7 @@ you through the process.
 From sources
 ------------
 
-The sources for python-tamer can be downloaded from the `GitLab repo`_.
+The sources for python-tamer can be downloaded from the `Github repo`_.
 
 You can either clone the public repository:
 
@@ -42,4 +42,4 @@ Once you have a copy of the source, you can install it with:
     $ python setup.py install
 
 
-.. _GitLab repo: https://github.com/tch521/python-TAMER
+.. _Github repo: https://github.com/tch521/python-TAMER

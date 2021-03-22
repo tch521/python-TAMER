@@ -1,7 +1,8 @@
 import pytest
 
 import datetime as dt
-from python_tamer.library import *
+from python_tamer.ExposureMap import *
+from python_tamer.SpecificDoses import *
 
 def test_ExposureMap_max():
 
@@ -9,7 +10,7 @@ def test_ExposureMap_max():
     units = "UVI",
     statistic = "max",
     data_directory="test/",
-    nc_filename_format="UV_test_data_yyyy.nc",
+    src_filename_format="UV_test_data_yyyy.nc",
     bin_width=0.1
     ).collect_data().calculate_map()
 
@@ -27,7 +28,7 @@ def test_SpecificDoses():
         "Longitude" : [6.79167]
     }))
     test.data_directory = "test/"
-    test.nc_filename_format = "UV_test_data_yyyy.nc"
+    test.src_filename_format = "UV_test_data_yyyy.nc"
 
     test = test.ER_from_posture().schedule_constant_exposure()
 

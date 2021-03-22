@@ -1,4 +1,6 @@
 import numpy as np
+import pandas as pd
+import datetime as dt
 
 def assert_data_shape_24(data,reverse=False,force_second_dim=True) :
     """Simple function to check if first dimension is 24 hours and, if not, reshapes accordingly
@@ -53,7 +55,11 @@ def min_solar_zenith_angle(date,lat) :
         pandas.DataFrame: A column of minimal SZA values in degrees.
     """
 
-    TrTim = date.apply(lambda x: x.toordinal() + 366).to_numpy() * 2.73785151e-05 - 18.9996356
+    if type(date) is pd.core.series.Series :
+        TrTim = date.apply(lambda x: x.toordinal() + 366).to_numpy() * 2.73785151e-05 - 18.9996356
+    else : # adds support for single date input
+        TrTim = (date.toordinal() +366) * 2.73785151e-05 - 18.9996356
+        TrTim = np.array(TrTim)
     G  = np.radians(np.mod( 358.475833 + 35999.04975   * TrTim - 0.000150 * TrTim**2 , 360))
     SL = np.radians(np.mod( 279.696678 + 36000.76892   * TrTim + 0.000303 * TrTim**2 , 360))
     SJ = np.radians(np.mod( 225.444651 + 3034.906654   * TrTim , 360))
@@ -238,3 +244,108 @@ def hist_max(counts,bin_centers) :
 
     return max
 
+
+def ER_Vernez_2015(Anatomic_zone,
+Posture,
+Date=None,
+Latitude=None,
+Vis_table_path=None,
+Vis_table=None) :
+    """Calculates Exposure Ratios for a given anatomic zone, posture, and date.
+
+    This function calculates ER as a percentage between 0 and 100 based on Anatomic_zone, Posture, Date, and Latitude
+    information. This function contains hard-coded synonyms for certain anatomical zones, e.g. 'Forehead" 
+    maps to "Face'. See Vernez et al., Journal of Exposure Science and Environmental Epidemiology (2015) 
+    25, 113–118 (https://doi.org/10.1038/jes.2014.6) for further details on the model used for the calculation.
+
+
+    Parameters
+    ----------
+
+    Anatomic_zone : str
+        String or list of strings describing the anatomic zone for which the ER is to be calculated. 
+
+    Posture : str
+        String or list of strings describing the posture for which the ER is to be calculated.
+
+    Date : datetime.date or pandas.DateTimeIndex, optional
+        The date for which the ER is to be calculated. The date affects the minimum solar zenith
+        angle in the Vernez et al. 2015 ER model. The specific year is not relevant. Defaults to
+        March 20, the equinox.
+
+    Latitude : float or array, optional
+        The latitude is important for calculating the ER. Defaults to None, wherein the latitude
+        of the centroid of Switzerland (46.8 degrees) is used.
+
+    Vis_table_path : str, optional
+        The full path to an alternative table for the Vis parameter. 
+        Must be a csv file. Defaults to None.
+
+    Vis_table : str, optional
+        An alternative table for the Vis parameter. Defaults to None.
+
+
+    Returns
+    -------
+
+    numpy.array
+        Returns ER values as a numpy array
+
+
+    """
+
+    # This chunk of code checks if the default Vis table should be used or if the user enters some alternative table.
+    if Vis_table is None and Vis_table_path is None :
+        Vis_table = pd.DataFrame.from_records(
+            columns=['Seated','Kneeling','Standing erect arms down','Standing erect arms up','Standing bowing'],
+            index=['Face','Skull','Forearm','Upper arm','Neck','Top of shoulders','Belly','Upper back','Hand','Shoulder','Upper leg','Lower leg','Lower back'],
+            data=[[53.7,28.7,46.6,44.9,19.2],
+                [56.2,66.6,61.1,58.4,67.5],
+                [62.3,56.5,49.4,53.1,62.1],
+                [51.7,60.5,45.9,65.3,61.6],
+                [58.3,84.3,67.6,65.2,81.6],
+                [35.9,50.3,48.6,45.7,85.3],
+                [58.1,45.1,50.3,49.6,15.2],
+                [35.9,50.3,48.6,45.7,85.3],
+                [59.2,58.8,42.4,55,58.5],
+                [68,62,63,67.1,64],
+                [65.4,45.4,50.9,51,43.5],
+                [32.8,63.4,49.7,50.3,50],
+                [44.9,51.6,56.6,53.4,86.9]])
+        # The 'standing moving' posture must be dealt with somehow...
+        # Vis_table['Standing moving']= (Vis_table['Standing erect arms down'] + Vis_table['Standing bowing']) / 2
+        # TO DO: add interpeter or force users to conform?
+        Vis_table['Standing moving']= Vis_table['Standing erect arms down'] 
+    elif Vis_table is None :
+        Vis_table = pd.read_csv(Vis_table_path)
+
+    # Below is a dictionary describing a range of synonyms for the anatomical zones defined in the Vis table.
+    Anatomic_zone_synonyms_reverse = {'Forearm' : ['wrist','Left extern radial','Right extern radial','Left wrist: radius head','Right wrist: radius head','Left wrist','Right wrist'],
+        'Face' : ['Forehead'],
+        'Upper back' : ['Right trapezoid','Left trapezoid','trapezius'],
+        'Belly' : ['Chest'],
+        'Shoulder' : ['Left deltoid','Right deltoid','Left shoulder','Right shoulder'],
+        'Upper arm' : ['Left elbow','Right elbow','Left biceps','Right biceps'],
+        'Upper leg' : ['Left thigh','Right thigh','Left knee','Right knee'],
+        'Lower back' : ['Low back']}
+    # The dictionary is reversed so that the multiple synonyms can be mapped to the few correct terms for the Vis table.
+    Anatomic_zone_synonyms = {keys: old_keys for old_keys, old_values in Anatomic_zone_synonyms_reverse.items() for keys in old_values}
+
+    anatomic_zone = Anatomic_zone_synonyms[Anatomic_zone]
+
+    # With the correct anatomic zone names established, we can lookup the Vis values from the table
+    Vis = Vis_table.lookup(anatomic_zone,Posture)
+
+    if Latitude is None :
+        Latitude = 46.8 #Switzerland centroid
+    
+    if Date is None :
+        Date = dt.date(2015,3,20) # equinox
+
+    # Next we must calculate the minimal Solar Zenith Angle for the given date
+    mSZA = min_solar_zenith_angle(Date,Latitude)
+
+    # With the Vis value and the SZA, we can calculate the ER according to the Vernez model
+    ER = ER_Vernez_model_equation(Vis,mSZA) / 100
+
+    return ER

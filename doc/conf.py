@@ -24,7 +24,7 @@ copyright = '2021, Todd C. Harris'
 author = 'Todd C. Harris'
 
 # The full version, including alpha/beta/rc tags
-release = '0.2'
+release = python_tamer.__version__
 
 
 # -- General configuration ---------------------------------------------------

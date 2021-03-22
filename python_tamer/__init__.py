@@ -1,7 +1,8 @@
 """ Initializations """
 
 from pkg_resources import get_distribution, DistributionNotFound # What's this? 
-from .library import *
+from .ExposureMap import *
+from .SpecificDoses import *
 # from yaconfigobject import Config
 
 
@@ -13,6 +14,6 @@ from .library import *
 
 __author__ = """Todd C. Harris"""
 __email__ = 'todd.harris@meteoswiss.ch'
-__version__ = "0.2.13"
+__version__ = "0.3.0"
 
 # CONFIG = Config(name='python_tamer.conf')

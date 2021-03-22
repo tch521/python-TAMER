@@ -1,14 +1,11 @@
 from setuptools import setup, find_packages
-import os
 
 requirements = [
-    'yaconfigobject',
     'pandas',
     'netcdf4',
     'numpy',
     'cartopy',
     'matplotlib',
-    'os',
     'datetime',
     'regex',
 ]
@@ -33,7 +30,7 @@ package_data = {'test': ["UV_test_data_2018.nc"]}
 
 setup(
     name='python-TAMER',
-    version="0.2.13",
+    version="0.3.0",
     author="Todd C. Harris",
     author_email='todd.harris@meteoswiss.ch',
     description="Toolkit for Analysis and Maps of Exposure Risk",

@@ -5,17 +5,33 @@ import datetime as dt
 from python_tamer import *
 from test.test_dummy_library import *
 
-#test_ExposureMap_max()
+# test_ExposureMap_max()
 
-test_SpecificDoses()
+# test_SpecificDoses()
+
+test = SpecificDoses(pd.read_excel(r'atmosphere-12-00268-s001.xlsx',header=2,index_col=0,usecols="B:K"))
+
+test = test.standard_column_names()
+
+test['Time_start'] = convert_swiss_time_to_UTC(test,"Time_start")
+test['Time_end'] = convert_swiss_time_to_UTC(test,"Time_end")
+
+test = test.schedule_constant_exposure()
+
+test = test.ER_from_posture()
+
+test = test.calculate_specific_dose()
+
+test.to_excel('C:/Data/Dosimetry/doses_test_day_fix.xlsx')
+    
+"""
 
 testmap = ExposureMap(date_selection=pd.date_range(start="2005-01-01",end="2005-12-31"),
     statistic="std",
     units="UVI",
     exposure_schedule=np.concatenate([np.zeros(10),np.ones(4),np.zeros(10)])
     )
-    
-"""
+
 
 testmap.calculate_pix_hist().calculate_map().plot_map()
 

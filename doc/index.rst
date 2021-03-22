@@ -13,13 +13,13 @@ Welcome to python-TAMER's documentation!
    readme
    installation
    usage
-   modules
+   code_reference
    contributing
    authors
    history
 
-Indices and tables
-==================
+Index
+=====
 
 * :ref:`genindex`
 * :ref:`modindex`
