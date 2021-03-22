@@ -1,35 +1,152 @@
 
+
 <!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>python_tamer.library &mdash; python-TAMER 0.2 documentation</title>
+  
 
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>python_tamer.library &#8212; python-TAMER 0.2 documentation</title>
-    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/language_data.js"></script>
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
    
-  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
-  </head><body>
-  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
           
 
-          <div class="body" role="main">
+          
+            <a href="../../index.html" class="icon icon-home"> python-TAMER
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">python-TAMER</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">python-tamer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">python-TAMER</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>python_tamer.library</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <h1>Source code for python_tamer.library</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot; python_TAMER &quot;&quot;&quot;</span> 
@@ -52,7 +169,6 @@
 <span class="kn">import</span> <span class="nn">datetime</span> <span class="k">as</span> <span class="nn">dt</span>
 <span class="kn">import</span> <span class="nn">regex</span> <span class="k">as</span> <span class="nn">re</span>
 <span class="kn">from</span> <span class="nn">.subroutines</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">.initial_reference</span> <span class="kn">import</span> <span class="o">*</span>
 
 <div class="viewcode-block" id="SpecificDoses"><a class="viewcode-back" href="../../python_tamer.html#python_tamer.library.SpecificDoses">[docs]</a><span class="k">class</span> <span class="nc">SpecificDoses</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;SpecificDoses is the class for replicating dosimetry measurements</span>
@@ -83,8 +199,8 @@
     
     <span class="c1"># This adds some useful metadata (self-explanatory)</span>
     <span class="n">_metadata</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;nc_filename_format&quot;</span><span class="p">,</span><span class="s2">&quot;data_directory&quot;</span><span class="p">]</span>
-    <span class="n">nc_filename_format</span> <span class="o">=</span> <span class="n">default_nc_filename_format</span>
-    <span class="n">data_directory</span> <span class="o">=</span> <span class="n">default_data_directory</span> <span class="c1"># TO DO: set up __init__ for these options</span>
+    <span class="n">nc_filename_format</span> <span class="o">=</span> <span class="s1">&#39;UVery.AS_ch02.lonlat_yyyy01010000.nc&#39;</span>
+    <span class="n">data_directory</span> <span class="o">=</span> <span class="s1">&#39;C:/Data/UV/&#39;</span> <span class="c1"># TO DO: set up __init__ for these options</span>
     <span class="c1"># It feels like this should be declared with __init__ as well but idk</span>
 
 <div class="viewcode-block" id="SpecificDoses.schedule_constant_exposure"><a class="viewcode-back" href="../../python_tamer.html#python_tamer.library.SpecificDoses.schedule_constant_exposure">[docs]</a>    <span class="k">def</span> <span class="nf">schedule_constant_exposure</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span>
@@ -167,12 +283,40 @@
 
         <span class="c1"># This chunk of code checks if the default Vis table should be used or if the user enters some alternative table.</span>
         <span class="k">if</span> <span class="n">Vis_table</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">Vis_table_path</span> <span class="ow">is</span> <span class="kc">None</span> <span class="p">:</span>
-            <span class="n">Vis_table</span> <span class="o">=</span> <span class="n">Vernez_2015_vis_table</span>
+            <span class="n">Vis_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">(</span>
+                <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Seated&#39;</span><span class="p">,</span><span class="s1">&#39;Kneeling&#39;</span><span class="p">,</span><span class="s1">&#39;Standing erect arms down&#39;</span><span class="p">,</span><span class="s1">&#39;Standing erect arms up&#39;</span><span class="p">,</span><span class="s1">&#39;Standing bowing&#39;</span><span class="p">],</span>
+                <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Face&#39;</span><span class="p">,</span><span class="s1">&#39;Skull&#39;</span><span class="p">,</span><span class="s1">&#39;Forearm&#39;</span><span class="p">,</span><span class="s1">&#39;Upper arm&#39;</span><span class="p">,</span><span class="s1">&#39;Neck&#39;</span><span class="p">,</span><span class="s1">&#39;Top of shoulders&#39;</span><span class="p">,</span><span class="s1">&#39;Belly&#39;</span><span class="p">,</span><span class="s1">&#39;Upper back&#39;</span><span class="p">,</span><span class="s1">&#39;Hand&#39;</span><span class="p">,</span><span class="s1">&#39;Shoulder&#39;</span><span class="p">,</span><span class="s1">&#39;Upper leg&#39;</span><span class="p">,</span><span class="s1">&#39;Lower leg&#39;</span><span class="p">,</span><span class="s1">&#39;Lower back&#39;</span><span class="p">],</span>
+                <span class="n">data</span><span class="o">=</span><span class="p">[[</span><span class="mf">53.7</span><span class="p">,</span><span class="mf">28.7</span><span class="p">,</span><span class="mf">46.6</span><span class="p">,</span><span class="mf">44.9</span><span class="p">,</span><span class="mf">19.2</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mf">56.2</span><span class="p">,</span><span class="mf">66.6</span><span class="p">,</span><span class="mf">61.1</span><span class="p">,</span><span class="mf">58.4</span><span class="p">,</span><span class="mf">67.5</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mf">62.3</span><span class="p">,</span><span class="mf">56.5</span><span class="p">,</span><span class="mf">49.4</span><span class="p">,</span><span class="mf">53.1</span><span class="p">,</span><span class="mf">62.1</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mf">51.7</span><span class="p">,</span><span class="mf">60.5</span><span class="p">,</span><span class="mf">45.9</span><span class="p">,</span><span class="mf">65.3</span><span class="p">,</span><span class="mf">61.6</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mf">58.3</span><span class="p">,</span><span class="mf">84.3</span><span class="p">,</span><span class="mf">67.6</span><span class="p">,</span><span class="mf">65.2</span><span class="p">,</span><span class="mf">81.6</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mf">35.9</span><span class="p">,</span><span class="mf">50.3</span><span class="p">,</span><span class="mf">48.6</span><span class="p">,</span><span class="mf">45.7</span><span class="p">,</span><span class="mf">85.3</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mf">58.1</span><span class="p">,</span><span class="mf">45.1</span><span class="p">,</span><span class="mf">50.3</span><span class="p">,</span><span class="mf">49.6</span><span class="p">,</span><span class="mf">15.2</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mf">35.9</span><span class="p">,</span><span class="mf">50.3</span><span class="p">,</span><span class="mf">48.6</span><span class="p">,</span><span class="mf">45.7</span><span class="p">,</span><span class="mf">85.3</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mf">59.2</span><span class="p">,</span><span class="mf">58.8</span><span class="p">,</span><span class="mf">42.4</span><span class="p">,</span><span class="mi">55</span><span class="p">,</span><span class="mf">58.5</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mi">68</span><span class="p">,</span><span class="mi">62</span><span class="p">,</span><span class="mi">63</span><span class="p">,</span><span class="mf">67.1</span><span class="p">,</span><span class="mi">64</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mf">65.4</span><span class="p">,</span><span class="mf">45.4</span><span class="p">,</span><span class="mf">50.9</span><span class="p">,</span><span class="mi">51</span><span class="p">,</span><span class="mf">43.5</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mf">32.8</span><span class="p">,</span><span class="mf">63.4</span><span class="p">,</span><span class="mf">49.7</span><span class="p">,</span><span class="mf">50.3</span><span class="p">,</span><span class="mi">50</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mf">44.9</span><span class="p">,</span><span class="mf">51.6</span><span class="p">,</span><span class="mf">56.6</span><span class="p">,</span><span class="mf">53.4</span><span class="p">,</span><span class="mf">86.9</span><span class="p">]])</span>
             <span class="c1"># The &#39;standing moving&#39; posture must be dealt with somehow...</span>
             <span class="c1"># Vis_table[&#39;Standing moving&#39;]= (Vis_table[&#39;Standing erect arms down&#39;] + Vis_table[&#39;Standing bowing&#39;]) / 2</span>
+            <span class="c1"># TO DO: add interpeter or force users to conform?</span>
             <span class="n">Vis_table</span><span class="p">[</span><span class="s1">&#39;Standing moving&#39;</span><span class="p">]</span><span class="o">=</span> <span class="n">Vis_table</span><span class="p">[</span><span class="s1">&#39;Standing erect arms down&#39;</span><span class="p">]</span> 
         <span class="k">elif</span> <span class="n">Vis_table</span> <span class="ow">is</span> <span class="kc">None</span> <span class="p">:</span>
             <span class="n">Vis_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">Vis_table_path</span><span class="p">)</span>
+
+        <span class="c1"># Below is a dictionary describing a range of synonyms for the anatomical zones defined in the Vis table.</span>
+        <span class="n">Anatomic_zone_synonyms_reverse</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Forearm&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;wrist&#39;</span><span class="p">,</span><span class="s1">&#39;Left extern radial&#39;</span><span class="p">,</span><span class="s1">&#39;Right extern radial&#39;</span><span class="p">,</span><span class="s1">&#39;Left wrist: radius head&#39;</span><span class="p">,</span><span class="s1">&#39;Right wrist: radius head&#39;</span><span class="p">,</span><span class="s1">&#39;Left wrist&#39;</span><span class="p">,</span><span class="s1">&#39;Right wrist&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;Face&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Forehead&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;Upper back&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Right trapezoid&#39;</span><span class="p">,</span><span class="s1">&#39;Left trapezoid&#39;</span><span class="p">,</span><span class="s1">&#39;trapezius&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;Belly&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Chest&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;Shoulder&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Left deltoid&#39;</span><span class="p">,</span><span class="s1">&#39;Right deltoid&#39;</span><span class="p">,</span><span class="s1">&#39;Left shoulder&#39;</span><span class="p">,</span><span class="s1">&#39;Right shoulder&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;Upper arm&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Left elbow&#39;</span><span class="p">,</span><span class="s1">&#39;Right elbow&#39;</span><span class="p">,</span><span class="s1">&#39;Left biceps&#39;</span><span class="p">,</span><span class="s1">&#39;Right biceps&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;Upper leg&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Left thigh&#39;</span><span class="p">,</span><span class="s1">&#39;Right thigh&#39;</span><span class="p">,</span><span class="s1">&#39;Left knee&#39;</span><span class="p">,</span><span class="s1">&#39;Right knee&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;Lower back&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Low back&#39;</span><span class="p">]}</span>
+        <span class="c1"># The dictionary is reversed so that the multiple synonyms can be mapped to the few correct terms for the Vis table.</span>
+        <span class="n">Anatomic_zone_synonyms</span> <span class="o">=</span> <span class="p">{</span><span class="n">keys</span><span class="p">:</span> <span class="n">old_keys</span> <span class="k">for</span> <span class="n">old_keys</span><span class="p">,</span> <span class="n">old_values</span> <span class="ow">in</span> <span class="n">Anatomic_zone_synonyms_reverse</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">for</span> <span class="n">keys</span> <span class="ow">in</span> <span class="n">old_values</span><span class="p">}</span>
 
         <span class="bp">self</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">replace</span><span class="p">({</span><span class="s1">&#39;Anatomic_zone&#39;</span> <span class="p">:</span> <span class="n">Anatomic_zone_synonyms</span><span class="p">})</span>
 
@@ -324,24 +468,57 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">units</span><span class="o">=</span><span class="s2">&quot;SED&quot;</span><span class="p">,</span>
-    <span class="n">exposure_schedule</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">24</span><span class="p">),</span>
+    <span class="n">exposure_schedule</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
     <span class="n">statistic</span><span class="o">=</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span>
     <span class="n">bin_width</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
     <span class="n">date_selection</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span>
-    <span class="n">map_options</span><span class="o">=</span><span class="n">default_map_options</span><span class="p">,</span>
-    <span class="n">nc_filename_format</span><span class="o">=</span><span class="n">default_nc_filename_format</span><span class="p">,</span>
-    <span class="n">data_directory</span><span class="o">=</span><span class="n">default_data_directory</span><span class="p">):</span>
+    <span class="n">map_options</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span>
+    <span class="n">nc_filename_format</span><span class="o">=</span><span class="s1">&#39;UVery.AS_ch02.lonlat_yyyy01010000.nc&#39;</span><span class="p">,</span>
+    <span class="n">data_directory</span><span class="o">=</span><span class="s1">&#39;C:/Data/UV/&#39;</span><span class="p">):</span>
+        <span class="c1"># assigning options to fields in class with a few basic checks</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="n">units</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">exposure_schedule</span><span class="o">=</span><span class="n">exposure_schedule</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exposure_schedule</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">exposure_schedule</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exposure_schedule</span><span class="p">,</span><span class="mi">24</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">statistic</span> <span class="o">=</span> <span class="n">statistic</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">map_options</span> <span class="o">=</span> <span class="n">map_options</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">map_options</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;title&quot;</span> <span class="p">:</span> <span class="s2">&quot;Test map&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;size&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span><span class="mi">15</span><span class="p">],</span>
+            <span class="s2">&quot;save&quot;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;img_dir&quot;</span> <span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;img_filename&quot;</span> <span class="p">:</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;img_filetype&quot;</span> <span class="p">:</span> <span class="s2">&quot;png&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;brdr_nation&quot;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;brdr_nation_rgba&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;brdr_state&quot;</span> <span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;brdr_state_rgba&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.67</span><span class="p">],</span>
+            <span class="s2">&quot;cmap&quot;</span> <span class="p">:</span> <span class="s2">&quot;jet&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;cmap_limits&quot;</span> <span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">&quot;cbar&quot;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;cbar_limits&quot;</span> <span class="p">:</span> <span class="kc">None</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">map_options</span> <span class="ow">is</span> <span class="s2">&quot;default&quot;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">map_options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_options</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">map_options</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">nc_filename_format</span> <span class="o">=</span> <span class="n">nc_filename_format</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_directory</span> <span class="o">=</span> <span class="n">data_directory</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">date_selection</span> <span class="o">=</span> <span class="n">date_selection</span>
-        <span class="k">if</span> <span class="n">bin_width</span> <span class="o">==</span> <span class="s2">&quot;default&quot;</span> <span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">bin_width</span> <span class="o">=</span> <span class="n">default_bin_widths</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">units</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">bin_width</span> <span class="ow">is</span> <span class="s2">&quot;default&quot;</span> <span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bin_width</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;SED&quot;</span> <span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span> 
+                <span class="s2">&quot;J m-2&quot;</span> <span class="p">:</span> <span class="mi">10</span><span class="p">,</span> 
+                <span class="s2">&quot;UVI&quot;</span> <span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span> 
+                <span class="s2">&quot;W m-2&quot;</span> <span class="p">:</span> <span class="mf">0.0025</span><span class="p">,</span> 
+                <span class="s2">&quot;mW m-2&quot;</span> <span class="p">:</span> <span class="mf">2.5</span>
+            <span class="p">}[</span><span class="bp">self</span><span class="o">.</span><span class="n">units</span><span class="p">]</span>
         <span class="k">else</span> <span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">bin_width</span> <span class="o">=</span> <span class="n">bin_width</span>
+        
     
 <div class="viewcode-block" id="ExposureMap.collect_data"><a class="viewcode-back" href="../../python_tamer.html#python_tamer.library.ExposureMap.collect_data">[docs]</a>    <span class="k">def</span> <span class="nf">collect_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_directory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">nc_filename_format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">date_selection</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">units</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">exposure_schedule</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">bin_width</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
@@ -631,75 +808,43 @@
 
 </pre></div>
 
+           </div>
+           
           </div>
-          
-        </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../../index.html">python-TAMER</a></h1>
+          <footer>
+  
 
+  <hr/>
 
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2021, Todd C. Harris
 
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-
-
-
-
-<h3>Navigation</h3>
-<p class="caption"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../readme.html">python-TAMER</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../modules.html">python-tamer</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Credits</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../../index.html">Documentation overview</a><ul>
-  <li><a href="../index.html">Module code</a><ul>
-  </ul></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
-
-
-
-
-
-
-
+</footer>
 
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2021, Todd C. Harris.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.2</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-    </div>
 
-    
+    </section>
 
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
     
-  </body>
+   
+
+</body>
 </html>
