@@ -1,0 +1,601 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>python_tamer.SpecificDoses &mdash; python-TAMER 0.3.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> python-TAMER
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">Introduction to python-TAMER</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../code_reference.html">Code Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">python-TAMER</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>python_tamer.SpecificDoses</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for python_tamer.SpecificDoses</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">netCDF4</span> <span class="k">as</span> <span class="nn">nc</span>
+<span class="kn">from</span> <span class="nn">.subroutines</span> <span class="kn">import</span> <span class="o">*</span>
+
+
+<div class="viewcode-block" id="SpecificDoses"><a class="viewcode-back" href="../../code_reference.html#python_tamer.SpecificDoses.SpecificDoses">[docs]</a><span class="k">class</span> <span class="nc">SpecificDoses</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A class for specific dose estimates akin to dosimetry measurements</span>
+
+<span class="sd">    High resolution data allows for personal and ambient dose estimation without the need for</span>
+<span class="sd">    direct measurement. This class is structured like a table with a set of functions to add </span>
+<span class="sd">    columns ultimately leading to dose estimates. Each row of this table represents a specific</span>
+<span class="sd">    exposure instance, i.e. an individual at a specific location for a specific date and time</span>
+<span class="sd">    with a specific exposure ratio. See Harris et al. 2021 </span>
+<span class="sd">    (https://doi.org/10.3390/atmos12020268) for more information on calculations appropriate </span>
+<span class="sd">    for this class.</span>
+
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    src_filename_format : str</span>
+<span class="sd">        Describes the filename of the netCDF files containing the UV data with &#39;yyyy&#39; in place </span>
+<span class="sd">        of the year.</span>
+<span class="sd">    </span>
+<span class="sd">    data_directory : str</span>
+<span class="sd">        The directory where the data is stored. Must end with a slash.</span>
+
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+
+<span class="sd">    Presently, the class is inherited from a pandas.DataFrame which is somewhat restrictive </span>
+<span class="sd">    and will likely be revised in a later update. For the time being, this means that the </span>
+<span class="sd">    parameters cannot be set when initialising a `SpecificDoses` object, they must instead</span>
+<span class="sd">    be adjusted after initialisation, like so:</span>
+
+<span class="sd">    &gt;&gt;&gt; ExistingExposureMapObject.data_directory = &quot;/new/data/directory/&quot;</span>
+
+<span class="sd">    </span>
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    In this example, we illustrate the process for calculating the doses in Harris et al. 2021</span>
+<span class="sd">    (https://doi.org/10.3390/atmos12020268) from the spreadsheet supplied as supplementary </span>
+<span class="sd">    data (https://www.mdpi.com/2073-4433/12/2/268/s1). Note that results will differ as the</span>
+<span class="sd">    spreadsheet contains only local Swiss time and not UTC time. There are four functions</span>
+
+<span class="sd">    &gt;&gt;&gt; import python_tamer as pt</span>
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; example = pt.SpecificDoses(pd.read_excel(r&#39;atmosphere-12-00268-s001.xlsx&#39;,</span>
+<span class="sd">    ...     header=2,index_col=0,usecols=&quot;B:K&quot;))</span>
+<span class="sd">    &gt;&gt;&gt; example = example.standard_column_names() </span>
+<span class="sd">    &gt;&gt;&gt; example = example.schedule_constant_exposure().ER_from_posture()</span>
+<span class="sd">    &gt;&gt;&gt; example = example.calculate_specific_dose()</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># This property ensures that functions return the same subclass</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">_constructor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">SpecificDoses</span>
+    
+    <span class="c1"># This adds some useful metadata (self-explanatory)</span>
+    <span class="n">_metadata</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;src_filename_format&quot;</span><span class="p">,</span><span class="s2">&quot;data_directory&quot;</span><span class="p">]</span>
+    <span class="n">src_filename_format</span> <span class="o">=</span> <span class="s1">&#39;UVery.AS_ch02.lonlat_yyyy01010000.nc&#39;</span>
+    <span class="n">data_directory</span> <span class="o">=</span> <span class="s1">&#39;C:/Data/UV/&#39;</span> <span class="c1"># TO DO: set up __init__ for these options</span>
+    <span class="c1"># It feels like this should be declared with __init__ as well but idk</span>
+
+<div class="viewcode-block" id="SpecificDoses.standard_column_names"><a class="viewcode-back" href="../../code_reference.html#python_tamer.SpecificDoses.SpecificDoses.standard_column_names">[docs]</a>    <span class="k">def</span> <span class="nf">standard_column_names</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">legend_dict_reverse</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Point&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Lieu de mesure&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;Date&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;Time_start&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Heure début&#39;</span><span class="p">,</span><span class="s1">&#39;Start_time&#39;</span><span class="p">,</span><span class="s1">&#39;Start time&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;Time_end&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Heure fin&#39;</span><span class="p">,</span><span class="s1">&#39;End_time&#39;</span><span class="p">,</span><span class="s1">&#39;End time&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;Measured_dose&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Exposition [MED]&#39;</span><span class="p">,</span><span class="s1">&#39;Exposure&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;Anatomic_zone&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Zone anatomique&#39;</span><span class="p">,</span><span class="s1">&#39;Body part&#39;</span><span class="p">,</span><span class="s1">&#39;Anatomic zone&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;Posture&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Body posture&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;Latitude&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;Longitude&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;lon&#39;</span><span class="p">,</span><span class="s1">&#39;lng&#39;</span><span class="p">]}</span>
+        <span class="n">legend_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">keys</span><span class="p">:</span> <span class="n">old_keys</span> <span class="k">for</span> <span class="n">old_keys</span><span class="p">,</span> <span class="n">old_values</span> <span class="ow">in</span> <span class="n">legend_dict_reverse</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">for</span> <span class="n">keys</span> <span class="ow">in</span> <span class="n">old_values</span><span class="p">}</span>
+        <span class="bp">self</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">legend_dict</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="SpecificDoses.schedule_constant_exposure"><a class="viewcode-back" href="../../code_reference.html#python_tamer.SpecificDoses.SpecificDoses.schedule_constant_exposure">[docs]</a>    <span class="k">def</span> <span class="nf">schedule_constant_exposure</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Generates exposure schedules given start and end times.</span>
+
+<span class="sd">        This function generates exposure schedules based on simple continuous exposure, i.e.</span>
+<span class="sd">        with a start time and an end time. The exposure schedule is a vector with length 24</span>
+<span class="sd">        with each entry representing the proportion of the corresponding hour of the day that</span>
+<span class="sd">        the subject is exposed. </span>
+
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        python_tamer.SpecificDoses</span>
+<span class="sd">            An exposure_schedule column is created and is appended to the input </span>
+<span class="sd">            `SpecificDoses` object or, if that column already exists, it is overwritten.</span>
+<span class="sd">        </span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+
+<span class="sd">        The input `SpecificDoses` object must contain the following columns:</span>
+<span class="sd">        * ``Time_start``</span>
+<span class="sd">        * ``Time_end``</span>
+
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        In this example, we illustrate the process for calculating the doses in Harris et al. 2021</span>
+<span class="sd">        (https://doi.org/10.3390/atmos12020268) from the spreadsheet supplied as supplementary </span>
+<span class="sd">        data (https://www.mdpi.com/2073-4433/12/2/268/s1). Note that results will differ as the</span>
+<span class="sd">        spreadsheet contains only local Swiss time and not UTC time. There are four functions</span>
+
+<span class="sd">        &gt;&gt;&gt; import python_tamer as pt</span>
+<span class="sd">        &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">        &gt;&gt;&gt; example = pt.SpecificDoses(pd.read_excel(r&#39;atmosphere-12-00268-s001.xlsx&#39;,</span>
+<span class="sd">        ...     header=2,index_col=0,usecols=&quot;B:K&quot;))</span>
+<span class="sd">        &gt;&gt;&gt; example = example.standard_column_names() </span>
+<span class="sd">        &gt;&gt;&gt; example = example.schedule_constant_exposure().ER_from_posture()</span>
+<span class="sd">        &gt;&gt;&gt; example = example.calculate_specific_dose()</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">schedule_constant_exposure_iter</span><span class="p">(</span><span class="n">Start_time</span><span class="p">,</span><span class="n">End_time</span><span class="p">)</span> <span class="p">:</span>
+            <span class="sd">&quot;&quot;&quot;Iterates through rows of a SpecificDoses table to generate schedules.</span>
+
+<span class="sd">            This function is designed to be applied to each row in a datatable to generate an</span>
+<span class="sd">            exposure schedule based on a start time and end time</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            Start_time : datetime.time</span>
+<span class="sd">                UTC time at which exposure period begins</span>
+<span class="sd">            End_time : datetime.time</span>
+<span class="sd">                UTC time at which exposure period end</span>
+
+<span class="sd">            Returns</span>
+<span class="sd">            -------</span>
+<span class="sd">            numpy.array</span>
+<span class="sd">                24 length vector of values between 0 and 1 indicating proportion </span>
+<span class="sd">                of time exposed for that corresponding hour of the day.</span>
+
+
+<span class="sd">            &quot;&quot;&quot;</span>
+
+            <span class="n">schedule</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span>
+            <span class="n">schedule</span><span class="p">[</span><span class="n">Start_time</span><span class="o">.</span><span class="n">hour</span><span class="p">:</span><span class="n">End_time</span><span class="o">.</span><span class="n">hour</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+            <span class="c1"># Modify start and end hours according to proportion of time exposed</span>
+            <span class="k">if</span> <span class="n">Start_time</span><span class="o">.</span><span class="n">minute</span> <span class="o">!=</span> <span class="mi">0</span> <span class="p">:</span>
+                <span class="n">schedule</span><span class="p">[</span><span class="n">Start_time</span><span class="o">.</span><span class="n">hour</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">Start_time</span><span class="o">.</span><span class="n">minute</span><span class="o">/</span><span class="mi">60</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">End_time</span><span class="o">.</span><span class="n">minute</span> <span class="o">!=</span> <span class="mi">0</span> <span class="p">:</span>
+                <span class="n">schedule</span><span class="p">[</span><span class="n">End_time</span><span class="o">.</span><span class="n">hour</span><span class="p">]</span> <span class="o">=</span> <span class="n">End_time</span><span class="o">.</span><span class="n">minute</span><span class="o">/</span><span class="mi">60</span> 
+
+            <span class="k">return</span> <span class="n">schedule</span>
+        <span class="c1"># With that function defined, we need just one line to apply it to the whole table</span>
+        <span class="bp">self</span><span class="p">[</span><span class="s2">&quot;Schedule&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">schedule_constant_exposure_iter</span><span class="p">(</span>
+            <span class="n">x</span><span class="p">[</span><span class="s2">&quot;Time_start&quot;</span><span class="p">],</span><span class="n">x</span><span class="p">[</span><span class="s2">&quot;Time_end&quot;</span><span class="p">]),</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+    
+<div class="viewcode-block" id="SpecificDoses.ER_from_posture"><a class="viewcode-back" href="../../code_reference.html#python_tamer.SpecificDoses.SpecificDoses.ER_from_posture">[docs]</a>    <span class="k">def</span> <span class="nf">ER_from_posture</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+    <span class="n">Vis_table_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">Vis_table</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;ER_from_posture calculates Exposure Ratios for a given anatomic zone, posture, and date.</span>
+
+<span class="sd">        This function calculates ER as a percentage between 0 and 100 based on information from an input table.</span>
+<span class="sd">        The input table must contain certain columns at a minimum. Those are: Date, Anatomic_zone, and Posture.</span>
+<span class="sd">        This function contains hard-coded synonyms for certain anatomical zones, e.g. &#39;Forehead&quot; maps to &quot;Face&#39;.</span>
+<span class="sd">        See Vernez et al., Journal of Exposure Science and Environmental Epidemiology (2015) 25, 113–118 </span>
+<span class="sd">        (https://doi.org/10.1038/jes.2014.6) for further details on the model used for the calculation.</span>
+
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Vis_table_path : str, optional</span>
+<span class="sd">            The full path to an alternative table for the Vis parameter. </span>
+<span class="sd">                Must be a csv file. Defaults to None.</span>
+<span class="sd">        Vis_table : str, optional</span>
+<span class="sd">            An alternative table for the Vis parameter. Defaults to None.</span>
+
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        SpecificDoses</span>
+<span class="sd">            Returns input table appended with ER column</span>
+
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+
+<span class="sd">        The SpecificDoses table used must contain columns for Date, Anatomic_zone, and Posture.</span>
+<span class="sd">        The Date column should contain DateTime entries. The Anatonic_zone column should contain one string per </span>
+<span class="sd">        row describing the exposed body part. The Posture column should contain one string per row describing </span>
+<span class="sd">        one of six accepted postures.</span>
+
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        In this example, we illustrate the process for calculating the doses in Harris et al. 2021</span>
+<span class="sd">        (https://doi.org/10.3390/atmos12020268) from the spreadsheet supplied as supplementary </span>
+<span class="sd">        data (https://www.mdpi.com/2073-4433/12/2/268/s1). Note that results will differ as the</span>
+<span class="sd">        spreadsheet contains only local Swiss time and not UTC time. There are four functions</span>
+
+<span class="sd">        &gt;&gt;&gt; import python_tamer as pt</span>
+<span class="sd">        &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">        &gt;&gt;&gt; example = pt.SpecificDoses(pd.read_excel(r&#39;atmosphere-12-00268-s001.xlsx&#39;,</span>
+<span class="sd">        ...     header=2,index_col=0,usecols=&quot;B:K&quot;))</span>
+<span class="sd">        &gt;&gt;&gt; example = example.standard_column_names() </span>
+<span class="sd">        &gt;&gt;&gt; example = example.schedule_constant_exposure().ER_from_posture()</span>
+<span class="sd">        &gt;&gt;&gt; example = example.calculate_specific_dose()</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># This chunk of code checks if the default Vis table should be used or if the user enters some alternative table.</span>
+        <span class="k">if</span> <span class="n">Vis_table</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">Vis_table_path</span> <span class="ow">is</span> <span class="kc">None</span> <span class="p">:</span>
+            <span class="n">Vis_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">(</span>
+                <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Seated&#39;</span><span class="p">,</span><span class="s1">&#39;Kneeling&#39;</span><span class="p">,</span><span class="s1">&#39;Standing erect arms down&#39;</span><span class="p">,</span><span class="s1">&#39;Standing erect arms up&#39;</span><span class="p">,</span><span class="s1">&#39;Standing bowing&#39;</span><span class="p">],</span>
+                <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Face&#39;</span><span class="p">,</span><span class="s1">&#39;Skull&#39;</span><span class="p">,</span><span class="s1">&#39;Forearm&#39;</span><span class="p">,</span><span class="s1">&#39;Upper arm&#39;</span><span class="p">,</span><span class="s1">&#39;Neck&#39;</span><span class="p">,</span><span class="s1">&#39;Top of shoulders&#39;</span><span class="p">,</span><span class="s1">&#39;Belly&#39;</span><span class="p">,</span><span class="s1">&#39;Upper back&#39;</span><span class="p">,</span><span class="s1">&#39;Hand&#39;</span><span class="p">,</span><span class="s1">&#39;Shoulder&#39;</span><span class="p">,</span><span class="s1">&#39;Upper leg&#39;</span><span class="p">,</span><span class="s1">&#39;Lower leg&#39;</span><span class="p">,</span><span class="s1">&#39;Lower back&#39;</span><span class="p">],</span>
+                <span class="n">data</span><span class="o">=</span><span class="p">[[</span><span class="mf">53.7</span><span class="p">,</span><span class="mf">28.7</span><span class="p">,</span><span class="mf">46.6</span><span class="p">,</span><span class="mf">44.9</span><span class="p">,</span><span class="mf">19.2</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mf">56.2</span><span class="p">,</span><span class="mf">66.6</span><span class="p">,</span><span class="mf">61.1</span><span class="p">,</span><span class="mf">58.4</span><span class="p">,</span><span class="mf">67.5</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mf">62.3</span><span class="p">,</span><span class="mf">56.5</span><span class="p">,</span><span class="mf">49.4</span><span class="p">,</span><span class="mf">53.1</span><span class="p">,</span><span class="mf">62.1</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mf">51.7</span><span class="p">,</span><span class="mf">60.5</span><span class="p">,</span><span class="mf">45.9</span><span class="p">,</span><span class="mf">65.3</span><span class="p">,</span><span class="mf">61.6</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mf">58.3</span><span class="p">,</span><span class="mf">84.3</span><span class="p">,</span><span class="mf">67.6</span><span class="p">,</span><span class="mf">65.2</span><span class="p">,</span><span class="mf">81.6</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mf">35.9</span><span class="p">,</span><span class="mf">50.3</span><span class="p">,</span><span class="mf">48.6</span><span class="p">,</span><span class="mf">45.7</span><span class="p">,</span><span class="mf">85.3</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mf">58.1</span><span class="p">,</span><span class="mf">45.1</span><span class="p">,</span><span class="mf">50.3</span><span class="p">,</span><span class="mf">49.6</span><span class="p">,</span><span class="mf">15.2</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mf">35.9</span><span class="p">,</span><span class="mf">50.3</span><span class="p">,</span><span class="mf">48.6</span><span class="p">,</span><span class="mf">45.7</span><span class="p">,</span><span class="mf">85.3</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mf">59.2</span><span class="p">,</span><span class="mf">58.8</span><span class="p">,</span><span class="mf">42.4</span><span class="p">,</span><span class="mi">55</span><span class="p">,</span><span class="mf">58.5</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mi">68</span><span class="p">,</span><span class="mi">62</span><span class="p">,</span><span class="mi">63</span><span class="p">,</span><span class="mf">67.1</span><span class="p">,</span><span class="mi">64</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mf">65.4</span><span class="p">,</span><span class="mf">45.4</span><span class="p">,</span><span class="mf">50.9</span><span class="p">,</span><span class="mi">51</span><span class="p">,</span><span class="mf">43.5</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mf">32.8</span><span class="p">,</span><span class="mf">63.4</span><span class="p">,</span><span class="mf">49.7</span><span class="p">,</span><span class="mf">50.3</span><span class="p">,</span><span class="mi">50</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mf">44.9</span><span class="p">,</span><span class="mf">51.6</span><span class="p">,</span><span class="mf">56.6</span><span class="p">,</span><span class="mf">53.4</span><span class="p">,</span><span class="mf">86.9</span><span class="p">]])</span>
+            <span class="c1"># The &#39;standing moving&#39; posture must be dealt with somehow...</span>
+            <span class="c1"># Vis_table[&#39;Standing moving&#39;]= (Vis_table[&#39;Standing erect arms down&#39;] + Vis_table[&#39;Standing bowing&#39;]) / 2</span>
+            <span class="c1"># TO DO: add interpeter or force users to conform?</span>
+            <span class="n">Vis_table</span><span class="p">[</span><span class="s1">&#39;Standing moving&#39;</span><span class="p">]</span><span class="o">=</span> <span class="n">Vis_table</span><span class="p">[</span><span class="s1">&#39;Standing erect arms down&#39;</span><span class="p">]</span> 
+        <span class="k">elif</span> <span class="n">Vis_table</span> <span class="ow">is</span> <span class="kc">None</span> <span class="p">:</span>
+            <span class="n">Vis_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">Vis_table_path</span><span class="p">)</span>
+
+        <span class="c1"># Below is a dictionary describing a range of synonyms for the anatomical zones defined in the Vis table.</span>
+        <span class="n">Anatomic_zone_synonyms_reverse</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;Forearm&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;wrist&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;Left extern radial&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;Right extern radial&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;Left wrist: radius head&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;Right wrist: radius head&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;Left wrist&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;Right wrist&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;Face&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Forehead&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;Upper back&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Right trapezoid&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;Left trapezoid&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;trapezius&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;Belly&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Chest&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;Shoulder&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Left deltoid&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;Right deltoid&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;Left shoulder&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;Right shoulder&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;Upper arm&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Left elbow&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;Right elbow&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;Left biceps&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;Right biceps&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;Upper leg&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Left thigh&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;Right thigh&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;Left knee&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;Right knee&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;Lower back&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Low back&#39;</span><span class="p">]</span>
+        <span class="p">}</span>
+        <span class="c1"># The dictionary is reversed so that the multiple synonyms can be mapped to the few correct terms for the Vis table.</span>
+        <span class="n">Anatomic_zone_synonyms</span> <span class="o">=</span> <span class="p">{</span><span class="n">keys</span><span class="p">:</span> <span class="n">old_keys</span> <span class="k">for</span> <span class="n">old_keys</span><span class="p">,</span> <span class="n">old_values</span> <span class="ow">in</span> <span class="n">Anatomic_zone_synonyms_reverse</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">for</span> <span class="n">keys</span> <span class="ow">in</span> <span class="n">old_values</span><span class="p">}</span>
+
+        <span class="bp">self</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">replace</span><span class="p">({</span><span class="s1">&#39;Anatomic_zone&#39;</span> <span class="p">:</span> <span class="n">Anatomic_zone_synonyms</span><span class="p">})</span>
+
+        <span class="c1"># With the correct anatomic zone names established, we can lookup the Vis values from the table</span>
+        <span class="n">Vis</span> <span class="o">=</span> <span class="n">Vis_table</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;Anatomic_zone&#39;</span><span class="p">],</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;Posture&#39;</span><span class="p">])</span>
+
+        <span class="c1"># Next we must calculate the minimal Solar Zenith Angle for the given date</span>
+        <span class="n">mSZA</span> <span class="o">=</span> <span class="n">min_solar_zenith_angle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Date</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">Latitude</span><span class="p">)</span>
+
+        <span class="c1"># With the Vis value and the SZA, we can calculate the ER according to the Vernez model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;ER&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ER_Vernez_model_equation</span><span class="p">(</span><span class="n">Vis</span><span class="p">,</span><span class="n">mSZA</span><span class="p">)</span> <span class="o">/</span> <span class="mi">100</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="SpecificDoses.calculate_specific_dose"><a class="viewcode-back" href="../../code_reference.html#python_tamer.SpecificDoses.SpecificDoses.calculate_specific_dose">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_specific_dose</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Calculates doses according to exposure schedule, ER, date, and location.</span>
+
+<span class="sd">        This function takes the SpecificDoseEstimationTable and calculates the specific </span>
+<span class="sd">        ambient and personal doses according to the exposure schedule and ER. There are</span>
+<span class="sd">        a few key steps to this function. First it reads the Date column to determine </span>
+<span class="sd">        which years of data must be loaded. It then iterates through each year, loading</span>
+<span class="sd">        only the necessary dates. It applies the exposure schedule and the ER to </span>
+<span class="sd">        calculate the ambient and personal doses.</span>
+
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        SpecificDoses</span>
+<span class="sd">            The input table is appended with a Ambient_dose and Personal_dose column.</span>
+<span class="sd">        </span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+
+<span class="sd">        The input SpecificDoses object must include Date, Schedule, ER, Latitude,</span>
+<span class="sd">        and Longitude columns.</span>
+<span class="sd">        Consult Harris et al. 2021 (https://doi.org/10.3390/atmos12020268) for more </span>
+<span class="sd">        information on how this function can be used in the context of mimicking UV</span>
+<span class="sd">        dosimetry measurements.</span>
+
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        In this example, we illustrate the process for calculating the doses in Harris et al. 2021</span>
+<span class="sd">        (https://doi.org/10.3390/atmos12020268) from the spreadsheet supplied as supplementary </span>
+<span class="sd">        data (https://www.mdpi.com/2073-4433/12/2/268/s1). Note that results will differ as the</span>
+<span class="sd">        spreadsheet contains only local Swiss time and not UTC time. There are four functions</span>
+
+<span class="sd">        &gt;&gt;&gt; import python_tamer as pt</span>
+<span class="sd">        &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">        &gt;&gt;&gt; example = pt.SpecificDoses(pd.read_excel(r&#39;atmosphere-12-00268-s001.xlsx&#39;,</span>
+<span class="sd">        ...     header=2,index_col=0,usecols=&quot;B:K&quot;))</span>
+<span class="sd">        &gt;&gt;&gt; example = example.standard_column_names() </span>
+<span class="sd">        &gt;&gt;&gt; example = example.schedule_constant_exposure().ER_from_posture()</span>
+<span class="sd">        &gt;&gt;&gt; example = example.calculate_specific_dose()</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># First step is find unique years to avoid loading unnecessary data</span>
+        <span class="n">years</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DatetimeIndex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Date</span><span class="p">)</span><span class="o">.</span><span class="n">year</span>
+        <span class="n">unique_years</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">years</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;Ambient_dose&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span> 
+        <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;Personal_dose&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+
+        <span class="k">for</span> <span class="n">year</span> <span class="ow">in</span> <span class="n">unique_years</span> <span class="p">:</span>
+            <span class="c1"># Load netCDF file</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Processing year &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">year</span><span class="p">))</span> 
+            <span class="n">dataset</span><span class="o">=</span><span class="n">nc</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_directory</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">src_filename_format</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;yyyy&#39;</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="n">year</span><span class="p">)))</span> 
+            <span class="n">dataset</span><span class="o">.</span><span class="n">set_auto_mask</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span> <span class="c1"># This is important for nans to import correctly</span>
+
+            <span class="c1"># Make temporary table for yearly subset</span>
+            <span class="n">temp_table</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">years</span> <span class="o">==</span> <span class="n">year</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+            <span class="c1"># find all unique days in year to be loaded</span>
+            <span class="n">unique_days</span><span class="p">,</span><span class="n">unique_days_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DatetimeIndex</span><span class="p">(</span><span class="n">temp_table</span><span class="o">.</span><span class="n">Date</span><span class="p">)</span><span class="o">.</span><span class="n">dayofyear</span><span class="p">,</span>
+                <span class="n">return_inverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">temp_table</span><span class="p">[</span><span class="s1">&#39;unique_days_idx&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">unique_days_idx</span>
+
+            <span class="c1">#pd.DatetimeIndex(nc.num2date(dataset.variables[&quot;time&quot;][:],dataset.variables[&quot;time&quot;].units,only_use_cftime_datetimes=False))</span>
+
+            <span class="k">if</span> <span class="n">dataset</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">24</span> <span class="p">:</span>
+                <span class="c1"># needed if just a single day</span>
+                <span class="n">time_subset</span> <span class="o">=</span> <span class="p">[</span><span class="kc">True</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">)]</span>
+            <span class="k">else</span> <span class="p">:</span>
+                <span class="c1"># Next we pull a subset from the netCDF file</span>
+                <span class="c1"># declare false array with same length of time dimension from netCDF</span>
+                <span class="n">time_subset</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">)]</span> 
+                <span class="c1"># reshape false array to have first dimension 24 (hours in day)</span>
+                <span class="n">time_subset</span> <span class="o">=</span> <span class="n">assert_data_shape_24</span><span class="p">(</span><span class="n">time_subset</span><span class="p">)</span> 
+                <span class="c1"># set the appropriate days as true</span>
+                <span class="n">time_subset</span><span class="p">[:,</span><span class="n">unique_days</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span> 
+                <span class="c1"># flatten time_subset array back to one dimension</span>
+                <span class="n">time_subset</span> <span class="o">=</span> <span class="n">time_subset</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+
+            <span class="n">data</span> <span class="o">=</span> <span class="n">assert_data_shape_24</span><span class="p">(</span><span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;UV_AS&#39;</span><span class="p">][</span><span class="n">time_subset</span><span class="p">,:,:]</span><span class="o">*</span><span class="mi">40</span><span class="p">)</span> 
+            <span class="c1"># *40 converts it to uv index</span>
+            <span class="c1"># TO DO: improve comprehension of raw data units rather than assuming</span>
+
+            <span class="c1"># convert lat lon into pixel coordinates</span>
+            <span class="c1"># TO DO: consider is necessary to load entire maps for just a few required pixels</span>
+            <span class="n">lat</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">][:]</span>
+            <span class="n">lon</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;lon&#39;</span><span class="p">][:]</span>
+            <span class="n">temp_table</span><span class="p">[</span><span class="s1">&#39;pixel_lat&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_table</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> 
+                <span class="n">find_nearest</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;Latitude&#39;</span><span class="p">]),</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">)</span>
+            <span class="n">temp_table</span><span class="p">[</span><span class="s1">&#39;pixel_lon&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_table</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> 
+                <span class="n">find_nearest</span><span class="p">(</span><span class="n">lon</span><span class="p">,</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;Longitude&#39;</span><span class="p">]),</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">)</span>
+
+            
+            <span class="c1"># calculate doses</span>
+            <span class="n">temp_table</span><span class="p">[</span><span class="s1">&#39;Ambient_dose&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_table</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> 
+                <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;unique_days_idx&#39;</span><span class="p">],</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;pixel_lat&#39;</span><span class="p">],</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;pixel_lon&#39;</span><span class="p">]]</span> <span class="o">*</span> 
+                    <span class="n">x</span><span class="p">[</span><span class="s1">&#39;Schedule&#39;</span><span class="p">]),</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">)</span>
+            <span class="n">temp_table</span><span class="p">[</span><span class="s1">&#39;Personal_dose&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_table</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> 
+                <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;unique_days_idx&#39;</span><span class="p">],</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;pixel_lat&#39;</span><span class="p">],</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;pixel_lon&#39;</span><span class="p">]]</span> <span class="o">*</span> 
+                    <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;Schedule&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;ER&#39;</span><span class="p">])),</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">)</span>
+
+            <span class="c1"># extra step necessary to ensure correct assignment</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">temp_table</span><span class="o">.</span><span class="n">index</span><span class="p">,</span><span class="s1">&#39;Ambient_dose&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_table</span><span class="p">[</span><span class="s1">&#39;Ambient_dose&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">temp_table</span><span class="o">.</span><span class="n">index</span><span class="p">,</span><span class="s1">&#39;Personal_dose&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_table</span><span class="p">[</span><span class="s1">&#39;Personal_dose&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+        <span class="c1"># TO DO: improve units options here</span>
+        <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;Ambient_dose&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;Ambient_dose&#39;</span><span class="p">]</span><span class="o">/</span><span class="mi">40</span><span class="o">*</span><span class="mi">3600</span><span class="o">/</span><span class="mi">100</span> <span class="c1"># SED</span>
+        <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;Personal_dose&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;Personal_dose&#39;</span><span class="p">]</span><span class="o">/</span><span class="mi">40</span><span class="o">*</span><span class="mi">3600</span><span class="o">/</span><span class="mi">100</span> <span class="c1"># SED</span>
+        <span class="k">return</span> <span class="bp">self</span>        </div></div>
+
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2021, Todd C. Harris
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

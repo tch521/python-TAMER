@@ -1,0 +1,760 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>python_tamer.ExposureMap &mdash; python-TAMER 0.3.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> python-TAMER
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">Introduction to python-TAMER</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../code_reference.html">Code Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">python-TAMER</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>python_tamer.ExposureMap</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for python_tamer.ExposureMap</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">datetime</span> <span class="k">as</span> <span class="nn">dt</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">regex</span> <span class="k">as</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">netCDF4</span> <span class="k">as</span> <span class="nn">nc</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">cartopy.crs</span> <span class="k">as</span> <span class="nn">ccrs</span>
+<span class="kn">import</span> <span class="nn">cartopy.feature</span> <span class="k">as</span> <span class="nn">cfeat</span>
+<span class="kn">from</span> <span class="nn">.subroutines</span> <span class="kn">import</span> <span class="o">*</span>
+
+
+<div class="viewcode-block" id="ExposureMap"><a class="viewcode-back" href="../../code_reference.html#python_tamer.ExposureMap.ExposureMap">[docs]</a><span class="k">class</span> <span class="nc">ExposureMap</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; A class for calculating maps based on user specifications</span>
+
+<span class="sd">    Each instance of this class contains information required to calculate and illustrate a map</span>
+<span class="sd">    of exposure information, be that simple averages or more advanced mathematical representations</span>
+<span class="sd">    of exposure risk. The class is designed to have three core functions run in sequence, with</span>
+<span class="sd">    room for flexibility should more advanced users desire it. First, the data is read and a pixel</span>
+<span class="sd">    histogram is calculated. This allows much more data to be stored in memory and is the basis</span>
+<span class="sd">    for performing this kind of data analysis on personal computers.</span>
+
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    </span>
+<span class="sd">    units : str</span>
+<span class="sd">        The units of the quantity to be mapped. Must be &quot;SED&quot;, &quot;J m-2&quot; or &quot;UVIh&quot; for doses or &quot;UVI&quot;,</span>
+<span class="sd">        &quot;W m-2&quot; or &quot;mW m-2&quot; for irradiances. Defaults to &quot;SED&quot;.</span>
+
+<span class="sd">    exposure_schedule : array</span>
+<span class="sd">        A vector of values describing the relative exposure of each hour of the day. 0 indicates no</span>
+<span class="sd">        exposure, 1 indicates full exposure, and a fractional value such as 0.5 would indicate </span>
+<span class="sd">        exposure for a total of 30 minutes within the hour, or a 50% partial exposure for the full</span>
+<span class="sd">        hour, or anything equivalent. Values greater than 1 are allowed. Must have a length of 24 (for </span>
+<span class="sd">        each hour of the day) although a length of 1 is also allowed, in which case that number will </span>
+<span class="sd">        be immediately replicated across a 24-length vector. When not calculating doses, hours with </span>
+<span class="sd">        any non-zero entry in this vector are included, with the irradiance values being </span>
+<span class="sd">        multiplied by the corresponding non-zero value in the exposure schedule.</span>
+
+<span class="sd">    bin_width : float</span>
+<span class="sd">        The width of each bin in the pixel histogram. Value assumed to be in the same units as </span>
+<span class="sd">        defined by the units parameter. *Making bin_width excessively small can lead to high</span>
+<span class="sd">        memory usage,* consider the underlying accuracy of the source data and be sure not to</span>
+<span class="sd">        substantially exceed its precision with this parameter.</span>
+
+<span class="sd">    statistic : str</span>
+<span class="sd">        The statistical descriptor to be calculated from the pixel histograms to be later </span>
+<span class="sd">        represented on the rendered map. Must contain at least one of these keywords:</span>
+<span class="sd">        &quot;mean&quot;, &quot;median&quot; or &quot;med&quot;, &quot;sd&quot; or &quot;std&quot; or &quot;stdev&quot;, &quot;max&quot; or &quot;maximum&quot;, &quot;min&quot; or </span>
+<span class="sd">        &quot;minimum&quot;. </span>
+
+<span class="sd">        *Planned:* the string can be a formula using any of the keywords above,</span>
+<span class="sd">        as well at &quot;prct&quot; or &quot;percentile&quot; preceeded by a number between 0 and 100, and </span>
+<span class="sd">        basic mathematical operators (+, -, *, /, **) and numeric factors.</span>
+
+<span class="sd">    date_selection : list of dates</span>
+<span class="sd">        The dates for which the irradiances are retrieved or the daily doses are calculated. </span>
+<span class="sd">        Defaults to None whereby the program selects all data within the data_directory that</span>
+<span class="sd">        matches the src_filename_format.</span>
+
+<span class="sd">    src_filename_format : str</span>
+<span class="sd">        Describes the filename of the netCDF files containing the data with &#39;yyyy&#39; in place </span>
+<span class="sd">        of the year.</span>
+<span class="sd">    </span>
+<span class="sd">    data_directory : str</span>
+<span class="sd">        The directory where the data is stored. Must end with a slash.</span>
+
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    The code below shows a typical use case for the ExposureMap class. The long-term average daily doses</span>
+<span class="sd">    (i.e. the chronic doses) for typical school children are calculated across Switzerland asssuming certain</span>
+<span class="sd">    hours of exposure for journeying to and from school and having breaks for morning tea and lunch time.</span>
+
+<span class="sd">    &gt;&gt;&gt; import python_tamer as pt</span>
+<span class="sd">    &gt;&gt;&gt; import pandas </span>
+<span class="sd">    &gt;&gt;&gt; ER = ER_Vernez_2015(&quot;Forehead&quot;,&quot;Standing&quot;) # Long-term average ER for foreheads in standing posture</span>
+<span class="sd">    &gt;&gt;&gt; map = pt.ExposureMap(</span>
+<span class="sd">    ...     units = &quot;J m-2&quot;,</span>
+<span class="sd">    ...     exposure_schedule = [0  ,0  ,0  ,0  ,0  ,0  ,</span>
+<span class="sd">    ...                          0  ,0  ,0.5,0  ,0.5,0  ,</span>
+<span class="sd">    ...                          0.5,0.5,0  ,0  ,0.5,0  ,</span>
+<span class="sd">    ...                          0  ,0  ,0  ,0  ,0  ,0  ]*ER,</span>
+<span class="sd">    ...     bin_width = 25,</span>
+<span class="sd">    ...     date_selection = pandas.date_range(start=&quot;2005-01-01&quot;,end=&quot;2014-12-31&quot;),</span>
+<span class="sd">    ...     statistic = &quot;mean&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; map = map.collect_data().calculate_map()</span>
+<span class="sd">    &gt;&gt;&gt; map.plot_map(map_options={&quot;title&quot;: &quot;Chronic daily UV dose for typical school children, 2005-2014&quot;,</span>
+<span class="sd">    ...                           &quot;save&quot;: False})</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">units</span><span class="o">=</span><span class="s2">&quot;SED&quot;</span><span class="p">,</span>
+    <span class="n">exposure_schedule</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">statistic</span><span class="o">=</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span>
+    <span class="n">bin_width</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">date_selection</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">map_options</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">src_filename_format</span><span class="o">=</span><span class="s1">&#39;UVery.AS_ch02.lonlat_yyyy01010000.nc&#39;</span><span class="p">,</span>
+    <span class="n">data_directory</span><span class="o">=</span><span class="s1">&#39;C:/Data/UV/&#39;</span><span class="p">):</span>
+        <span class="c1"># assigning options to fields in class with a few basic checks</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="n">units</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">exposure_schedule</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">exposure_schedule</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exposure_schedule</span><span class="p">))</span> <span class="o">==</span> <span class="mi">1</span> <span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">exposure_schedule</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exposure_schedule</span><span class="p">,</span><span class="mi">24</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">statistic</span> <span class="o">=</span> <span class="n">statistic</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">map_options</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;title&quot;</span> <span class="p">:</span> <span class="s2">&quot;Test map&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;save&quot;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;img_size&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span><span class="mi">15</span><span class="p">],</span>
+            <span class="s2">&quot;img_dpi&quot;</span> <span class="p">:</span> <span class="mi">300</span><span class="p">,</span>
+            <span class="s2">&quot;img_dir&quot;</span> <span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;img_filename&quot;</span> <span class="p">:</span> <span class="s2">&quot;timestamp&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;img_filetype&quot;</span> <span class="p">:</span> <span class="s2">&quot;png&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;brdr_nation&quot;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;brdr_nation_rgba&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+            <span class="s2">&quot;brdr_state&quot;</span> <span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;brdr_state_rgba&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.67</span><span class="p">],</span>
+            <span class="s2">&quot;cmap&quot;</span> <span class="p">:</span> <span class="s2">&quot;jet&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;cmap_limits&quot;</span> <span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">&quot;cbar&quot;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;cbar_limits&quot;</span> <span class="p">:</span> <span class="kc">None</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="n">map_options</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">map_options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_options</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">map_options</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">src_filename_format</span> <span class="o">=</span> <span class="n">src_filename_format</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_directory</span> <span class="o">=</span> <span class="n">data_directory</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">date_selection</span> <span class="o">=</span> <span class="n">date_selection</span>
+
+        <span class="k">if</span> <span class="n">bin_width</span> <span class="ow">is</span> <span class="kc">None</span> <span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bin_width</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;SED&quot;</span> <span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span> 
+                <span class="s2">&quot;J m-2&quot;</span> <span class="p">:</span> <span class="mi">10</span><span class="p">,</span> 
+                <span class="s2">&quot;UVI&quot;</span> <span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span> 
+                <span class="s2">&quot;W m-2&quot;</span> <span class="p">:</span> <span class="mf">0.0025</span><span class="p">,</span> 
+                <span class="s2">&quot;mW m-2&quot;</span> <span class="p">:</span> <span class="mf">2.5</span>
+            <span class="p">}[</span><span class="bp">self</span><span class="o">.</span><span class="n">units</span><span class="p">]</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bin_width</span> <span class="o">=</span> <span class="n">bin_width</span>
+        
+    
+<div class="viewcode-block" id="ExposureMap.collect_data"><a class="viewcode-back" href="../../code_reference.html#python_tamer.ExposureMap.ExposureMap.collect_data">[docs]</a>    <span class="k">def</span> <span class="nf">collect_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_directory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">src_filename_format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">date_selection</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">units</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">exposure_schedule</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">bin_width</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Loads and manipulates data into histograms for each pixel of the underlying data</span>
+
+<span class="sd">        In order to handle large amounts of data without exceeding memory limitations, files are</span>
+<span class="sd">        loaded one at a time and the time dimension is removed, either by calculating daily doses</span>
+<span class="sd">        or by simply taking the data as is. The resulting information is then stored not as a </span>
+<span class="sd">        list of specific values but rather binned into a histogram for each pixel. This process</span>
+<span class="sd">        is repeated for each file required by the user input, building up the pixel histograms</span>
+<span class="sd">        with more information that does not require additional memory.</span>
+
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        src_filename_format : str</span>
+<span class="sd">            Describes the filename of the netCDF files containing the data with &#39;yyyy&#39; in place </span>
+<span class="sd">            of the year.</span>
+<span class="sd">        </span>
+<span class="sd">        data_directory : str</span>
+<span class="sd">            The directory where the data is stored. Must end with a slash.</span>
+
+<span class="sd">        date_selection : list of dates</span>
+<span class="sd">            The dates for which the irradiances are retrieved or the daily doses are calculated. </span>
+<span class="sd">            Defaults to None whereby the program selects all data within the data_directory that</span>
+<span class="sd">            matches the src_filename_format.</span>
+
+<span class="sd">        units : str</span>
+<span class="sd">            Name of units of desired output. This also indicates whether daily doses must be </span>
+<span class="sd">            calculated or not. Units of &quot;SED&quot;, &quot;J m-2&quot;, or &quot;UVIh&quot; will produce daily doses,</span>
+<span class="sd">            units of &quot;UVI&quot;, &quot;W m-2&quot; or &quot;mW m-2&quot; will not. </span>
+
+<span class="sd">        exposure_schedule : array</span>
+<span class="sd">            A vector of values describing the relative exposure of each hour of the day. 0 indicates no</span>
+<span class="sd">            exposure, 1 indicates full exposure, and a fractional value such as 0.5 would indicate </span>
+<span class="sd">            exposure for a total of 30 minutes within the hour, or a 50% partial exposure for the full</span>
+<span class="sd">            hour, or anything equivalent. Values greater than 1 are allowed. Must have a length of 24 (for </span>
+<span class="sd">            each hour of the day) although a length of 1 is also allowed, in which case that number will </span>
+<span class="sd">            be immediately replicated across a 24-length vector. When not calculating doses, hours with </span>
+<span class="sd">            any non-zero entry in this vector are included, with the irradiance values being </span>
+<span class="sd">            multiplied by the corresponding non-zero value in the exposure schedule.</span>
+
+<span class="sd">        bin_width : float</span>
+<span class="sd">            The width of each bin in the pixel histogram. Value assumed to be in the same units as </span>
+<span class="sd">            defined by the units parameter. *Making bin_width excessively small can lead to high</span>
+<span class="sd">            memory usage,* consider the underlying accuracy of the source data and be sure not to</span>
+<span class="sd">            substantially exceed its precision with this parameter.</span>
+
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        python_tamer.ExposureMap</span>
+<span class="sd">            The input ExposureMap object is appended with new fields, `pix_hist` contains</span>
+<span class="sd">            the counts for the histogram, and `bin_edges`, `bin_centers`, and `num_bins`</span>
+<span class="sd">            all serve as metadata for the pixel histograms. `lat` and `lon` are also </span>
+<span class="sd">            added from the multi-file dataset to inform the pixel locations for map making</span>
+<span class="sd">            further down the typical pipeline.</span>
+<span class="sd">        </span>
+<span class="sd">        </span>
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        The example code below shows how an ExposureMap class can be declared with the default parameters that</span>
+<span class="sd">        can then be later redefined by collect_data() and the other class functions.</span>
+
+<span class="sd">        &gt;&gt;&gt; import python_tamer as pt</span>
+<span class="sd">        &gt;&gt;&gt; import pandas </span>
+<span class="sd">        &gt;&gt;&gt; ER = ER_Vernez_2015(&quot;Forehead&quot;,&quot;Standing&quot;) # Long-term average ER for foreheads in standing posture</span>
+<span class="sd">        &gt;&gt;&gt; map = pt.ExposureMap()</span>
+<span class="sd">        &gt;&gt;&gt; map = map.collect_data(</span>
+<span class="sd">        ...     units = &quot;J m-2&quot;,</span>
+<span class="sd">        ...     exposure_schedule = [0  ,0  ,0  ,0  ,0  ,0  ,</span>
+<span class="sd">        ...                          0  ,0  ,0.5,0  ,0.5,0  ,</span>
+<span class="sd">        ...                          0.5,0.5,0  ,0  ,0.5,0  ,</span>
+<span class="sd">        ...                          0  ,0  ,0  ,0  ,0  ,0  ]*ER,</span>
+<span class="sd">        ...     bin_width = 25,</span>
+<span class="sd">        ...     date_selection = pandas.date_range(start=&quot;2005-01-01&quot;,end=&quot;2014-12-31&quot;)</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt; map = map.calculate_map(statistic = &quot;mean&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; map.plot_map(map_options={&quot;title&quot;: &quot;Chronic daily UV dose for typical school children, 2005-2014&quot;,</span>
+<span class="sd">        ...                           &quot;save&quot;: False})</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># TO DO: There must be a better way to do this</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">data_directory</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_directory</span> <span class="o">=</span> <span class="n">data_directory</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">src_filename_format</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">src_filename_format</span> <span class="o">=</span> <span class="n">src_filename_format</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">date_selection</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">date_selection</span> <span class="o">=</span> <span class="n">date_selection</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">units</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="n">units</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">exposure_schedule</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">exposure_schedule</span> <span class="o">=</span> <span class="n">exposure_schedule</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">bin_width</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bin_width</span> <span class="o">=</span> <span class="n">bin_width</span>
+
+        <span class="c1"># first we read the data_directory to check the total number of unique years available</span>
+        <span class="n">data_dir_contents</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_directory</span><span class="p">)</span>
+        <span class="c1"># TO DO: improve jankiness of this format-matching search for filenames</span>
+        <span class="n">char_year</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">src_filename_format</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;yyyy&#39;</span><span class="p">)</span>
+        <span class="n">dataset_years</span> <span class="o">=</span> <span class="p">[</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data_dir_contents</span> <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">src_filename_format</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;yyyy&quot;</span><span class="p">,</span><span class="s2">&quot;[0-9]</span><span class="si">{4}</span><span class="s2">&quot;</span><span class="p">),</span><span class="n">x</span><span class="p">)]</span>
+        <span class="n">dataset_years</span> <span class="o">=</span> <span class="p">[</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">char_year</span><span class="p">:</span><span class="n">char_year</span><span class="o">+</span><span class="mi">4</span><span class="p">])</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">dataset_years</span> <span class="p">]</span>
+
+        <span class="c1"># Now we can handle default options like &quot;all&quot;</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">date_selection</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">date_selection</span> <span class="o">==</span> <span class="s2">&quot;all&quot;</span> <span class="p">:</span>
+            <span class="n">date_selection</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">dataset_years</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">+</span><span class="s2">&quot;-01-01&quot;</span><span class="p">,</span>
+                <span class="n">end</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">dataset_years</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">+</span><span class="s2">&quot;-12-31&quot;</span><span class="p">)</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="n">date_selection</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">date_selection</span> <span class="c1"># TO DO: much more interpretation options here</span>
+
+        <span class="c1">#now we find unique years </span>
+        <span class="n">list_of_years</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">date_selection</span><span class="o">.</span><span class="n">year</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">list_of_years</span><span class="p">))</span> <span class="p">:</span>
+            <span class="n">year</span> <span class="o">=</span> <span class="n">list_of_years</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Processing year &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">year</span><span class="p">))</span> <span class="c1">#should use logging, don&#39;t yet know how</span>
+            <span class="n">dataset</span><span class="o">=</span><span class="n">nc</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_directory</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">src_filename_format</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;yyyy&#39;</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="n">year</span><span class="p">)))</span> 
+            <span class="n">dataset</span><span class="o">.</span><span class="n">set_auto_mask</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span> <span class="c1">#to get normal arrays (faster than default masked arrays)</span>
+
+            <span class="k">if</span> <span class="n">dataset</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">24</span> <span class="p">:</span>
+                <span class="c1"># needed if just a single day</span>
+                <span class="n">time_subset</span> <span class="o">=</span> <span class="p">[</span><span class="kc">True</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">)]</span>
+            <span class="k">else</span> <span class="p">:</span>
+                <span class="c1"># Next we pull a subset from the netCDF file</span>
+                <span class="c1"># declare false array with same length of time dimension from netCDF</span>
+                <span class="n">time_subset</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">)]</span> 
+                <span class="c1"># reshape false array to have first dimension 24 (hours in day)</span>
+                <span class="n">time_subset</span> <span class="o">=</span> <span class="n">assert_data_shape_24</span><span class="p">(</span><span class="n">time_subset</span><span class="p">)</span> 
+                <span class="c1"># set the appropriate days as true</span>
+                <span class="n">time_subset</span><span class="p">[:,</span><span class="n">date_selection</span><span class="p">[</span><span class="n">date_selection</span><span class="o">.</span><span class="n">year</span> <span class="o">==</span> <span class="n">year</span><span class="p">]</span><span class="o">.</span><span class="n">dayofyear</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span> 
+                <span class="c1"># flatten time_subset array back to one dimension</span>
+                <span class="n">time_subset</span> <span class="o">=</span> <span class="n">time_subset</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+
+            <span class="c1"># load subset of data</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;   Slicing netcdf data with time subset&quot;</span><span class="p">)</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;UV_AS&#39;</span><span class="p">][</span><span class="n">time_subset</span><span class="p">,:,:]</span><span class="o">*</span><span class="mi">40</span> <span class="c1">#work in UVI by default because it&#39;s easy to read</span>
+            <span class="c1"># TO DO: check units of dataset files, CF conventions for UVI or W/m2</span>
+
+            <span class="c1"># now to calculate doses if requested</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">units</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;SED&quot;</span><span class="p">,</span><span class="s2">&quot;J m-2&quot;</span><span class="p">,</span><span class="s2">&quot;UVIh&quot;</span><span class="p">]</span> <span class="p">:</span>
+                <span class="c1"># if calculating doses</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;   Calculating doses&#39;</span><span class="p">)</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">assert_data_shape_24</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exposure_schedule</span><span class="p">,[</span><span class="mi">24</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">data</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exposure_schedule</span> <span class="o">!=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">24</span><span class="p">))</span><span class="o">.</span><span class="n">any</span><span class="p">()</span> <span class="p">:</span>
+                <span class="c1"># assume elsewise calculating intensity (i.e. UV-index) then limit data selection according</span>
+                <span class="c1"># to schedule (remembering that default schedule is just ones)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;   Slicing data with exposure schedule&#39;</span><span class="p">)</span>
+                <span class="c1"># reshape so first dimension is 24 hours</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">assert_data_shape_24</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                <span class="c1"># select only those hours with nonzero entry in exposure schedule</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">exposure_schedule</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">,:,:,:]</span>
+                <span class="c1"># select nonzero values from exposure schedule</span>
+                <span class="n">exposure_schedule_nonzero</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exposure_schedule</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">exposure_schedule</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]</span>
+
+                <span class="c1"># if any nonzero entries aren&#39;t 1, multiply data accordingly</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">exposure_schedule_nonzero</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">()</span> <span class="p">:</span>
+                    <span class="n">data</span> <span class="o">*=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">exposure_schedule_nonzero</span><span class="p">,[</span><span class="nb">len</span><span class="p">(</span><span class="n">exposure_schedule_nonzero</span><span class="p">),</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+
+                <span class="c1"># recombine first two dimensions (hour and day) back into time ready for histogram</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">assert_data_shape_24</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> 
+
+            <span class="c1"># now multiply data by conversion factor according to desired untis</span>
+            <span class="c1"># TO DO: Should expand upon this in reference files</span>
+            <span class="n">data</span> <span class="o">*=</span> <span class="p">{</span><span class="s2">&quot;SED&quot;</span><span class="p">:</span><span class="mf">0.9</span><span class="p">,</span> <span class="s2">&quot;J m-2&quot;</span><span class="p">:</span><span class="mi">90</span><span class="p">,</span> <span class="s2">&quot;UVIh&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;UVI&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;W m-2&quot;</span><span class="p">:</span><span class="mf">0.025</span><span class="p">,</span> <span class="s2">&quot;mW m-2&quot;</span><span class="p">:</span><span class="mi">25</span><span class="p">}[</span><span class="bp">self</span><span class="o">.</span><span class="n">units</span><span class="p">]</span>
+
+            <span class="c1"># if this is the first iteration, declare a hist</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">:</span>
+                <span class="c1"># seems like useful metadata to know bin n and edges</span>
+                <span class="c1"># TO DO: reconsider where this belongs in the code (__init__?)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">num_bins</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">bin_width</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bin_edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_bins</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">bin_width</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bin_centers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bin_edges</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bin_edges</span><span class="p">)</span>
+
+                <span class="c1"># TO DO: think about possible cases where dimensions could differ</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">pix_hist</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">num_bins</span><span class="p">,</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">data</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">],</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">data</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int16</span><span class="p">)</span>
+
+                <span class="c1"># TO DO: this should also be done by some initial dataset analysis</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">lat</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">][:]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">lon</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;lon&#39;</span><span class="p">][:]</span>
+
+            <span class="c1"># TO DO: add check here in case max exceeds current bin edges</span>
+            <span class="c1"># now put data into hist using apply_along_axis to perform histogram for each pixel</span>
+            <span class="k">def</span> <span class="nf">hist_raw</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">hist</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">bins</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bin_edges</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">hist</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;   Calculating and adding to pix hist&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pix_hist</span><span class="p">[:,:,:]</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">apply_along_axis</span><span class="p">(</span><span class="n">hist_raw</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="ExposureMap.calculate_map"><a class="viewcode-back" href="../../code_reference.html#python_tamer.ExposureMap.ExposureMap.calculate_map">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pix_hist</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">statistic</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">bin_centers</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Calculates statistical descriptor values for pixel histograms to produce a map</span>
+
+<span class="sd">        This function interprets the statistic string, which can either be a simple command</span>
+<span class="sd">        such as &quot;mean&quot; or a more advanced formula of keywords. The corresponding function is </span>
+<span class="sd">        applied to each pixel of the pix_hist object within the ExposureMap class, essentially</span>
+<span class="sd">        removing the first dimension and resulting in straightforward map to be plotted.</span>
+
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        pix_hist : array</span>
+<span class="sd">            A 3D array with the first dimension containing vectors of counts for histograms</span>
+<span class="sd">            and the next two dimensions serving as pixel coordinates. See </span>
+<span class="sd">            `ExposureMap.collect_data()` for more information.</span>
+
+<span class="sd">        statistic : str</span>
+<span class="sd">            The statistical descriptor to be calculated from the pixel histograms to be later </span>
+<span class="sd">            represented on the rendered map. Must contain at least one of these keywords:</span>
+<span class="sd">            &quot;mean&quot;, &quot;median&quot; or &quot;med&quot;, &quot;sd&quot; or &quot;std&quot; or &quot;stdev&quot;, &quot;max&quot; or &quot;maximum&quot;, &quot;min&quot; or </span>
+<span class="sd">            &quot;minimum&quot;. </span>
+
+<span class="sd">            *Planned:* the string can be a formula using any of the keywords above,</span>
+<span class="sd">            as well at &quot;prct&quot; or &quot;percentile&quot; preceeded by a number between 0 and 100, and </span>
+<span class="sd">            basic mathematical operators (+, -, *, /, **) and numeric factors.</span>
+<span class="sd">            </span>
+<span class="sd">        bin_centers : array</span>
+<span class="sd">            The central numeric values corresponding to the bins in pix_hist. The </span>
+<span class="sd">            `ExposureMap.collect_data` function typically calculates these values from the</span>
+<span class="sd">            given `bin_width` input.</span>
+
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        python_tamer.ExposureMap</span>
+<span class="sd">            The ExposureMap class object is appended with a map field containing a 2D array</span>
+
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        In the example below, the user imports some pre-calculated pixel histograms, thereby</span>
+<span class="sd">        completing the ExposureMap workflow without using the `ExposureMap.ExposureMap.collect_data()`</span>
+<span class="sd">        function. This can be useful if the data collection is timely and the user wants to</span>
+<span class="sd">        produce multiple different maps. </span>
+
+<span class="sd">        &gt;&gt;&gt; import python_tamer as pt</span>
+<span class="sd">        &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">        &gt;&gt;&gt; from custom_user_data import pix_hist, bin_centers, map_options </span>
+<span class="sd">        &gt;&gt;&gt; map = pt.ExposureMap(map_options = map_options)</span>
+<span class="sd">        &gt;&gt;&gt; map = map.calculate_map(</span>
+<span class="sd">        ...     statistic = &quot;median&quot;, </span>
+<span class="sd">        ...     pix_hist = data, </span>
+<span class="sd">        ...     bin_centers = bin_centers</span>
+<span class="sd">        ... ).plot_map(save = False)</span>
+<span class="sd">        &gt;&gt;&gt; map.calculate_map(statistic = &quot;max&quot;).plot_map(map_options={&quot;save&quot; = False})</span>
+<span class="sd">        &gt;&gt;&gt; map.calculate_map(statistic = &quot;std&quot;).plot_map(map_options={&quot;save&quot; = False})</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">pix_hist</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pix_hist</span> <span class="o">=</span> <span class="n">pix_hist</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">statistic</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">statistic</span> <span class="o">=</span> <span class="n">statistic</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">bin_centers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bin_centers</span> <span class="o">=</span> <span class="n">bin_centers</span>
+
+        <span class="c1"># Begin by defining the easy options that only require two inputs</span>
+        <span class="n">basic_descriptor_functions</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;mean&quot;</span><span class="p">:</span> <span class="n">hist_mean</span><span class="p">,</span>
+            <span class="s2">&quot;median&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">:</span> <span class="n">hist_percentile</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="mf">0.5</span><span class="p">),</span>
+            <span class="s2">&quot;med&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">:</span> <span class="n">hist_percentile</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="mf">0.5</span><span class="p">),</span>
+            <span class="s2">&quot;sd&quot;</span><span class="p">:</span> <span class="n">hist_stdev</span><span class="p">,</span>
+            <span class="s2">&quot;std&quot;</span><span class="p">:</span> <span class="n">hist_stdev</span><span class="p">,</span>
+            <span class="s2">&quot;stdev&quot;</span><span class="p">:</span> <span class="n">hist_stdev</span><span class="p">,</span>
+            <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="n">hist_max</span><span class="p">,</span>
+            <span class="s2">&quot;maximum&quot;</span><span class="p">:</span> <span class="n">hist_max</span><span class="p">,</span>
+            <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="n">hist_min</span><span class="p">,</span>
+            <span class="s2">&quot;minimum&quot;</span><span class="p">:</span><span class="n">hist_min</span>
+        <span class="p">}</span>
+        <span class="c1"># we can check if the chosen statistic is basic or advanced</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">statistic</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">basic_descriptor_functions</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">:</span>
+            <span class="c1"># in this case, we can simply select the basic function from the dict...</span>
+            <span class="n">descriptor_function</span> <span class="o">=</span> <span class="n">basic_descriptor_functions</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">statistic</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span>
+            <span class="c1"># ...and execute it across the map</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">map</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">apply_along_axis</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">descriptor_function</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">bin_centers</span><span class="p">),</span><span class="mi">0</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">pix_hist</span><span class="p">)</span>
+
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="c1"># TO DO: interpret self.statistic to build advanced functions (y i k e s)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;WARNING: ExposureMap.statistic not recognised.&quot;</span><span class="p">)</span>
+        
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="ExposureMap.plot_map"><a class="viewcode-back" href="../../code_reference.html#python_tamer.ExposureMap.ExposureMap.plot_map">[docs]</a>    <span class="k">def</span> <span class="nf">plot_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">map_options</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Renders and optionally saves a map of the ``map`` field in an ExposureMap object</span>
+
+<span class="sd">        This function caps off the typical workflow for the ExposureMap class by rendering the contents</span>
+<span class="sd">        of the map field. Many aesthetic factors are accounted for, contained within the</span>
+<span class="sd">        `ExposureMap.map_options` dictionary.</span>
+
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        map_options : dict, optional</span>
+<span class="sd">            A collection of many typical options such as image and font sizes, colormaps, etc.</span>
+<span class="sd">            The full range of options is listed below with their default values.</span>
+
+<span class="sd">            &quot;title&quot; : &quot;Test map&quot;, </span>
+<span class="sd">            The title to be rendered above the map. Can be left blank for no title. Can be </span>
+<span class="sd">            used to inform img_filename</span>
+
+<span class="sd">            &quot;save&quot; : True, </span>
+<span class="sd">            Boolean to declare whether the map should be saved as an image file or not.</span>
+<span class="sd">            </span>
+<span class="sd">            &quot;img_size&quot; : [20,15], </span>
+<span class="sd">            The size [width,height] of the image in cm.</span>
+
+<span class="sd">            &quot;img_dpi&quot; : 300, </span>
+<span class="sd">            The dots per inch of the saved image.</span>
+
+<span class="sd">            &quot;img_dir&quot; : &quot;&quot;, </span>
+<span class="sd">            The directory for the image to be saved in, leaving it blank should result</span>
+<span class="sd">            in images being saved in the working directory.</span>
+
+<span class="sd">            &quot;img_filename&quot; : &quot;timestamp&quot;, </span>
+<span class="sd">            The image filename as a string. The default value of &quot;timestamp&quot; is a keyword</span>
+<span class="sd">            indicating that the function should generate a filename based on the time at</span>
+<span class="sd">            the moment of the calculation, specified with the format %Y%m%d_%H%M%S_%f </span>
+<span class="sd">            which includes millisecond precision.</span>
+
+<span class="sd">            &quot;img_filetype&quot; : &quot;png&quot;, </span>
+<span class="sd">            The image filetype, must be acceptable to `matplotlib.pyplot.savefig()`.</span>
+
+<span class="sd">            &quot;brdr_nation&quot; : True, </span>
+<span class="sd">            Boolean for drawing national borders on the map.</span>
+
+<span class="sd">            &quot;brdr_nation_rgba&quot; : [0,0,0,0], </span>
+<span class="sd">            The red, green, blue, and alpha values for the national borders.</span>
+
+<span class="sd">            &quot;brdr_state&quot; : False, </span>
+<span class="sd">            Boolean for drawing state borders as defined by Natural Earth dataset.</span>
+
+<span class="sd">            &quot;brdr_state_rgba&quot; : [0,0,0,0.67], </span>
+<span class="sd">            The red, green, blue, and alpha values for the national borders.</span>
+
+<span class="sd">            &quot;cmap&quot; : &quot;jet&quot;, </span>
+<span class="sd">            The name of the colourmap to be used when rendering the map.</span>
+
+<span class="sd">            &quot;cmap_limits&quot; : None, </span>
+<span class="sd">            The numeric limits of the colourmap. Defaults to None, where the lower</span>
+<span class="sd">            and upper limits of the plotted data are used as the colourmap limits.</span>
+
+<span class="sd">            &quot;cbar&quot; : True, </span>
+<span class="sd">            Boolean for rendering a colourbar.</span>
+
+<span class="sd">            &quot;cbar_limits&quot; : None, </span>
+<span class="sd">            The numeric limits of the colourbar. Defaults to None, where the lower</span>
+<span class="sd">            and upper limits of the plotted data are used as the colourbar limits.</span>
+<span class="sd">        </span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        python_tamer.ExposureMap</span>
+<span class="sd">            Returns the ExposureMap object that was input with an updated map_options</span>
+<span class="sd">            field (if the user has specificied any changes to the default map_options).</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">map_options</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">map_options</span> <span class="o">=</span> <span class="n">map_options</span>
+
+        <span class="c1"># TO DO: Add custom sizing and resolution specifications</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">map_options</span><span class="p">[</span><span class="s1">&#39;img_size&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mf">2.54</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">map_options</span><span class="p">[</span><span class="s1">&#39;img_size&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mf">2.54</span><span class="p">))</span>
+
+        <span class="c1"># TO DO: Accept custom projections</span>
+        <span class="n">proj</span> <span class="o">=</span> <span class="n">ccrs</span><span class="o">.</span><span class="n">Mercator</span><span class="p">()</span>
+
+        <span class="c1"># TO DO: Add support for multiple plots per figure (too complex? consider use cases)</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">projection</span> <span class="o">=</span> <span class="n">proj</span><span class="p">)</span>
+
+        <span class="c1"># TO DO: Increase flexibility of borders consideration</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_options</span><span class="p">[</span><span class="s1">&#39;brdr_nation&#39;</span><span class="p">]</span> <span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">cfeat</span><span class="o">.</span><span class="n">BORDERS</span><span class="p">)</span>
+
+        <span class="c1"># TO DO: Consider first-last versus min-max - how can we avoid accidentally flipping images</span>
+        <span class="n">extents</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">lon</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">lon</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">lat</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">lat</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_extent</span><span class="p">(</span><span class="n">extents</span><span class="p">)</span>
+
+        <span class="c1"># Confusingly, this code correctly translate the lat/lon limits into the projected coordinates</span>
+        <span class="n">extents_proj</span> <span class="o">=</span> <span class="n">proj</span><span class="o">.</span><span class="n">transform_points</span><span class="p">(</span><span class="n">ccrs</span><span class="o">.</span><span class="n">Geodetic</span><span class="p">(),</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">extents</span><span class="p">[:</span><span class="mi">2</span><span class="p">]),</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">extents</span><span class="p">[</span><span class="mi">2</span><span class="p">:]))</span>
+        <span class="n">extents_proj</span> <span class="o">=</span> <span class="n">extents_proj</span><span class="p">[:,:</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+
+        <span class="c1"># TO DO: Custom colormaps, interpolation, cropping</span>
+        <span class="n">im</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">,</span><span class="n">extent</span><span class="o">=</span><span class="n">extents_proj</span><span class="p">,</span><span class="n">transform</span><span class="o">=</span><span class="n">proj</span><span class="p">,</span><span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span>
+            <span class="n">cmap</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">map_options</span><span class="p">[</span><span class="s1">&#39;cmap&#39;</span><span class="p">],</span><span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;bicubic&#39;</span><span class="p">)</span>
+
+        <span class="c1"># TO DO: Add support for horizontal</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_options</span><span class="p">[</span><span class="s1">&#39;cbar&#39;</span><span class="p">]</span> <span class="p">:</span>
+            <span class="n">cb</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;horizontal&#39;</span><span class="p">,</span><span class="n">pad</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span><span class="n">fraction</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+            <span class="n">cb</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">units</span><span class="p">)</span>
+
+        <span class="c1"># TO DO: Add plot title, small textbox description, copyright from dataset, ticks and gridlines</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_options</span><span class="p">[</span><span class="s1">&#39;save&#39;</span><span class="p">]</span> <span class="p">:</span>
+            <span class="c1"># Generate timestamp filename if relying on default</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_options</span><span class="p">[</span><span class="s1">&#39;img_filename&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;timestamp&quot;</span> <span class="p">:</span>
+                <span class="n">img_filename</span><span class="o">=</span><span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">_%H%M%S_</span><span class="si">%f</span><span class="s1">&#39;</span><span class="p">)</span>
+
+            <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">map_options</span><span class="p">[</span><span class="s1">&#39;img_dir&#39;</span><span class="p">]</span><span class="o">+</span><span class="n">img_filename</span><span class="o">+</span><span class="s2">&quot;.&quot;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">map_options</span><span class="p">[</span><span class="s1">&#39;img_filetype&#39;</span><span class="p">],</span>
+                <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">,</span><span class="n">dpi</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">map_options</span><span class="p">[</span><span class="s1">&#39;img_dpi&#39;</span><span class="p">])</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2021, Todd C. Harris
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
