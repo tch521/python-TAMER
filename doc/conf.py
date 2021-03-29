@@ -35,7 +35,8 @@ release = python_tamer.__version__
 extensions = ['sphinx.ext.autodoc', 
     'sphinx.ext.viewcode', 
     'sphinx.ext.napoleon',
-    'sphinx_rtd_theme']
+    'sphinx_rtd_theme',
+    'sphinx.ext.autosectionlabel']
 
 
 # Add any paths that contain templates here, relative to this directory.

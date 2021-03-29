@@ -2,16 +2,23 @@
 Introduction to python-TAMER
 ============================
 
-Advanced environmental exposure calculations made easy! 
-Official documentation hosted at https://tch521.github.io/python-TAMER
+| Official documentation hosted at https://tch521.github.io/python-TAMER 
 
-The Toolkit for Analysis and Maps of Exposure Risk (TAMER) is designed to calculate estimates of individual and
-population exposure across a geographic area. Currently, the project is focused on erythemal UV radiation 
-exposure, but the tools provided by TAMER could be used in a variety of contexts provided there is appropriate
-source data. In addition to providing a simple methods for basic exposure calculations, (such as mean, median,
-and maximum intensities over certain time periods,) TAMER allows users to calculate daily doses by integrating
-the exposure over time. TAMER deals with very large volumes of data, but is designed with memory efficiency in
-mind so that such data can be processed on even modest personal comptuters.
+Python-TAMER is a python package for performing advanced environmental exposure calculations in a simple and
+accessable way suitable for users with minimal python experience. To get started, check the `Installation`_
+tab.
+
+.. _Installation: https://tch521.github.io/python-TAMER/installation.html
+
+* Free software: BSD-3-Clause licence
+
+The Toolkit for Analysis and Maps of Exposure Risk (TAMER) is a python package designed to calculate estimates 
+of individual and population exposure across a geographic area. Currently, the project is focused on erythemal 
+UV radiation exposure, but the tools provided by TAMER could be used in a variety of contexts provided there 
+is appropriate source data. In addition to providing a simple methods for basic exposure calculations, (such 
+as mean, median, and maximum intensities over certain time periods,) TAMER allows users to calculate daily 
+doses by integrating the exposure over time. TAMER deals with very large volumes of data, but is designed with 
+memory efficiency in mind so that such data can be processed on even modest personal comptuters.
 
 In the context of UV, the dose received by an exposed individual is far more relevant to their corresponding 
 health risk than the ambient level of UV. Usually, these doses are measured by wearable devices. Harris et al.
@@ -46,11 +53,8 @@ the simple and novel exposure calculations provided by TAMER give opportunity to
 health experts to study UV exposure with higher detail than has ever been possible before.
 
 
-* Free software: BSD-3-Clause license
-
-
 Features
-^^^^^^^^
+--------
 
 * Calculate daily doses rapidly with custom exposure schedules
 * Analyse exposure distributions per pixel
@@ -58,14 +62,14 @@ Features
 * Replicate dosimetry measurements using Exposure Ratio modelling
 
 In Development
-^^^^^^^^^^^^^^
+--------------
 
 * Improved support for custom statistical descriptors
 * Custom area selection for the SpecificDoses class
 * Improved aesthetic options for ExposureMap class
 
 Future work
-^^^^^^^^^^^
+-----------
 
 * Improved support for different source files (new units, temporal resolutions, etc.)
 * Integrate support for cross multiplication of ExposureMap with population distribution data

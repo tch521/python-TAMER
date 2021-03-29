@@ -6,7 +6,7 @@ def assert_data_shape_24(data,reverse=False,force_second_dim=True) :
     """Simple function to check if first dimension is 24 hours and, if not, reshapes accordingly
     """
     datashape = np.shape(data)
-    # TO DO: Could be a big job, but this F ordering is weird and I should reconsider
+    # TODO: Could be a big job, but this F ordering is weird and I should reconsider
     if datashape[0] != 24 and not reverse: # Checks that first dimension is length 24 (hours in a day) and reshapes if not
         new_shape = (24, datashape[0]//24) + datashape[1:]
     elif reverse :
@@ -86,7 +86,7 @@ def find_nearest(array, value):
 
 
 def convert_swiss_time_to_UTC(input_table,name) :
-    # TO DO: Need a replacement for this, but argument the responsibility of the user?
+    # TODO: Need a replacement for this, but argument the responsibility of the user?
     def convert_swiss_time_to_UTC_iter(time_in,Date) :
         if Date.month > 3 and Date.month < 11 :
             time_out = time_in 
@@ -180,7 +180,7 @@ def hist_percentile(counts,bin_centers,prct) :
 
     n = np.sum(counts)
     cumcounts = np.cumsum(counts)
-    # TO DO: Possibly unnecessary, but could probably improve efficiency of
+    # TODO: Possibly unnecessary, but could probably improve efficiency of
     # this if statement (e.g. if i==j no need to take average)
     if prct == 0 :
         # special case: searching for min
@@ -262,18 +262,18 @@ Vis_table=None) :
     Parameters
     ----------
 
-    Anatomic_zone : str
+    Anatomic_zone : list
         String or list of strings describing the anatomic zone for which the ER is to be calculated. 
 
-    Posture : str
+    Posture : list
         String or list of strings describing the posture for which the ER is to be calculated.
 
-    Date : datetime.date or pandas.DateTimeIndex, optional
+    Date : list, optional
         The date for which the ER is to be calculated. The date affects the minimum solar zenith
         angle in the Vernez et al. 2015 ER model. The specific year is not relevant. Defaults to
         March 20, the equinox.
 
-    Latitude : float or array, optional
+    Latitude : list, optional
         The latitude is important for calculating the ER. Defaults to None, wherein the latitude
         of the centroid of Switzerland (46.8 degrees) is used.
 
@@ -288,11 +288,37 @@ Vis_table=None) :
     Returns
     -------
 
-    numpy.array
-        Returns ER values as a numpy array
+    list
+        Returns ER values as a list
 
 
     """
+
+    # In case of single input rather than lists
+    if isinstance(Anatomic_zone, str): Anatomic_zone = [Anatomic_zone]
+    if isinstance(Posture,str): Posture = [Posture]
+
+    if Latitude is None:
+        Latitude = [46.8] #Switzerland centroid
+    
+    if Date is None:
+        Date = [dt.date(2015,3,20)] # equinox
+
+    if not isinstance(Latitude,list): Latitude = [Latitude]
+    if not isinstance(Date,list): Date = [Date]
+
+    d = {'Anatomic_zone': Anatomic_zone,
+         'Posture': Posture,
+         'Latitude': Latitude,
+         'Date': Date}
+
+    lengths = [len(x) for x in d.values()]
+    max_length = max(lengths)
+    for key in list(d.keys()) :
+        if len(d[key]) != max_length :
+            d[key] = d[key] * (max_length//len(d[key]))
+
+    self = pd.DataFrame(d)
 
     # This chunk of code checks if the default Vis table should be used or if the user enters some alternative table.
     if Vis_table is None and Vis_table_path is None :
@@ -314,38 +340,53 @@ Vis_table=None) :
                 [44.9,51.6,56.6,53.4,86.9]])
         # The 'standing moving' posture must be dealt with somehow...
         # Vis_table['Standing moving']= (Vis_table['Standing erect arms down'] + Vis_table['Standing bowing']) / 2
-        # TO DO: add interpeter or force users to conform?
+        # TODO: add interpeter or force users to conform?
         Vis_table['Standing moving']= Vis_table['Standing erect arms down'] 
+        Vis_table['Standing']=Vis_table['Standing erect arms down'] 
     elif Vis_table is None :
         Vis_table = pd.read_csv(Vis_table_path)
 
     # Below is a dictionary describing a range of synonyms for the anatomical zones defined in the Vis table.
-    Anatomic_zone_synonyms_reverse = {'Forearm' : ['wrist','Left extern radial','Right extern radial','Left wrist: radius head','Right wrist: radius head','Left wrist','Right wrist'],
-        'Face' : ['Forehead'],
-        'Upper back' : ['Right trapezoid','Left trapezoid','trapezius'],
-        'Belly' : ['Chest'],
-        'Shoulder' : ['Left deltoid','Right deltoid','Left shoulder','Right shoulder'],
-        'Upper arm' : ['Left elbow','Right elbow','Left biceps','Right biceps'],
-        'Upper leg' : ['Left thigh','Right thigh','Left knee','Right knee'],
-        'Lower back' : ['Low back']}
+    Anatomic_zone_synonyms_reverse = {
+        'Forearm'    : ['wrist',
+                        'Left extern radial',
+                        'Right extern radial',
+                        'Left wrist: radius head',
+                        'Right wrist: radius head',
+                        'Left wrist',
+                        'Right wrist'],
+        'Face'       : ['Forehead'],
+        'Upper back' : ['Right trapezoid',
+                        'Left trapezoid',
+                        'trapezius'],
+        'Belly'      : ['Chest'],
+        'Shoulder'   : ['Left deltoid',
+                        'Right deltoid',
+                        'Left shoulder',
+                        'Right shoulder'],
+        'Upper arm'  : ['Left elbow',
+                        'Right elbow',
+                        'Left biceps',
+                        'Right biceps'],
+        'Upper leg'  : ['Left thigh',
+                        'Right thigh',
+                        'Left knee',
+                        'Right knee'],
+        'Lower back' : ['Low back']
+    }
+    
     # The dictionary is reversed so that the multiple synonyms can be mapped to the few correct terms for the Vis table.
     Anatomic_zone_synonyms = {keys: old_keys for old_keys, old_values in Anatomic_zone_synonyms_reverse.items() for keys in old_values}
 
-    anatomic_zone = Anatomic_zone_synonyms[Anatomic_zone]
+    self = self.replace({'Anatomic_zone' : Anatomic_zone_synonyms})
 
     # With the correct anatomic zone names established, we can lookup the Vis values from the table
-    Vis = Vis_table.lookup(anatomic_zone,Posture)
-
-    if Latitude is None :
-        Latitude = 46.8 #Switzerland centroid
-    
-    if Date is None :
-        Date = dt.date(2015,3,20) # equinox
+    Vis = Vis_table.lookup(self['Anatomic_zone'],self['Posture'])
 
     # Next we must calculate the minimal Solar Zenith Angle for the given date
-    mSZA = min_solar_zenith_angle(Date,Latitude)
+    mSZA = min_solar_zenith_angle(self.Date,self.Latitude)
 
     # With the Vis value and the SZA, we can calculate the ER according to the Vernez model
     ER = ER_Vernez_model_equation(Vis,mSZA) / 100
 
-    return ER
+    return ER.to_numpy()

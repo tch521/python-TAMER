@@ -33,9 +33,9 @@ class SpecificDoses(pd.DataFrame):
     Presently, the class is inherited from a pandas.DataFrame which is somewhat restrictive 
     and will likely be revised in a later update. For the time being, this means that the 
     parameters cannot be set when initialising a `SpecificDoses` object, they must instead
-    be adjusted after initialisation, like so:
+    be adjusted after initialisation, like so::
 
-    >>> ExistingExposureMapObject.data_directory = "/new/data/directory/"
+        ExistingExposureMapObject.data_directory = "/new/data/directory/"
 
     
     Example
@@ -44,15 +44,18 @@ class SpecificDoses(pd.DataFrame):
     In this example, we illustrate the process for calculating the doses in Harris et al. 2021
     (https://doi.org/10.3390/atmos12020268) from the spreadsheet supplied as supplementary 
     data (https://www.mdpi.com/2073-4433/12/2/268/s1). Note that results will differ as the
-    spreadsheet contains only local Swiss time and not UTC time. There are four functions
+    spreadsheet contains only local Swiss time and not UTC time. There are four important
+    functions as part of this class, three for standardising and preparing the columns,
+    and one for actually loading the data and performing the dose calculations. See below::
 
-    >>> import python_tamer as pt
-    >>> import pandas as pd
-    >>> example = pt.SpecificDoses(pd.read_excel(r'atmosphere-12-00268-s001.xlsx',
-    ...     header=2,index_col=0,usecols="B:K"))
-    >>> example = example.standard_column_names() 
-    >>> example = example.schedule_constant_exposure().ER_from_posture()
-    >>> example = example.calculate_specific_dose()
+        import python_tamer as pt
+        import pandas as pd
+        example = pt.SpecificDoses(pd.read_excel(r'atmosphere-12-00268-s001.xlsx',
+                                                 header=2,index_col=0,usecols="B:K"))
+        example.data_directory = 'C:/enter_the_directory_of_your_dataset_here'
+        example = example.standard_column_names() 
+        example = example.schedule_constant_exposure().ER_from_posture()
+        example = example.calculate_specific_dose()
 
 
     """
@@ -65,7 +68,7 @@ class SpecificDoses(pd.DataFrame):
     # This adds some useful metadata (self-explanatory)
     _metadata = ["src_filename_format","data_directory"]
     src_filename_format = 'UVery.AS_ch02.lonlat_yyyy01010000.nc'
-    data_directory = 'C:/Data/UV/' # TO DO: set up __init__ for these options
+    data_directory = 'C:/Data/UV/' # TODO: set up __init__ for these options
     # It feels like this should be declared with __init__ as well but idk
 
     def standard_column_names(self) :
@@ -114,15 +117,18 @@ class SpecificDoses(pd.DataFrame):
         In this example, we illustrate the process for calculating the doses in Harris et al. 2021
         (https://doi.org/10.3390/atmos12020268) from the spreadsheet supplied as supplementary 
         data (https://www.mdpi.com/2073-4433/12/2/268/s1). Note that results will differ as the
-        spreadsheet contains only local Swiss time and not UTC time. There are four functions
+        spreadsheet contains only local Swiss time and not UTC time. There are four important
+        functions as part of this class, three for standardising and preparing the columns,
+        and one for actually loading the data and performing the dose calculations. See below::
 
-        >>> import python_tamer as pt
-        >>> import pandas as pd
-        >>> example = pt.SpecificDoses(pd.read_excel(r'atmosphere-12-00268-s001.xlsx',
-        ...     header=2,index_col=0,usecols="B:K"))
-        >>> example = example.standard_column_names() 
-        >>> example = example.schedule_constant_exposure().ER_from_posture()
-        >>> example = example.calculate_specific_dose()
+            import python_tamer as pt
+            import pandas as pd
+            example = pt.SpecificDoses(pd.read_excel(r'atmosphere-12-00268-s001.xlsx',
+                                                    header=2,index_col=0,usecols="B:K"))
+            example.data_directory = 'C:/enter_the_directory_of_your_dataset_here'
+            example = example.standard_column_names() 
+            example = example.schedule_constant_exposure().ER_from_posture()
+            example = example.calculate_specific_dose()
 
 
         """
@@ -209,15 +215,18 @@ class SpecificDoses(pd.DataFrame):
         In this example, we illustrate the process for calculating the doses in Harris et al. 2021
         (https://doi.org/10.3390/atmos12020268) from the spreadsheet supplied as supplementary 
         data (https://www.mdpi.com/2073-4433/12/2/268/s1). Note that results will differ as the
-        spreadsheet contains only local Swiss time and not UTC time. There are four functions
+        spreadsheet contains only local Swiss time and not UTC time. There are four important
+        functions as part of this class, three for standardising and preparing the columns,
+        and one for actually loading the data and performing the dose calculations. See below::
 
-        >>> import python_tamer as pt
-        >>> import pandas as pd
-        >>> example = pt.SpecificDoses(pd.read_excel(r'atmosphere-12-00268-s001.xlsx',
-        ...     header=2,index_col=0,usecols="B:K"))
-        >>> example = example.standard_column_names() 
-        >>> example = example.schedule_constant_exposure().ER_from_posture()
-        >>> example = example.calculate_specific_dose()
+            import python_tamer as pt
+            import pandas as pd
+            example = pt.SpecificDoses(pd.read_excel(r'atmosphere-12-00268-s001.xlsx',
+                                                    header=2,index_col=0,usecols="B:K"))
+            example.data_directory = 'C:/enter_the_directory_of_your_dataset_here'
+            example = example.standard_column_names() 
+            example = example.schedule_constant_exposure().ER_from_posture()
+            example = example.calculate_specific_dose()
 
 
         """
@@ -242,7 +251,7 @@ class SpecificDoses(pd.DataFrame):
                     [44.9,51.6,56.6,53.4,86.9]])
             # The 'standing moving' posture must be dealt with somehow...
             # Vis_table['Standing moving']= (Vis_table['Standing erect arms down'] + Vis_table['Standing bowing']) / 2
-            # TO DO: add interpeter or force users to conform?
+            # TODO: add interpeter or force users to conform?
             Vis_table['Standing moving']= Vis_table['Standing erect arms down'] 
         elif Vis_table is None :
             Vis_table = pd.read_csv(Vis_table_path)
@@ -325,15 +334,19 @@ class SpecificDoses(pd.DataFrame):
         In this example, we illustrate the process for calculating the doses in Harris et al. 2021
         (https://doi.org/10.3390/atmos12020268) from the spreadsheet supplied as supplementary 
         data (https://www.mdpi.com/2073-4433/12/2/268/s1). Note that results will differ as the
-        spreadsheet contains only local Swiss time and not UTC time. There are four functions
+        spreadsheet contains only local Swiss time and not UTC time. There are four important
+        functions as part of this class, three for standardising and preparing the columns,
+        and one for actually loading the data and performing the dose calculations. See below::
 
-        >>> import python_tamer as pt
-        >>> import pandas as pd
-        >>> example = pt.SpecificDoses(pd.read_excel(r'atmosphere-12-00268-s001.xlsx',
-        ...     header=2,index_col=0,usecols="B:K"))
-        >>> example = example.standard_column_names() 
-        >>> example = example.schedule_constant_exposure().ER_from_posture()
-        >>> example = example.calculate_specific_dose()
+            import python_tamer as pt
+            import pandas as pd
+            example = pt.SpecificDoses(pd.read_excel(r'atmosphere-12-00268-s001.xlsx',
+                                                    header=2,index_col=0,usecols="B:K"))
+            example.data_directory = 'C:/enter_the_directory_of_your_dataset_here'
+            example = example.standard_column_names() 
+            example = example.schedule_constant_exposure().ER_from_posture()
+            example = example.calculate_specific_dose()
+
 
         """
 
@@ -374,12 +387,11 @@ class SpecificDoses(pd.DataFrame):
                 # flatten time_subset array back to one dimension
                 time_subset = time_subset.flatten(order='F')
 
-            data = assert_data_shape_24(dataset['UV_AS'][time_subset,:,:]*40) 
-            # *40 converts it to uv index
-            # TO DO: improve comprehension of raw data units rather than assuming
+            data = assert_data_shape_24(dataset['UV_AS'][time_subset,:,:]) 
+            # TODO: improve comprehension of raw data units rather than assuming
 
             # convert lat lon into pixel coordinates
-            # TO DO: consider is necessary to load entire maps for just a few required pixels
+            # TODO: consider is necessary to load entire maps for just a few required pixels
             lat = dataset['lat'][:]
             lon = dataset['lon'][:]
             temp_table['pixel_lat'] = temp_table.apply(lambda x: 
@@ -400,7 +412,7 @@ class SpecificDoses(pd.DataFrame):
             self.loc[temp_table.index,'Ambient_dose'] = temp_table['Ambient_dose'].values
             self.loc[temp_table.index,'Personal_dose'] = temp_table['Personal_dose'].values
 
-        # TO DO: improve units options here
+        # TODO: improve units options here
         self['Ambient_dose'] = self['Ambient_dose']/40*3600/100 # SED
         self['Personal_dose'] = self['Personal_dose']/40*3600/100 # SED
         return self        

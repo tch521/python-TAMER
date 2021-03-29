@@ -6,8 +6,6 @@ requirements = [
     'numpy',
     'cartopy',
     'matplotlib',
-    'datetime',
-    'regex',
 ]
 
 setup_requirements = [
@@ -30,7 +28,7 @@ package_data = {'test': ["UV_test_data_2018.nc"]}
 
 setup(
     name='python-TAMER',
-    version="0.3.0",
+    version="0.3.1",
     author="Todd C. Harris",
     author_email='todd.harris@meteoswiss.ch',
     description="Toolkit for Analysis and Maps of Exposure Risk",

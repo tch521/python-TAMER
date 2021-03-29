@@ -14,6 +14,7 @@ Welcome to python-TAMER's documentation!
    installation
    usage
    code_reference
+   licence
    contributing
    authors
    history

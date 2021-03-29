@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import datetime as dt
 import os
-import regex as re
+import re
 import netCDF4 as nc
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
@@ -72,23 +72,26 @@ class ExposureMap:
 
     The code below shows a typical use case for the ExposureMap class. The long-term average daily doses
     (i.e. the chronic doses) for typical school children are calculated across Switzerland asssuming certain
-    hours of exposure for journeying to and from school and having breaks for morning tea and lunch time.
+    hours of exposure for journeying to and from school and having breaks for morning tea and lunch time. ::
 
-    >>> import python_tamer as pt
-    >>> import pandas 
-    >>> ER = ER_Vernez_2015("Forehead","Standing") # Long-term average ER for foreheads in standing posture
-    >>> map = pt.ExposureMap(
-    ...     units = "J m-2",
-    ...     exposure_schedule = [0  ,0  ,0  ,0  ,0  ,0  ,
-    ...                          0  ,0  ,0.5,0  ,0.5,0  ,
-    ...                          0.5,0.5,0  ,0  ,0.5,0  ,
-    ...                          0  ,0  ,0  ,0  ,0  ,0  ]*ER,
-    ...     bin_width = 25,
-    ...     date_selection = pandas.date_range(start="2005-01-01",end="2014-12-31"),
-    ...     statistic = "mean")
-    >>> map = map.collect_data().calculate_map()
-    >>> map.plot_map(map_options={"title": "Chronic daily UV dose for typical school children, 2005-2014",
-    ...                           "save": False})
+        import python_tamer as pt
+        import pandas as pd
+        data_directory = 'C:/enter_your_data_directory_here'
+        ER = pt.ER_Vernez_2015("Forehead","Standing") # Long-term average ER for foreheads in standing posture
+        map = pt.ExposureMap(
+            data_directory=data_directory,
+            units = "J m-2",
+            exposure_schedule = [0  ,0  ,0  ,0  ,0  ,0  ,
+                                0  ,0  ,0.5,0  ,0.5,0  ,
+                                0.5,0.5,0  ,0  ,0.5,0  ,
+                                0  ,0  ,0  ,0  ,0  ,0  ]*ER,
+            bin_width = 25,
+            date_selection = pd.date_range(start="2005-01-01",end="2014-12-31"),
+            statistic = "mean",
+            map_options={"title": "Chronic daily UV dose for typical school children, 2005-2014",
+                        "save": False})
+        map = map.collect_data().calculate_map()
+        map.plot_map()
 
 
     """
@@ -128,7 +131,7 @@ class ExposureMap:
             "cbar_limits" : None
         }
         if map_options is not None :
-            self.map_options = self.map_options.update(map_options)
+            self.map_options.update(map_options)
 
         self.src_filename_format = src_filename_format
         self.data_directory = data_directory
@@ -211,29 +214,31 @@ class ExposureMap:
         -------
 
         The example code below shows how an ExposureMap class can be declared with the default parameters that
-        can then be later redefined by collect_data() and the other class functions.
+        can then be later redefined by collect_data() and the other class functions. ::
 
-        >>> import python_tamer as pt
-        >>> import pandas 
-        >>> ER = ER_Vernez_2015("Forehead","Standing") # Long-term average ER for foreheads in standing posture
-        >>> map = pt.ExposureMap()
-        >>> map = map.collect_data(
-        ...     units = "J m-2",
-        ...     exposure_schedule = [0  ,0  ,0  ,0  ,0  ,0  ,
-        ...                          0  ,0  ,0.5,0  ,0.5,0  ,
-        ...                          0.5,0.5,0  ,0  ,0.5,0  ,
-        ...                          0  ,0  ,0  ,0  ,0  ,0  ]*ER,
-        ...     bin_width = 25,
-        ...     date_selection = pandas.date_range(start="2005-01-01",end="2014-12-31")
-        ... )
-        >>> map = map.calculate_map(statistic = "mean")
-        >>> map.plot_map(map_options={"title": "Chronic daily UV dose for typical school children, 2005-2014",
-        ...                           "save": False})
+            import python_tamer as pt
+            import pandas 
+            data_directory = 'C:/enter_your_data_directory_here'
+            ER = pt.ER_Vernez_2015("Forehead","Standing") # Long-term average ER for foreheads in standing posture
+            map = pt.ExposureMap()
+            map = map.collect_data(
+                data_directory=data_directory,
+                units = "J m-2",
+                exposure_schedule = [0  ,0  ,0  ,0  ,0  ,0  ,
+                                     0  ,0  ,0.5,0  ,0.5,0  ,
+                                     0.5,0.5,0  ,0  ,0.5,0  ,
+                                     0  ,0  ,0  ,0  ,0  ,0  ]*ER,
+                bin_width = 25,
+                date_selection = pandas.date_range(start="2005-01-01",end="2014-12-31")
+            )
+            map = map.calculate_map(statistic = "mean")
+            map.plot_map(map_options={"title": "Chronic daily UV dose for typical school children, 2005-2014",
+                                      "save": False})
 
 
         """
 
-        # TO DO: There must be a better way to do this
+        # TODO: There must be a better way to do this
         if not (data_directory is None) :
             self.data_directory = data_directory
         if not (src_filename_format is None) :
@@ -249,7 +254,7 @@ class ExposureMap:
 
         # first we read the data_directory to check the total number of unique years available
         data_dir_contents = os.listdir(self.data_directory)
-        # TO DO: improve jankiness of this format-matching search for filenames
+        # TODO: improve jankiness of this format-matching search for filenames
         char_year = self.src_filename_format.find('yyyy')
         dataset_years = [ x for x in data_dir_contents if re.findall(self.src_filename_format.replace("yyyy","[0-9]{4}"),x)]
         dataset_years = [ int(x[char_year:char_year+4]) for x in dataset_years ]
@@ -259,7 +264,7 @@ class ExposureMap:
             date_selection = pd.date_range(start=str(dataset_years[0])+"-01-01",
                 end=str(dataset_years[-1])+"-12-31")
         else :
-            date_selection = self.date_selection # TO DO: much more interpretation options here
+            date_selection = self.date_selection # TODO: much more interpretation options here
 
         #now we find unique years 
         list_of_years = sorted(set(date_selection.year))
@@ -286,8 +291,8 @@ class ExposureMap:
 
             # load subset of data
             print("   Slicing netcdf data with time subset")
-            data = dataset['UV_AS'][time_subset,:,:]*40 #work in UVI by default because it's easy to read
-            # TO DO: check units of dataset files, CF conventions for UVI or W/m2
+            data = dataset['UV_AS'][time_subset,:,:] #work in UVI by default because it's easy to read
+            # TODO: check units of dataset files, CF conventions for UVI or W/m2
 
             # now to calculate doses if requested
             if self.units in ["SED","J m-2","UVIh"] :
@@ -315,26 +320,27 @@ class ExposureMap:
                 data = assert_data_shape_24(data,reverse=True) 
 
             # now multiply data by conversion factor according to desired untis
-            # TO DO: Should expand upon this in reference files
+            # TODO: Should expand upon this in reference files
             data *= {"SED":0.9, "J m-2":90, "UVIh":1, "UVI":1, "W m-2":0.025, "mW m-2":25}[self.units]
 
             # if this is the first iteration, declare a hist
             if i == 0 :
                 # seems like useful metadata to know bin n and edges
-                # TO DO: reconsider where this belongs in the code (__init__?)
+                # TODO: reconsider where this belongs in the code (__init__?)
                 self.num_bins = int(2*np.nanmax(data) // self.bin_width)
                 self.bin_edges = np.array(range(self.num_bins+1)) * self.bin_width
                 self.bin_centers = self.bin_edges[:-1] + 0.5 * np.diff(self.bin_edges)
 
-                # TO DO: think about possible cases where dimensions could differ
+                # TODO: think about possible cases where dimensions could differ
                 self.pix_hist=np.empty([self.num_bins,
                     np.shape(data)[-2],np.shape(data)[-1]], dtype=np.int16)
 
-                # TO DO: this should also be done by some initial dataset analysis
+                # TODO: this should also be done by some initial dataset analysis, but that's a drastic
+                # design overhaul
                 self.lat = dataset['lat'][:]
                 self.lon = dataset['lon'][:]
 
-            # TO DO: add check here in case max exceeds current bin edges
+            # TODO: add check here in case max exceeds current bin edges
             # now put data into hist using apply_along_axis to perform histogram for each pixel
             def hist_raw(x) :
                 hist, _ = np.histogram(x,bins=self.bin_edges)
@@ -390,19 +396,19 @@ class ExposureMap:
         In the example below, the user imports some pre-calculated pixel histograms, thereby
         completing the ExposureMap workflow without using the `ExposureMap.ExposureMap.collect_data()`
         function. This can be useful if the data collection is timely and the user wants to
-        produce multiple different maps. 
+        produce multiple different maps. ::
 
-        >>> import python_tamer as pt
-        >>> import numpy as np
-        >>> from custom_user_data import pix_hist, bin_centers, map_options 
-        >>> map = pt.ExposureMap(map_options = map_options)
-        >>> map = map.calculate_map(
-        ...     statistic = "median", 
-        ...     pix_hist = data, 
-        ...     bin_centers = bin_centers
-        ... ).plot_map(save = False)
-        >>> map.calculate_map(statistic = "max").plot_map(map_options={"save" = False})
-        >>> map.calculate_map(statistic = "std").plot_map(map_options={"save" = False})
+            import python_tamer as pt
+            import numpy as np
+            from custom_user_data import pix_hist, bin_centers, map_options 
+            map = pt.ExposureMap(map_options = map_options)
+            map = map.calculate_map(
+                statistic = "median", 
+                pix_hist = data, 
+                bin_centers = bin_centers
+            ).plot_map(save = False)
+            map.calculate_map(statistic = "max").plot_map(map_options={"save" = False})
+            map.calculate_map(statistic = "std").plot_map(map_options={"save" = False})
 
 
         """
@@ -433,9 +439,12 @@ class ExposureMap:
             descriptor_function = basic_descriptor_functions[self.statistic.lower()]
             # ...and execute it across the map
             self.map = np.apply_along_axis(lambda x: descriptor_function(x,self.bin_centers),0,self.pix_hist)
-
+        # TODO: a loose space could ruin this, need shunting yard algorithm of sorts
+        elif self.statistic.lower()[2:] == "prct" or self.statistic.lower()[2:] == "percentile" :
+            prct = int(self.statistic[0:1]) / 100
+            self.map = np.apply_along_axis(lambda x: hist_percentile(x,self.bin_centers,prct),0,self.pix_hist)
         else :
-            # TO DO: interpret self.statistic to build advanced functions (y i k e s)
+            # TODO: interpret self.statistic to build advanced functions (y i k e s)
             print("WARNING: ExposureMap.statistic not recognised.")
         
 
@@ -519,24 +528,24 @@ class ExposureMap:
 
         """
 
-        if not (map_options is None) :
-            self.map_options = map_options
+        if map_options is not None :
+            self.map_options.update(map_options)
 
-        # TO DO: Add custom sizing and resolution specifications
+        # TODO: Add custom sizing and resolution specifications
         fig = plt.figure(figsize=(self.map_options['img_size'][0]/2.54,
             self.map_options['img_size'][1]/2.54))
 
-        # TO DO: Accept custom projections
+        # TODO: Accept custom projections
         proj = ccrs.Mercator()
 
-        # TO DO: Add support for multiple plots per figure (too complex? consider use cases)
+        # TODO: Add support for multiple plots per figure (too complex? consider use cases)
         ax = fig.add_subplot(1,1,1,projection = proj)
 
-        # TO DO: Increase flexibility of borders consideration
+        # TODO: Increase flexibility of borders consideration
         if self.map_options['brdr_nation'] :
             ax.add_feature(cfeat.BORDERS)
 
-        # TO DO: Consider first-last versus min-max - how can we avoid accidentally flipping images
+        # TODO: Consider first-last versus min-max - how can we avoid accidentally flipping images
         extents=[self.lon[0],self.lon[-1],self.lat[0],self.lat[-1]]
         ax.set_extent(extents)
 
@@ -544,16 +553,20 @@ class ExposureMap:
         extents_proj = proj.transform_points(ccrs.Geodetic(),np.array(extents[:2]),np.array(extents[2:]))
         extents_proj = extents_proj[:,:2].flatten(order='F')
 
-        # TO DO: Custom colormaps, interpolation, cropping
+        # TODO: Custom colormaps, interpolation, cropping
         im = ax.imshow(self.map,extent=extents_proj,transform=proj,origin='lower',
             cmap=self.map_options['cmap'],interpolation='bicubic')
 
-        # TO DO: Add support for horizontal
+        # TODO: Add more advanced title interpretation (i.e. smart date placeholder)
+        if self.map_options['title'] is not None :
+            ax.set_title(self.map_options['title'])
+
+        # TODO: Add support for horizontal
         if self.map_options['cbar'] :
             cb = plt.colorbar(im, ax=ax, orientation='horizontal',pad=0.05,fraction=0.05)
             cb.ax.set_xlabel(self.units)
 
-        # TO DO: Add plot title, small textbox description, copyright from dataset, ticks and gridlines
+        # TODO: Add plot title, small textbox description, copyright from dataset, ticks and gridlines
         if self.map_options['save'] :
             # Generate timestamp filename if relying on default
             if self.map_options['img_filename'] == "timestamp" :
@@ -565,3 +578,75 @@ class ExposureMap:
         plt.show()
 
         return self
+
+
+class ExposureMapBatch:
+    
+    def __init__(self,
+    quick_selection=None,
+    units="SED",
+    exposure_schedule=1,
+    statistic="mean",
+    bin_width = None,
+    date_selection=None,
+    climatology_years=0,
+    map_options=None,
+    src_filename_format='UVery.AS_ch02.lonlat_yyyy01010000.nc',
+    data_directory='C:/Data/UV/'):
+        # start with data location to quickly get some metadata
+        self.src_filename_format = src_filename_format
+        self.data_directory = data_directory
+        # first we read the data_directory to check the total number of unique years available
+        data_dir_contents = os.listdir(self.data_directory)
+        # TODO: improve jankiness of this format-matching search for filenames
+        char_year = self.src_filename_format.find('yyyy')
+        dataset_years = [ x for x in data_dir_contents if re.findall(self.src_filename_format.replace("yyyy","[0-9]{4}"),x)]
+        dataset_years = [ int(x[char_year:char_year+4]) for x in dataset_years ]
+
+
+        # if quick_selection is not None :
+        #     if quick_selection.lower() == "monthly" :
+        #         date_selection = 
+
+        # assigning options to fields in class with a few basic checks
+        self.units = units
+
+        self.exposure_schedule=np.array(exposure_schedule)
+        if len(np.atleast_1d(self.exposure_schedule)) == 1 :
+            self.exposure_schedule = np.repeat(self.exposure_schedule,24)
+
+        self.statistic = statistic
+
+        self.map_options = {
+            "title" : "Test map",
+            "save" : True,
+            "img_size" : [20,15],
+            "img_dpi" : 300,
+            "img_dir" : "",
+            "img_filename" : "timestamp",
+            "img_filetype" : "png",
+            "brdr_nation" : True,
+            "brdr_nation_rgba" : [0,0,0,0],
+            "brdr_state" : False,
+            "brdr_state_rgba" : [0,0,0,0.67],
+            "cmap" : "jet",
+            "cmap_limits" : None,
+            "cbar" : True,
+            "cbar_limits" : None
+        }
+        if map_options is not None :
+            self.map_options = self.map_options.update(map_options)
+
+        self.date_selection = date_selection
+
+        if bin_width is None :
+            self.bin_width = {
+                "SED" : 0.1, 
+                "J m-2" : 10, 
+                "UVI" : 0.1, 
+                "W m-2" : 0.0025, 
+                "mW m-2" : 2.5
+            }[self.units]
+        else :
+            self.bin_width = bin_width
+    
