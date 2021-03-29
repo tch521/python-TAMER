@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Introduction to python-TAMER &mdash; python-TAMER 0.3.0 documentation</title>
+  <title>Introduction to python-TAMER &mdash; python-TAMER 0.3.1 documentation</title>
   
 
   
@@ -90,6 +90,7 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="code_reference.html">Code Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="licence.html">Licence</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="authors.html">Credits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="history.html">History</a></li>
@@ -159,15 +160,22 @@
             
   <div class="section" id="introduction-to-python-tamer">
 <h1>Introduction to python-TAMER<a class="headerlink" href="#introduction-to-python-tamer" title="Permalink to this headline">¶</a></h1>
-<p>Advanced environmental exposure calculations made easy!
-Official documentation hosted at <a class="reference external" href="https://tch521.github.io/python-TAMER">https://tch521.github.io/python-TAMER</a></p>
-<p>The Toolkit for Analysis and Maps of Exposure Risk (TAMER) is designed to calculate estimates of individual and
-population exposure across a geographic area. Currently, the project is focused on erythemal UV radiation
-exposure, but the tools provided by TAMER could be used in a variety of contexts provided there is appropriate
-source data. In addition to providing a simple methods for basic exposure calculations, (such as mean, median,
-and maximum intensities over certain time periods,) TAMER allows users to calculate daily doses by integrating
-the exposure over time. TAMER deals with very large volumes of data, but is designed with memory efficiency in
-mind so that such data can be processed on even modest personal comptuters.</p>
+<div class="line-block">
+<div class="line">Official documentation hosted at <a class="reference external" href="https://tch521.github.io/python-TAMER">https://tch521.github.io/python-TAMER</a></div>
+</div>
+<p>Python-TAMER is a python package for performing advanced environmental exposure calculations in a simple and
+accessable way suitable for users with minimal python experience. To get started, check the <a class="reference internal" href="installation.html#installation"><span class="std std-ref">Installation</span></a>
+tab.</p>
+<ul class="simple">
+<li><p>Free software: BSD-3-Clause licence</p></li>
+</ul>
+<p>The Toolkit for Analysis and Maps of Exposure Risk (TAMER) is a python package designed to calculate estimates
+of individual and population exposure across a geographic area. Currently, the project is focused on erythemal
+UV radiation exposure, but the tools provided by TAMER could be used in a variety of contexts provided there
+is appropriate source data. In addition to providing a simple methods for basic exposure calculations, (such
+as mean, median, and maximum intensities over certain time periods,) TAMER allows users to calculate daily
+doses by integrating the exposure over time. TAMER deals with very large volumes of data, but is designed with
+memory efficiency in mind so that such data can be processed on even modest personal comptuters.</p>
 <p>In the context of UV, the dose received by an exposed individual is far more relevant to their corresponding
 health risk than the ambient level of UV. Usually, these doses are measured by wearable devices. Harris et al.
 2021 (<a class="reference external" href="https://doi.org/10.3390/atmos12020268">https://doi.org/10.3390/atmos12020268</a>) explains the various benefits of instead estimating such doses
@@ -198,9 +206,6 @@ indicative of the severity of acute exposure instances. The simple and novel app
 provided by the combined release of high resolution UV data (<a class="reference external" href="https://doi.org/10.1016/j.envint.2020.106177">https://doi.org/10.1016/j.envint.2020.106177</a>) and
 the simple and novel exposure calculations provided by TAMER give opportunity to epidemiologists and public
 health experts to study UV exposure with higher detail than has ever been possible before.</p>
-<ul class="simple">
-<li><p>Free software: BSD-3-Clause license</p></li>
-</ul>
 <div class="section" id="features">
 <h2>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>History &mdash; python-TAMER 0.3.0 documentation</title>
+  <title>History &mdash; python-TAMER 0.3.1 documentation</title>
   
 
   
@@ -84,10 +84,12 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="code_reference.html">Code Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="licence.html">Licence</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="authors.html">Credits</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">History</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#open-alpha-2021-03-11">0.3.0 Open Alpha (2021-03-11)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#open-alpha-2021-03-29">0.3.1 Open Alpha (2021-03-29)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#open-alpha-2021-03-23">0.3.0 Open Alpha (2021-03-23)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#alpha-2021-03-11">0.2.0 Alpha (2021-03-11)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#pre-alpha-2021-03-02">0.1.0 Pre-Alpha (2021-03-02)</a></li>
 </ul>
@@ -158,23 +160,32 @@
             
   <div class="section" id="history">
 <h1>History<a class="headerlink" href="#history" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="open-alpha-2021-03-11">
-<h2>0.3.0 Open Alpha (2021-03-11)<a class="headerlink" href="#open-alpha-2021-03-11" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="open-alpha-2021-03-29">
+<h2>0.3.1 Open Alpha (2021-03-29)<a class="headerlink" href="#open-alpha-2021-03-29" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Fixed errors in example code in documentation</p></li>
+<li><p>Fixed <code class="docutils literal notranslate"><span class="pre">ER_Vernez_2015()</span></code> function</p></li>
+<li><p>Updated assumptions about units to reflect new dataset from Vuilleumier in UVI rather than W m-2</p></li>
+<li><p>Fixed issue where modifying <code class="docutils literal notranslate"><span class="pre">map_options</span></code> property would result in it being set to None</p></li>
+</ul>
+</div>
+<div class="section" id="open-alpha-2021-03-23">
+<h2>0.3.0 Open Alpha (2021-03-23)<a class="headerlink" href="#open-alpha-2021-03-23" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Compiled and added to PyPI for easy public access</p></li>
-<li><p>Added standalone function for calculating ER using the Vernez 2015 method: <cite>ER_Vernez_2015</cite></p></li>
+<li><p>Added standalone function for calculating ER using the Vernez 2015 method: <code class="docutils literal notranslate"><span class="pre">ER_Vernez_2015()</span></code></p></li>
 <li><p>Significantly expanded and standardised docstrings, adding examples</p></li>
-<li><p>Fixed error involving day selection in SpecificDoses class being one day late</p></li>
-<li><p>Added <cite>SpecificDoses.standard_column_names</cite> function for standardising column names to ensure functionality</p></li>
+<li><p>Fixed error involving day selection in <code class="docutils literal notranslate"><span class="pre">SpecificDoses</span></code> class being one day late</p></li>
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">SpecificDoses.standard_column_names()</span></code> function for standardising column names to ensure functionality</p></li>
 </ul>
 </div>
 <div class="section" id="alpha-2021-03-11">
 <h2>0.2.0 Alpha (2021-03-11)<a class="headerlink" href="#alpha-2021-03-11" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Added documentation</p></li>
-<li><p>Added basic unit tests for each class (SpecificDoses and ExposureMap)</p></li>
+<li><p>Added basic unit tests for each class (<code class="docutils literal notranslate"><span class="pre">SpecificDoses</span></code> and <code class="docutils literal notranslate"><span class="pre">ExposureMap</span></code>)</p></li>
 <li><p>Added histogram descriptor calculator functions to subroutines.</p></li>
-<li><p>Added map making functionality for ExposureMap class, limited consideration of map_options at this stage</p></li>
+<li><p>Added map making functionality for <code class="docutils literal notranslate"><span class="pre">ExposureMap</span></code> class, limited consideration of <code class="docutils literal notranslate"><span class="pre">map_options</span></code> at this stage</p></li>
 <li><p>Fixed errors when working with single day test data (but anticipate further issues with this, to be fixed in a later release)</p></li>
 </ul>
 </div>

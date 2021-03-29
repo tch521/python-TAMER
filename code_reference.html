@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Code Reference &mdash; python-TAMER 0.3.0 documentation</title>
+  <title>Code Reference &mdash; python-TAMER 0.3.1 documentation</title>
   
 
   
@@ -34,7 +34,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Contributing" href="contributing.html" />
+    <link rel="next" title="Licence" href="licence.html" />
     <link rel="prev" title="Usage" href="usage.html" /> 
 </head>
 
@@ -90,6 +90,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#module-python_tamer.subroutines">Subroutines module</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="licence.html">Licence</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="authors.html">Credits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="history.html">History</a></li>
@@ -210,21 +211,24 @@ of the year.</p></li>
 <p>The code below shows a typical use case for the ExposureMap class. The long-term average daily doses
 (i.e. the chronic doses) for typical school children are calculated across Switzerland asssuming certain
 hours of exposure for journeying to and from school and having breaks for morning tea and lunch time.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">python_tamer</span> <span class="k">as</span> <span class="nn">pt</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ER</span> <span class="o">=</span> <span class="n">ER_Vernez_2015</span><span class="p">(</span><span class="s2">&quot;Forehead&quot;</span><span class="p">,</span><span class="s2">&quot;Standing&quot;</span><span class="p">)</span> <span class="c1"># Long-term average ER for foreheads in standing posture</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">map</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">ExposureMap</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="n">units</span> <span class="o">=</span> <span class="s2">&quot;J m-2&quot;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">exposure_schedule</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span>
-<span class="gp">... </span>                         <span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span>  <span class="p">,</span>
-<span class="gp">... </span>                         <span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span>  <span class="p">,</span>
-<span class="gp">... </span>                         <span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">]</span><span class="o">*</span><span class="n">ER</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">bin_width</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">date_selection</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s2">&quot;2005-01-01&quot;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s2">&quot;2014-12-31&quot;</span><span class="p">),</span>
-<span class="gp">... </span>    <span class="n">statistic</span> <span class="o">=</span> <span class="s2">&quot;mean&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">map</span> <span class="o">=</span> <span class="nb">map</span><span class="o">.</span><span class="n">collect_data</span><span class="p">()</span><span class="o">.</span><span class="n">calculate_map</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">map</span><span class="o">.</span><span class="n">plot_map</span><span class="p">(</span><span class="n">map_options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Chronic daily UV dose for typical school children, 2005-2014&quot;</span><span class="p">,</span>
-<span class="gp">... </span>                          <span class="s2">&quot;save&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">python_tamer</span> <span class="k">as</span> <span class="nn">pt</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="n">data_directory</span> <span class="o">=</span> <span class="s1">&#39;C:/enter_your_data_directory_here&#39;</span>
+<span class="n">ER</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">ER_Vernez_2015</span><span class="p">(</span><span class="s2">&quot;Forehead&quot;</span><span class="p">,</span><span class="s2">&quot;Standing&quot;</span><span class="p">)</span> <span class="c1"># Long-term average ER for foreheads in standing posture</span>
+<span class="nb">map</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">ExposureMap</span><span class="p">(</span>
+    <span class="n">data_directory</span><span class="o">=</span><span class="n">data_directory</span><span class="p">,</span>
+    <span class="n">units</span> <span class="o">=</span> <span class="s2">&quot;J m-2&quot;</span><span class="p">,</span>
+    <span class="n">exposure_schedule</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span>
+                        <span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span>  <span class="p">,</span>
+                        <span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span>  <span class="p">,</span>
+                        <span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">]</span><span class="o">*</span><span class="n">ER</span><span class="p">,</span>
+    <span class="n">bin_width</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span>
+    <span class="n">date_selection</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s2">&quot;2005-01-01&quot;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s2">&quot;2014-12-31&quot;</span><span class="p">),</span>
+    <span class="n">statistic</span> <span class="o">=</span> <span class="s2">&quot;mean&quot;</span><span class="p">,</span>
+    <span class="n">map_options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Chronic daily UV dose for typical school children, 2005-2014&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;save&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
+<span class="nb">map</span> <span class="o">=</span> <span class="nb">map</span><span class="o">.</span><span class="n">collect_data</span><span class="p">()</span><span class="o">.</span><span class="n">calculate_map</span><span class="p">()</span>
+<span class="nb">map</span><span class="o">.</span><span class="n">plot_map</span><span class="p">()</span>
 </pre></div>
 </div>
 <dl class="py method">
@@ -266,17 +270,17 @@ given <cite>bin_width</cite> input.</p></li>
 completing the ExposureMap workflow without using the <cite>ExposureMap.ExposureMap.collect_data()</cite>
 function. This can be useful if the data collection is timely and the user wants to
 produce multiple different maps.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">python_tamer</span> <span class="k">as</span> <span class="nn">pt</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">custom_user_data</span> <span class="kn">import</span> <span class="n">pix_hist</span><span class="p">,</span> <span class="n">bin_centers</span><span class="p">,</span> <span class="n">map_options</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">map</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">ExposureMap</span><span class="p">(</span><span class="n">map_options</span> <span class="o">=</span> <span class="n">map_options</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">map</span> <span class="o">=</span> <span class="nb">map</span><span class="o">.</span><span class="n">calculate_map</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="n">statistic</span> <span class="o">=</span> <span class="s2">&quot;median&quot;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">pix_hist</span> <span class="o">=</span> <span class="n">data</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">bin_centers</span> <span class="o">=</span> <span class="n">bin_centers</span>
-<span class="gp">... </span><span class="p">)</span><span class="o">.</span><span class="n">plot_map</span><span class="p">(</span><span class="n">save</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">map</span><span class="o">.</span><span class="n">calculate_map</span><span class="p">(</span><span class="n">statistic</span> <span class="o">=</span> <span class="s2">&quot;max&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">plot_map</span><span class="p">(</span><span class="n">map_options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;save&quot;</span> <span class="o">=</span> <span class="kc">False</span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">map</span><span class="o">.</span><span class="n">calculate_map</span><span class="p">(</span><span class="n">statistic</span> <span class="o">=</span> <span class="s2">&quot;std&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">plot_map</span><span class="p">(</span><span class="n">map_options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;save&quot;</span> <span class="o">=</span> <span class="kc">False</span><span class="p">})</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">python_tamer</span> <span class="k">as</span> <span class="nn">pt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">custom_user_data</span> <span class="kn">import</span> <span class="n">pix_hist</span><span class="p">,</span> <span class="n">bin_centers</span><span class="p">,</span> <span class="n">map_options</span>
+<span class="nb">map</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">ExposureMap</span><span class="p">(</span><span class="n">map_options</span> <span class="o">=</span> <span class="n">map_options</span><span class="p">)</span>
+<span class="nb">map</span> <span class="o">=</span> <span class="nb">map</span><span class="o">.</span><span class="n">calculate_map</span><span class="p">(</span>
+    <span class="n">statistic</span> <span class="o">=</span> <span class="s2">&quot;median&quot;</span><span class="p">,</span>
+    <span class="n">pix_hist</span> <span class="o">=</span> <span class="n">data</span><span class="p">,</span>
+    <span class="n">bin_centers</span> <span class="o">=</span> <span class="n">bin_centers</span>
+<span class="p">)</span><span class="o">.</span><span class="n">plot_map</span><span class="p">(</span><span class="n">save</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+<span class="nb">map</span><span class="o">.</span><span class="n">calculate_map</span><span class="p">(</span><span class="n">statistic</span> <span class="o">=</span> <span class="s2">&quot;max&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">plot_map</span><span class="p">(</span><span class="n">map_options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;save&quot;</span> <span class="o">=</span> <span class="kc">False</span><span class="p">})</span>
+<span class="nb">map</span><span class="o">.</span><span class="n">calculate_map</span><span class="p">(</span><span class="n">statistic</span> <span class="o">=</span> <span class="s2">&quot;std&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">plot_map</span><span class="p">(</span><span class="n">map_options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;save&quot;</span> <span class="o">=</span> <span class="kc">False</span><span class="p">})</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -331,22 +335,24 @@ further down the typical pipeline.</p>
 <p class="rubric">Example</p>
 <p>The example code below shows how an ExposureMap class can be declared with the default parameters that
 can then be later redefined by collect_data() and the other class functions.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">python_tamer</span> <span class="k">as</span> <span class="nn">pt</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ER</span> <span class="o">=</span> <span class="n">ER_Vernez_2015</span><span class="p">(</span><span class="s2">&quot;Forehead&quot;</span><span class="p">,</span><span class="s2">&quot;Standing&quot;</span><span class="p">)</span> <span class="c1"># Long-term average ER for foreheads in standing posture</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">map</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">ExposureMap</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">map</span> <span class="o">=</span> <span class="nb">map</span><span class="o">.</span><span class="n">collect_data</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="n">units</span> <span class="o">=</span> <span class="s2">&quot;J m-2&quot;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">exposure_schedule</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span>
-<span class="gp">... </span>                         <span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span>  <span class="p">,</span>
-<span class="gp">... </span>                         <span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span>  <span class="p">,</span>
-<span class="gp">... </span>                         <span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">]</span><span class="o">*</span><span class="n">ER</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">bin_width</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">date_selection</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s2">&quot;2005-01-01&quot;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s2">&quot;2014-12-31&quot;</span><span class="p">)</span>
-<span class="gp">... </span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">map</span> <span class="o">=</span> <span class="nb">map</span><span class="o">.</span><span class="n">calculate_map</span><span class="p">(</span><span class="n">statistic</span> <span class="o">=</span> <span class="s2">&quot;mean&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">map</span><span class="o">.</span><span class="n">plot_map</span><span class="p">(</span><span class="n">map_options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Chronic daily UV dose for typical school children, 2005-2014&quot;</span><span class="p">,</span>
-<span class="gp">... </span>                          <span class="s2">&quot;save&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">python_tamer</span> <span class="k">as</span> <span class="nn">pt</span>
+<span class="kn">import</span> <span class="nn">pandas</span>
+<span class="n">data_directory</span> <span class="o">=</span> <span class="s1">&#39;C:/enter_your_data_directory_here&#39;</span>
+<span class="n">ER</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">ER_Vernez_2015</span><span class="p">(</span><span class="s2">&quot;Forehead&quot;</span><span class="p">,</span><span class="s2">&quot;Standing&quot;</span><span class="p">)</span> <span class="c1"># Long-term average ER for foreheads in standing posture</span>
+<span class="nb">map</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">ExposureMap</span><span class="p">()</span>
+<span class="nb">map</span> <span class="o">=</span> <span class="nb">map</span><span class="o">.</span><span class="n">collect_data</span><span class="p">(</span>
+    <span class="n">data_directory</span><span class="o">=</span><span class="n">data_directory</span><span class="p">,</span>
+    <span class="n">units</span> <span class="o">=</span> <span class="s2">&quot;J m-2&quot;</span><span class="p">,</span>
+    <span class="n">exposure_schedule</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span>
+                         <span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span>  <span class="p">,</span>
+                         <span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span>  <span class="p">,</span>
+                         <span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">]</span><span class="o">*</span><span class="n">ER</span><span class="p">,</span>
+    <span class="n">bin_width</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span>
+    <span class="n">date_selection</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s2">&quot;2005-01-01&quot;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s2">&quot;2014-12-31&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="nb">map</span> <span class="o">=</span> <span class="nb">map</span><span class="o">.</span><span class="n">calculate_map</span><span class="p">(</span><span class="n">statistic</span> <span class="o">=</span> <span class="s2">&quot;mean&quot;</span><span class="p">)</span>
+<span class="nb">map</span><span class="o">.</span><span class="n">plot_map</span><span class="p">(</span><span class="n">map_options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Chronic daily UV dose for typical school children, 2005-2014&quot;</span><span class="p">,</span>
+                          <span class="s2">&quot;save&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -413,6 +419,12 @@ field (if the user has specificied any changes to the default map_options).</p>
 
 </dd></dl>
 
+<dl class="py class">
+<dt id="python_tamer.ExposureMap.ExposureMapBatch">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">python_tamer.ExposureMap.</span></code><code class="sig-name descname"><span class="pre">ExposureMapBatch</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quick_selection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">units</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'SED'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exposure_schedule</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">statistic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date_selection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">climatology_years</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">src_filename_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'UVery.AS_ch02.lonlat_yyyy01010000.nc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'C:/Data/UV/'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/python_tamer/ExposureMap.html#ExposureMapBatch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#python_tamer.ExposureMap.ExposureMapBatch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
 </div>
 <div class="section" id="module-python_tamer.SpecificDoses">
 <span id="specificdoses-module"></span><h2>SpecificDoses module<a class="headerlink" href="#module-python_tamer.SpecificDoses" title="Permalink to this headline">¶</a></h2>
@@ -442,21 +454,24 @@ of the year.</p></li>
 and will likely be revised in a later update. For the time being, this means that the
 parameters cannot be set when initialising a <cite>SpecificDoses</cite> object, they must instead
 be adjusted after initialisation, like so:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ExistingExposureMapObject</span><span class="o">.</span><span class="n">data_directory</span> <span class="o">=</span> <span class="s2">&quot;/new/data/directory/&quot;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ExistingExposureMapObject</span><span class="o">.</span><span class="n">data_directory</span> <span class="o">=</span> <span class="s2">&quot;/new/data/directory/&quot;</span>
 </pre></div>
 </div>
 <p class="rubric">Example</p>
 <p>In this example, we illustrate the process for calculating the doses in Harris et al. 2021
 (<a class="reference external" href="https://doi.org/10.3390/atmos12020268">https://doi.org/10.3390/atmos12020268</a>) from the spreadsheet supplied as supplementary
 data (<a class="reference external" href="https://www.mdpi.com/2073-4433/12/2/268/s1">https://www.mdpi.com/2073-4433/12/2/268/s1</a>). Note that results will differ as the
-spreadsheet contains only local Swiss time and not UTC time. There are four functions</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">python_tamer</span> <span class="k">as</span> <span class="nn">pt</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">example</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">SpecificDoses</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;atmosphere-12-00268-s001.xlsx&#39;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">header</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">usecols</span><span class="o">=</span><span class="s2">&quot;B:K&quot;</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">standard_column_names</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">schedule_constant_exposure</span><span class="p">()</span><span class="o">.</span><span class="n">ER_from_posture</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">calculate_specific_dose</span><span class="p">()</span>
+spreadsheet contains only local Swiss time and not UTC time. There are four important
+functions as part of this class, three for standardising and preparing the columns,
+and one for actually loading the data and performing the dose calculations. See below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">python_tamer</span> <span class="k">as</span> <span class="nn">pt</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="n">example</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">SpecificDoses</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;atmosphere-12-00268-s001.xlsx&#39;</span><span class="p">,</span>
+                                         <span class="n">header</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">usecols</span><span class="o">=</span><span class="s2">&quot;B:K&quot;</span><span class="p">))</span>
+<span class="n">example</span><span class="o">.</span><span class="n">data_directory</span> <span class="o">=</span> <span class="s1">&#39;C:/enter_the_directory_of_your_dataset_here&#39;</span>
+<span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">standard_column_names</span><span class="p">()</span>
+<span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">schedule_constant_exposure</span><span class="p">()</span><span class="o">.</span><span class="n">ER_from_posture</span><span class="p">()</span>
+<span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">calculate_specific_dose</span><span class="p">()</span>
 </pre></div>
 </div>
 <dl class="py method">
@@ -495,14 +510,17 @@ one of six accepted postures.</p>
 <p>In this example, we illustrate the process for calculating the doses in Harris et al. 2021
 (<a class="reference external" href="https://doi.org/10.3390/atmos12020268">https://doi.org/10.3390/atmos12020268</a>) from the spreadsheet supplied as supplementary
 data (<a class="reference external" href="https://www.mdpi.com/2073-4433/12/2/268/s1">https://www.mdpi.com/2073-4433/12/2/268/s1</a>). Note that results will differ as the
-spreadsheet contains only local Swiss time and not UTC time. There are four functions</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">python_tamer</span> <span class="k">as</span> <span class="nn">pt</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">example</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">SpecificDoses</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;atmosphere-12-00268-s001.xlsx&#39;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">header</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">usecols</span><span class="o">=</span><span class="s2">&quot;B:K&quot;</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">standard_column_names</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">schedule_constant_exposure</span><span class="p">()</span><span class="o">.</span><span class="n">ER_from_posture</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">calculate_specific_dose</span><span class="p">()</span>
+spreadsheet contains only local Swiss time and not UTC time. There are four important
+functions as part of this class, three for standardising and preparing the columns,
+and one for actually loading the data and performing the dose calculations. See below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">python_tamer</span> <span class="k">as</span> <span class="nn">pt</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="n">example</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">SpecificDoses</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;atmosphere-12-00268-s001.xlsx&#39;</span><span class="p">,</span>
+                                        <span class="n">header</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">usecols</span><span class="o">=</span><span class="s2">&quot;B:K&quot;</span><span class="p">))</span>
+<span class="n">example</span><span class="o">.</span><span class="n">data_directory</span> <span class="o">=</span> <span class="s1">&#39;C:/enter_the_directory_of_your_dataset_here&#39;</span>
+<span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">standard_column_names</span><span class="p">()</span>
+<span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">schedule_constant_exposure</span><span class="p">()</span><span class="o">.</span><span class="n">ER_from_posture</span><span class="p">()</span>
+<span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">calculate_specific_dose</span><span class="p">()</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -535,14 +553,17 @@ dosimetry measurements.</p>
 <p>In this example, we illustrate the process for calculating the doses in Harris et al. 2021
 (<a class="reference external" href="https://doi.org/10.3390/atmos12020268">https://doi.org/10.3390/atmos12020268</a>) from the spreadsheet supplied as supplementary
 data (<a class="reference external" href="https://www.mdpi.com/2073-4433/12/2/268/s1">https://www.mdpi.com/2073-4433/12/2/268/s1</a>). Note that results will differ as the
-spreadsheet contains only local Swiss time and not UTC time. There are four functions</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">python_tamer</span> <span class="k">as</span> <span class="nn">pt</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">example</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">SpecificDoses</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;atmosphere-12-00268-s001.xlsx&#39;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">header</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">usecols</span><span class="o">=</span><span class="s2">&quot;B:K&quot;</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">standard_column_names</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">schedule_constant_exposure</span><span class="p">()</span><span class="o">.</span><span class="n">ER_from_posture</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">calculate_specific_dose</span><span class="p">()</span>
+spreadsheet contains only local Swiss time and not UTC time. There are four important
+functions as part of this class, three for standardising and preparing the columns,
+and one for actually loading the data and performing the dose calculations. See below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">python_tamer</span> <span class="k">as</span> <span class="nn">pt</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="n">example</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">SpecificDoses</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;atmosphere-12-00268-s001.xlsx&#39;</span><span class="p">,</span>
+                                        <span class="n">header</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">usecols</span><span class="o">=</span><span class="s2">&quot;B:K&quot;</span><span class="p">))</span>
+<span class="n">example</span><span class="o">.</span><span class="n">data_directory</span> <span class="o">=</span> <span class="s1">&#39;C:/enter_the_directory_of_your_dataset_here&#39;</span>
+<span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">standard_column_names</span><span class="p">()</span>
+<span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">schedule_constant_exposure</span><span class="p">()</span><span class="o">.</span><span class="n">ER_from_posture</span><span class="p">()</span>
+<span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">calculate_specific_dose</span><span class="p">()</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -577,14 +598,17 @@ the subject is exposed.</p>
 <p>In this example, we illustrate the process for calculating the doses in Harris et al. 2021
 (<a class="reference external" href="https://doi.org/10.3390/atmos12020268">https://doi.org/10.3390/atmos12020268</a>) from the spreadsheet supplied as supplementary
 data (<a class="reference external" href="https://www.mdpi.com/2073-4433/12/2/268/s1">https://www.mdpi.com/2073-4433/12/2/268/s1</a>). Note that results will differ as the
-spreadsheet contains only local Swiss time and not UTC time. There are four functions</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">python_tamer</span> <span class="k">as</span> <span class="nn">pt</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">example</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">SpecificDoses</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;atmosphere-12-00268-s001.xlsx&#39;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">header</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">usecols</span><span class="o">=</span><span class="s2">&quot;B:K&quot;</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">standard_column_names</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">schedule_constant_exposure</span><span class="p">()</span><span class="o">.</span><span class="n">ER_from_posture</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">calculate_specific_dose</span><span class="p">()</span>
+spreadsheet contains only local Swiss time and not UTC time. There are four important
+functions as part of this class, three for standardising and preparing the columns,
+and one for actually loading the data and performing the dose calculations. See below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">python_tamer</span> <span class="k">as</span> <span class="nn">pt</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="n">example</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">SpecificDoses</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;atmosphere-12-00268-s001.xlsx&#39;</span><span class="p">,</span>
+                                        <span class="n">header</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">usecols</span><span class="o">=</span><span class="s2">&quot;B:K&quot;</span><span class="p">))</span>
+<span class="n">example</span><span class="o">.</span><span class="n">data_directory</span> <span class="o">=</span> <span class="s1">&#39;C:/enter_the_directory_of_your_dataset_here&#39;</span>
+<span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">standard_column_names</span><span class="p">()</span>
+<span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">schedule_constant_exposure</span><span class="p">()</span><span class="o">.</span><span class="n">ER_from_posture</span><span class="p">()</span>
+<span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">calculate_specific_dose</span><span class="p">()</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -615,12 +639,12 @@ maps to “Face’. See Vernez et al., Journal of Exposure Science and Environme
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>Anatomic_zone</strong> (<em>str</em>) – String or list of strings describing the anatomic zone for which the ER is to be calculated.</p></li>
-<li><p><strong>Posture</strong> (<em>str</em>) – String or list of strings describing the posture for which the ER is to be calculated.</p></li>
-<li><p><strong>Date</strong> (<em>datetime.date</em><em> or </em><em>pandas.DateTimeIndex</em><em>, </em><em>optional</em>) – The date for which the ER is to be calculated. The date affects the minimum solar zenith
+<li><p><strong>Anatomic_zone</strong> (<em>list</em>) – String or list of strings describing the anatomic zone for which the ER is to be calculated.</p></li>
+<li><p><strong>Posture</strong> (<em>list</em>) – String or list of strings describing the posture for which the ER is to be calculated.</p></li>
+<li><p><strong>Date</strong> (<em>list</em><em>, </em><em>optional</em>) – The date for which the ER is to be calculated. The date affects the minimum solar zenith
 angle in the Vernez et al. 2015 ER model. The specific year is not relevant. Defaults to
 March 20, the equinox.</p></li>
-<li><p><strong>Latitude</strong> (<em>float</em><em> or </em><em>array</em><em>, </em><em>optional</em>) – The latitude is important for calculating the ER. Defaults to None, wherein the latitude
+<li><p><strong>Latitude</strong> (<em>list</em><em>, </em><em>optional</em>) – The latitude is important for calculating the ER. Defaults to None, wherein the latitude
 of the centroid of Switzerland (46.8 degrees) is used.</p></li>
 <li><p><strong>Vis_table_path</strong> (<em>str</em><em>, </em><em>optional</em>) – The full path to an alternative table for the Vis parameter.
 Must be a csv file. Defaults to None.</p></li>
@@ -628,10 +652,10 @@ Must be a csv file. Defaults to None.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Returns ER values as a numpy array</p>
+<dd class="field-even"><p>Returns ER values as a list</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>numpy.array</p>
+<dd class="field-odd"><p>list</p>
 </dd>
 </dl>
 </dd></dl>
@@ -856,7 +880,7 @@ we removed this calculation to optimise this function further.</p></li>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="contributing.html" class="btn btn-neutral float-right" title="Contributing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="licence.html" class="btn btn-neutral float-right" title="Licence" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="usage.html" class="btn btn-neutral float-left" title="Usage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

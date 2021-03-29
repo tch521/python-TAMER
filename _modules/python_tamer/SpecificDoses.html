@@ -83,6 +83,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../code_reference.html">Code Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../licence.html">Licence</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../authors.html">Credits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a></li>
@@ -184,9 +185,9 @@
 <span class="sd">    Presently, the class is inherited from a pandas.DataFrame which is somewhat restrictive </span>
 <span class="sd">    and will likely be revised in a later update. For the time being, this means that the </span>
 <span class="sd">    parameters cannot be set when initialising a `SpecificDoses` object, they must instead</span>
-<span class="sd">    be adjusted after initialisation, like so:</span>
+<span class="sd">    be adjusted after initialisation, like so::</span>
 
-<span class="sd">    &gt;&gt;&gt; ExistingExposureMapObject.data_directory = &quot;/new/data/directory/&quot;</span>
+<span class="sd">        ExistingExposureMapObject.data_directory = &quot;/new/data/directory/&quot;</span>
 
 <span class="sd">    </span>
 <span class="sd">    Example</span>
@@ -195,15 +196,18 @@
 <span class="sd">    In this example, we illustrate the process for calculating the doses in Harris et al. 2021</span>
 <span class="sd">    (https://doi.org/10.3390/atmos12020268) from the spreadsheet supplied as supplementary </span>
 <span class="sd">    data (https://www.mdpi.com/2073-4433/12/2/268/s1). Note that results will differ as the</span>
-<span class="sd">    spreadsheet contains only local Swiss time and not UTC time. There are four functions</span>
+<span class="sd">    spreadsheet contains only local Swiss time and not UTC time. There are four important</span>
+<span class="sd">    functions as part of this class, three for standardising and preparing the columns,</span>
+<span class="sd">    and one for actually loading the data and performing the dose calculations. See below::</span>
 
-<span class="sd">    &gt;&gt;&gt; import python_tamer as pt</span>
-<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
-<span class="sd">    &gt;&gt;&gt; example = pt.SpecificDoses(pd.read_excel(r&#39;atmosphere-12-00268-s001.xlsx&#39;,</span>
-<span class="sd">    ...     header=2,index_col=0,usecols=&quot;B:K&quot;))</span>
-<span class="sd">    &gt;&gt;&gt; example = example.standard_column_names() </span>
-<span class="sd">    &gt;&gt;&gt; example = example.schedule_constant_exposure().ER_from_posture()</span>
-<span class="sd">    &gt;&gt;&gt; example = example.calculate_specific_dose()</span>
+<span class="sd">        import python_tamer as pt</span>
+<span class="sd">        import pandas as pd</span>
+<span class="sd">        example = pt.SpecificDoses(pd.read_excel(r&#39;atmosphere-12-00268-s001.xlsx&#39;,</span>
+<span class="sd">                                                 header=2,index_col=0,usecols=&quot;B:K&quot;))</span>
+<span class="sd">        example.data_directory = &#39;C:/enter_the_directory_of_your_dataset_here&#39;</span>
+<span class="sd">        example = example.standard_column_names() </span>
+<span class="sd">        example = example.schedule_constant_exposure().ER_from_posture()</span>
+<span class="sd">        example = example.calculate_specific_dose()</span>
 
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -216,7 +220,7 @@
     <span class="c1"># This adds some useful metadata (self-explanatory)</span>
     <span class="n">_metadata</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;src_filename_format&quot;</span><span class="p">,</span><span class="s2">&quot;data_directory&quot;</span><span class="p">]</span>
     <span class="n">src_filename_format</span> <span class="o">=</span> <span class="s1">&#39;UVery.AS_ch02.lonlat_yyyy01010000.nc&#39;</span>
-    <span class="n">data_directory</span> <span class="o">=</span> <span class="s1">&#39;C:/Data/UV/&#39;</span> <span class="c1"># TO DO: set up __init__ for these options</span>
+    <span class="n">data_directory</span> <span class="o">=</span> <span class="s1">&#39;C:/Data/UV/&#39;</span> <span class="c1"># TODO: set up __init__ for these options</span>
     <span class="c1"># It feels like this should be declared with __init__ as well but idk</span>
 
 <div class="viewcode-block" id="SpecificDoses.standard_column_names"><a class="viewcode-back" href="../../code_reference.html#python_tamer.SpecificDoses.SpecificDoses.standard_column_names">[docs]</a>    <span class="k">def</span> <span class="nf">standard_column_names</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span>
@@ -265,15 +269,18 @@
 <span class="sd">        In this example, we illustrate the process for calculating the doses in Harris et al. 2021</span>
 <span class="sd">        (https://doi.org/10.3390/atmos12020268) from the spreadsheet supplied as supplementary </span>
 <span class="sd">        data (https://www.mdpi.com/2073-4433/12/2/268/s1). Note that results will differ as the</span>
-<span class="sd">        spreadsheet contains only local Swiss time and not UTC time. There are four functions</span>
+<span class="sd">        spreadsheet contains only local Swiss time and not UTC time. There are four important</span>
+<span class="sd">        functions as part of this class, three for standardising and preparing the columns,</span>
+<span class="sd">        and one for actually loading the data and performing the dose calculations. See below::</span>
 
-<span class="sd">        &gt;&gt;&gt; import python_tamer as pt</span>
-<span class="sd">        &gt;&gt;&gt; import pandas as pd</span>
-<span class="sd">        &gt;&gt;&gt; example = pt.SpecificDoses(pd.read_excel(r&#39;atmosphere-12-00268-s001.xlsx&#39;,</span>
-<span class="sd">        ...     header=2,index_col=0,usecols=&quot;B:K&quot;))</span>
-<span class="sd">        &gt;&gt;&gt; example = example.standard_column_names() </span>
-<span class="sd">        &gt;&gt;&gt; example = example.schedule_constant_exposure().ER_from_posture()</span>
-<span class="sd">        &gt;&gt;&gt; example = example.calculate_specific_dose()</span>
+<span class="sd">            import python_tamer as pt</span>
+<span class="sd">            import pandas as pd</span>
+<span class="sd">            example = pt.SpecificDoses(pd.read_excel(r&#39;atmosphere-12-00268-s001.xlsx&#39;,</span>
+<span class="sd">                                                    header=2,index_col=0,usecols=&quot;B:K&quot;))</span>
+<span class="sd">            example.data_directory = &#39;C:/enter_the_directory_of_your_dataset_here&#39;</span>
+<span class="sd">            example = example.standard_column_names() </span>
+<span class="sd">            example = example.schedule_constant_exposure().ER_from_posture()</span>
+<span class="sd">            example = example.calculate_specific_dose()</span>
 
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -360,15 +367,18 @@
 <span class="sd">        In this example, we illustrate the process for calculating the doses in Harris et al. 2021</span>
 <span class="sd">        (https://doi.org/10.3390/atmos12020268) from the spreadsheet supplied as supplementary </span>
 <span class="sd">        data (https://www.mdpi.com/2073-4433/12/2/268/s1). Note that results will differ as the</span>
-<span class="sd">        spreadsheet contains only local Swiss time and not UTC time. There are four functions</span>
+<span class="sd">        spreadsheet contains only local Swiss time and not UTC time. There are four important</span>
+<span class="sd">        functions as part of this class, three for standardising and preparing the columns,</span>
+<span class="sd">        and one for actually loading the data and performing the dose calculations. See below::</span>
 
-<span class="sd">        &gt;&gt;&gt; import python_tamer as pt</span>
-<span class="sd">        &gt;&gt;&gt; import pandas as pd</span>
-<span class="sd">        &gt;&gt;&gt; example = pt.SpecificDoses(pd.read_excel(r&#39;atmosphere-12-00268-s001.xlsx&#39;,</span>
-<span class="sd">        ...     header=2,index_col=0,usecols=&quot;B:K&quot;))</span>
-<span class="sd">        &gt;&gt;&gt; example = example.standard_column_names() </span>
-<span class="sd">        &gt;&gt;&gt; example = example.schedule_constant_exposure().ER_from_posture()</span>
-<span class="sd">        &gt;&gt;&gt; example = example.calculate_specific_dose()</span>
+<span class="sd">            import python_tamer as pt</span>
+<span class="sd">            import pandas as pd</span>
+<span class="sd">            example = pt.SpecificDoses(pd.read_excel(r&#39;atmosphere-12-00268-s001.xlsx&#39;,</span>
+<span class="sd">                                                    header=2,index_col=0,usecols=&quot;B:K&quot;))</span>
+<span class="sd">            example.data_directory = &#39;C:/enter_the_directory_of_your_dataset_here&#39;</span>
+<span class="sd">            example = example.standard_column_names() </span>
+<span class="sd">            example = example.schedule_constant_exposure().ER_from_posture()</span>
+<span class="sd">            example = example.calculate_specific_dose()</span>
 
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -393,7 +403,7 @@
                     <span class="p">[</span><span class="mf">44.9</span><span class="p">,</span><span class="mf">51.6</span><span class="p">,</span><span class="mf">56.6</span><span class="p">,</span><span class="mf">53.4</span><span class="p">,</span><span class="mf">86.9</span><span class="p">]])</span>
             <span class="c1"># The &#39;standing moving&#39; posture must be dealt with somehow...</span>
             <span class="c1"># Vis_table[&#39;Standing moving&#39;]= (Vis_table[&#39;Standing erect arms down&#39;] + Vis_table[&#39;Standing bowing&#39;]) / 2</span>
-            <span class="c1"># TO DO: add interpeter or force users to conform?</span>
+            <span class="c1"># TODO: add interpeter or force users to conform?</span>
             <span class="n">Vis_table</span><span class="p">[</span><span class="s1">&#39;Standing moving&#39;</span><span class="p">]</span><span class="o">=</span> <span class="n">Vis_table</span><span class="p">[</span><span class="s1">&#39;Standing erect arms down&#39;</span><span class="p">]</span> 
         <span class="k">elif</span> <span class="n">Vis_table</span> <span class="ow">is</span> <span class="kc">None</span> <span class="p">:</span>
             <span class="n">Vis_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">Vis_table_path</span><span class="p">)</span>
@@ -476,15 +486,19 @@
 <span class="sd">        In this example, we illustrate the process for calculating the doses in Harris et al. 2021</span>
 <span class="sd">        (https://doi.org/10.3390/atmos12020268) from the spreadsheet supplied as supplementary </span>
 <span class="sd">        data (https://www.mdpi.com/2073-4433/12/2/268/s1). Note that results will differ as the</span>
-<span class="sd">        spreadsheet contains only local Swiss time and not UTC time. There are four functions</span>
+<span class="sd">        spreadsheet contains only local Swiss time and not UTC time. There are four important</span>
+<span class="sd">        functions as part of this class, three for standardising and preparing the columns,</span>
+<span class="sd">        and one for actually loading the data and performing the dose calculations. See below::</span>
 
-<span class="sd">        &gt;&gt;&gt; import python_tamer as pt</span>
-<span class="sd">        &gt;&gt;&gt; import pandas as pd</span>
-<span class="sd">        &gt;&gt;&gt; example = pt.SpecificDoses(pd.read_excel(r&#39;atmosphere-12-00268-s001.xlsx&#39;,</span>
-<span class="sd">        ...     header=2,index_col=0,usecols=&quot;B:K&quot;))</span>
-<span class="sd">        &gt;&gt;&gt; example = example.standard_column_names() </span>
-<span class="sd">        &gt;&gt;&gt; example = example.schedule_constant_exposure().ER_from_posture()</span>
-<span class="sd">        &gt;&gt;&gt; example = example.calculate_specific_dose()</span>
+<span class="sd">            import python_tamer as pt</span>
+<span class="sd">            import pandas as pd</span>
+<span class="sd">            example = pt.SpecificDoses(pd.read_excel(r&#39;atmosphere-12-00268-s001.xlsx&#39;,</span>
+<span class="sd">                                                    header=2,index_col=0,usecols=&quot;B:K&quot;))</span>
+<span class="sd">            example.data_directory = &#39;C:/enter_the_directory_of_your_dataset_here&#39;</span>
+<span class="sd">            example = example.standard_column_names() </span>
+<span class="sd">            example = example.schedule_constant_exposure().ER_from_posture()</span>
+<span class="sd">            example = example.calculate_specific_dose()</span>
+
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -525,12 +539,11 @@
                 <span class="c1"># flatten time_subset array back to one dimension</span>
                 <span class="n">time_subset</span> <span class="o">=</span> <span class="n">time_subset</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
 
-            <span class="n">data</span> <span class="o">=</span> <span class="n">assert_data_shape_24</span><span class="p">(</span><span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;UV_AS&#39;</span><span class="p">][</span><span class="n">time_subset</span><span class="p">,:,:]</span><span class="o">*</span><span class="mi">40</span><span class="p">)</span> 
-            <span class="c1"># *40 converts it to uv index</span>
-            <span class="c1"># TO DO: improve comprehension of raw data units rather than assuming</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">assert_data_shape_24</span><span class="p">(</span><span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;UV_AS&#39;</span><span class="p">][</span><span class="n">time_subset</span><span class="p">,:,:])</span> 
+            <span class="c1"># TODO: improve comprehension of raw data units rather than assuming</span>
 
             <span class="c1"># convert lat lon into pixel coordinates</span>
-            <span class="c1"># TO DO: consider is necessary to load entire maps for just a few required pixels</span>
+            <span class="c1"># TODO: consider is necessary to load entire maps for just a few required pixels</span>
             <span class="n">lat</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">][:]</span>
             <span class="n">lon</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;lon&#39;</span><span class="p">][:]</span>
             <span class="n">temp_table</span><span class="p">[</span><span class="s1">&#39;pixel_lat&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_table</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> 
@@ -551,7 +564,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">temp_table</span><span class="o">.</span><span class="n">index</span><span class="p">,</span><span class="s1">&#39;Ambient_dose&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_table</span><span class="p">[</span><span class="s1">&#39;Ambient_dose&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">temp_table</span><span class="o">.</span><span class="n">index</span><span class="p">,</span><span class="s1">&#39;Personal_dose&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_table</span><span class="p">[</span><span class="s1">&#39;Personal_dose&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
 
-        <span class="c1"># TO DO: improve units options here</span>
+        <span class="c1"># TODO: improve units options here</span>
         <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;Ambient_dose&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;Ambient_dose&#39;</span><span class="p">]</span><span class="o">/</span><span class="mi">40</span><span class="o">*</span><span class="mi">3600</span><span class="o">/</span><span class="mi">100</span> <span class="c1"># SED</span>
         <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;Personal_dose&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;Personal_dose&#39;</span><span class="p">]</span><span class="o">/</span><span class="mi">40</span><span class="o">*</span><span class="mi">3600</span><span class="o">/</span><span class="mi">100</span> <span class="c1"># SED</span>
         <span class="k">return</span> <span class="bp">self</span>        </div></div>

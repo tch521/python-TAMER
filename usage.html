@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Usage &mdash; python-TAMER 0.3.0 documentation</title>
+  <title>Usage &mdash; python-TAMER 0.3.1 documentation</title>
   
 
   
@@ -83,8 +83,13 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="readme.html">Introduction to python-TAMER</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Usage</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#calculating-specific-doses">Calculating specific doses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generating-maps-of-exposure-information">Generating maps of exposure information</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="code_reference.html">Code Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="licence.html">Licence</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="authors.html">Credits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="history.html">History</a></li>
@@ -154,9 +159,57 @@
             
   <div class="section" id="usage">
 <h1>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h1>
-<p>To use python-tamer in a project:</p>
+<p>Currently, python-TAMER is only compatiable with the <a class="reference external" href="https://doi.org/10.1016/j.envint.2020.106177">Vuilleumier et al. 2020</a> UV climatology for Switzerland. This dataset is
+currently only availabe on request, but will soon be released publicly.</p>
+<p>To use python-TAMER in a project:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">python_tamer</span>
 </pre></div>
+</div>
+<p>There are currently two major classes in python-TAMER, <code class="docutils literal notranslate"><span class="pre">SpecificDoses</span></code> and <code class="docutils literal notranslate"><span class="pre">ExposureMap</span></code>.
+Each class has an associated workflow designed to produce tablular and map outputs respectively.
+Every object created by one of these classes has two critical properties, <code class="docutils literal notranslate"><span class="pre">data_directory</span></code>
+and <code class="docutils literal notranslate"><span class="pre">src_filename_format</span></code>. These describe the location and filename format of the Vuilleumier
+et al. UV climatology. Users must ensure these properties are correct for each class object
+they create. Below we describe in general terms the approach taken by these classes. For
+examples of raw code, see the <a class="reference internal" href="code_reference.html#code-reference"><span class="std std-ref">Code Reference</span></a>.</p>
+<div class="section" id="calculating-specific-doses">
+<h2>Calculating specific doses<a class="headerlink" href="#calculating-specific-doses" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">SpecificDoses</span></code> class is essentially a table listing the key information to perform a dose
+estimation. In the context of UV, this can be used in tandem with or as a substitute for
+tradition dosimetry measurements. See <a class="reference external" href="https://doi.org/10.3390/atmos12020268">Harris et al. 2021</a>
+for more information on this approach.</p>
+<p>To get started with the <code class="docutils literal notranslate"><span class="pre">SpecificDoses</span></code> class, prepare a pandas DataFrame (i.e. a table) with
+columns for <code class="docutils literal notranslate"><span class="pre">Latitude</span></code>, <code class="docutils literal notranslate"><span class="pre">Longitude</span></code>, <code class="docutils literal notranslate"><span class="pre">Date</span></code>, <code class="docutils literal notranslate"><span class="pre">ER</span></code>, and <code class="docutils literal notranslate"><span class="pre">Schedule</span></code>. Each row of this
+table represents an exposed individual and the columns provide the corresponding details needed
+to estimate their total daily UV dose. The <code class="docutils literal notranslate"><span class="pre">ER</span></code> column refers to the Exposure Ratio of the
+exposed individual. This information is not always readily available, and so the <code class="docutils literal notranslate"><span class="pre">SpecificDoses</span></code>
+class includes the <code class="docutils literal notranslate"><span class="pre">ER_from_posture()</span></code> function that calculates an <code class="docutils literal notranslate"><span class="pre">ER</span></code> column based on
+<code class="docutils literal notranslate"><span class="pre">Posture</span></code> and <code class="docutils literal notranslate"><span class="pre">Anatomic_zone</span></code> columns. Similarly, the <code class="docutils literal notranslate"><span class="pre">Schedule</span></code> column refers to the
+Exposure Schedule, a 24-length vector describing the proportion of each hour spent outdoors.
+Often it is easier to simply list and start time and end time for a given exposure period,
+so we have included the <code class="docutils literal notranslate"><span class="pre">schedule_constant_exposure()</span></code> function which generates a <code class="docutils literal notranslate"><span class="pre">Schedule</span></code>
+column based on <code class="docutils literal notranslate"><span class="pre">Time_start</span></code> and <code class="docutils literal notranslate"><span class="pre">Time_end</span></code> columns.</p>
+<p>Once the SpecificDoses table is prepared, the <code class="docutils literal notranslate"><span class="pre">calculate_specific_doses()</span></code> function can be
+applied to append <code class="docutils literal notranslate"><span class="pre">Ambient_dose</span></code> and <code class="docutils literal notranslate"><span class="pre">Personal_dose</span></code> columns to the table.</p>
+</div>
+<div class="section" id="generating-maps-of-exposure-information">
+<h2>Generating maps of exposure information<a class="headerlink" href="#generating-maps-of-exposure-information" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">ExposureMap</span></code> class is designed to calculate more general information about doses or
+UV radiation intensity. The idea is to generate what we refer to as “pixel histograms”,
+those are histograms of UV intensity or UV doses for each spatial pixel available in the
+dataset. By using histograms, python-TAMER is able to collect large distributions of data
+per pixel with relatively low memory requirements, ensuring that these calculations can be
+performed on personal computers with as little as 4GB of RAM. The data is loaded using the
+<code class="docutils literal notranslate"><span class="pre">collect_data()</span></code> function, which goes through the dataset one file at a time, loading
+the relevant data, performing any necessary calculations (such as applying an exposure
+schedule to calculate a dose or performing unit conversions), and then discretising the
+results and adding that information to the pixel histograms.</p>
+<p>Once the relevant data has been collected into pixel histograms, the <code class="docutils literal notranslate"><span class="pre">calculate_map()</span></code>
+function can be used to calculate a descriptor quantity for each histogram. These
+descriptors can be simple, such as the mean or median of the histograms. They can also
+be more advanced, such as percentiles or the standard deviation. This gives a single
+number per pixel, stored as an array, that can then be rendered as a colour map using
+the <code class="docutils literal notranslate"><span class="pre">plot_map()</span></code> function.</p>
 </div>
 </div>
 
