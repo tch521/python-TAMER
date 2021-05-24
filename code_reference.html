@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Code Reference &mdash; python-TAMER 0.3.1 documentation</title>
+  <title>Code Reference &mdash; python-TAMER 0.4.0 documentation</title>
   
 
   
@@ -164,7 +164,7 @@
 <span id="exposuremap-module"></span><h2>ExposureMap module<a class="headerlink" href="#module-python_tamer.ExposureMap" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt id="python_tamer.ExposureMap.ExposureMap">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">python_tamer.ExposureMap.</span></code><code class="sig-name descname"><span class="pre">ExposureMap</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">units</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'SED'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exposure_schedule</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">statistic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date_selection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">src_filename_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'UVery.AS_ch02.lonlat_yyyy01010000.nc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'C:/Data/UV/'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/python_tamer/ExposureMap.html#ExposureMap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#python_tamer.ExposureMap.ExposureMap" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">python_tamer.ExposureMap.</span></code><code class="sig-name descname"><span class="pre">ExposureMap</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">units</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'SED'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exposure_schedule</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">statistic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date_selection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">src_filename_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'UVery.AS_ch02.lonlat_yyyy01010000.nc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">src_directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'C:/Data/UV/'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/python_tamer/ExposureMap.html#ExposureMap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#python_tamer.ExposureMap.ExposureMap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>A class for calculating maps based on user specifications</p>
 <p>Each instance of this class contains information required to calculate and illustrate a map
@@ -199,11 +199,11 @@ as well at “prct” or “percentile” preceeded by a number between 0 and 10
 basic mathematical operators (+, -, <em>, /, *</em>) and numeric factors.</p>
 </p></li>
 <li><p><strong>date_selection</strong> (<em>list of dates</em>) – The dates for which the irradiances are retrieved or the daily doses are calculated.
-Defaults to None whereby the program selects all data within the data_directory that
+Defaults to None whereby the program selects all data within the src_directory that
 matches the src_filename_format.</p></li>
 <li><p><strong>src_filename_format</strong> (<em>str</em>) – Describes the filename of the netCDF files containing the data with ‘yyyy’ in place
 of the year.</p></li>
-<li><p><strong>data_directory</strong> (<em>str</em>) – The directory where the data is stored. Must end with a slash.</p></li>
+<li><p><strong>src_directory</strong> (<em>str</em>) – The directory where the data is stored. Must end with a slash.</p></li>
 </ul>
 </dd>
 </dl>
@@ -213,15 +213,16 @@ of the year.</p></li>
 hours of exposure for journeying to and from school and having breaks for morning tea and lunch time.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">python_tamer</span> <span class="k">as</span> <span class="nn">pt</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="n">data_directory</span> <span class="o">=</span> <span class="s1">&#39;C:/enter_your_data_directory_here&#39;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="n">src_directory</span> <span class="o">=</span> <span class="s1">&#39;C:/enter_your_src_directory_here&#39;</span>
 <span class="n">ER</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">ER_Vernez_2015</span><span class="p">(</span><span class="s2">&quot;Forehead&quot;</span><span class="p">,</span><span class="s2">&quot;Standing&quot;</span><span class="p">)</span> <span class="c1"># Long-term average ER for foreheads in standing posture</span>
 <span class="nb">map</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">ExposureMap</span><span class="p">(</span>
-    <span class="n">data_directory</span><span class="o">=</span><span class="n">data_directory</span><span class="p">,</span>
+    <span class="n">src_directory</span><span class="o">=</span><span class="n">src_directory</span><span class="p">,</span>
     <span class="n">units</span> <span class="o">=</span> <span class="s2">&quot;J m-2&quot;</span><span class="p">,</span>
-    <span class="n">exposure_schedule</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span>
+    <span class="n">exposure_schedule</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span>
                         <span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span>  <span class="p">,</span>
                         <span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span>  <span class="p">,</span>
-                        <span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">]</span><span class="o">*</span><span class="n">ER</span><span class="p">,</span>
+                        <span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">])</span><span class="o">*</span><span class="n">ER</span><span class="p">,</span>
     <span class="n">bin_width</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span>
     <span class="n">date_selection</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s2">&quot;2005-01-01&quot;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s2">&quot;2014-12-31&quot;</span><span class="p">),</span>
     <span class="n">statistic</span> <span class="o">=</span> <span class="s2">&quot;mean&quot;</span><span class="p">,</span>
@@ -269,9 +270,10 @@ given <cite>bin_width</cite> input.</p></li>
 <p>In the example below, the user imports some pre-calculated pixel histograms, thereby
 completing the ExposureMap workflow without using the <cite>ExposureMap.ExposureMap.collect_data()</cite>
 function. This can be useful if the data collection is timely and the user wants to
-produce multiple different maps.</p>
+produce multiple different maps. Note that the “custom data” used in this example is not
+included in the python-TAMER package, this simply illustrates a unique use-case.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">python_tamer</span> <span class="k">as</span> <span class="nn">pt</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="c1"># load custom data from an external file (not included)</span>
 <span class="kn">from</span> <span class="nn">custom_user_data</span> <span class="kn">import</span> <span class="n">pix_hist</span><span class="p">,</span> <span class="n">bin_centers</span><span class="p">,</span> <span class="n">map_options</span>
 <span class="nb">map</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">ExposureMap</span><span class="p">(</span><span class="n">map_options</span> <span class="o">=</span> <span class="n">map_options</span><span class="p">)</span>
 <span class="nb">map</span> <span class="o">=</span> <span class="nb">map</span><span class="o">.</span><span class="n">calculate_map</span><span class="p">(</span>
@@ -287,7 +289,7 @@ produce multiple different maps.</p>
 
 <dl class="py method">
 <dt id="python_tamer.ExposureMap.ExposureMap.collect_data">
-<code class="sig-name descname"><span class="pre">collect_data</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">src_filename_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date_selection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">units</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exposure_schedule</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/python_tamer/ExposureMap.html#ExposureMap.collect_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#python_tamer.ExposureMap.ExposureMap.collect_data" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">collect_data</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">src_directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">src_filename_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date_selection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">units</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exposure_schedule</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/python_tamer/ExposureMap.html#ExposureMap.collect_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#python_tamer.ExposureMap.ExposureMap.collect_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Loads and manipulates data into histograms for each pixel of the underlying data</p>
 <p>In order to handle large amounts of data without exceeding memory limitations, files are
 loaded one at a time and the time dimension is removed, either by calculating daily doses
@@ -300,9 +302,9 @@ with more information that does not require additional memory.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>src_filename_format</strong> (<em>str</em>) – Describes the filename of the netCDF files containing the data with ‘yyyy’ in place
 of the year.</p></li>
-<li><p><strong>data_directory</strong> (<em>str</em>) – The directory where the data is stored. Must end with a slash.</p></li>
+<li><p><strong>src_directory</strong> (<em>str</em>) – The directory where the data is stored. Must end with a slash.</p></li>
 <li><p><strong>date_selection</strong> (<em>list of dates</em>) – The dates for which the irradiances are retrieved or the daily doses are calculated.
-Defaults to None whereby the program selects all data within the data_directory that
+Defaults to None whereby the program selects all data within the src_directory that
 matches the src_filename_format.</p></li>
 <li><p><strong>units</strong> (<em>str</em>) – Name of units of desired output. This also indicates whether daily doses must be
 calculated or not. Units of “SED”, “J m-2”, or “UVIh” will produce daily doses,
@@ -336,19 +338,20 @@ further down the typical pipeline.</p>
 <p>The example code below shows how an ExposureMap class can be declared with the default parameters that
 can then be later redefined by collect_data() and the other class functions.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">python_tamer</span> <span class="k">as</span> <span class="nn">pt</span>
-<span class="kn">import</span> <span class="nn">pandas</span>
-<span class="n">data_directory</span> <span class="o">=</span> <span class="s1">&#39;C:/enter_your_data_directory_here&#39;</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="n">src_directory</span> <span class="o">=</span> <span class="s1">&#39;C:/enter_your_src_directory_here&#39;</span>
 <span class="n">ER</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">ER_Vernez_2015</span><span class="p">(</span><span class="s2">&quot;Forehead&quot;</span><span class="p">,</span><span class="s2">&quot;Standing&quot;</span><span class="p">)</span> <span class="c1"># Long-term average ER for foreheads in standing posture</span>
 <span class="nb">map</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">ExposureMap</span><span class="p">()</span>
 <span class="nb">map</span> <span class="o">=</span> <span class="nb">map</span><span class="o">.</span><span class="n">collect_data</span><span class="p">(</span>
-    <span class="n">data_directory</span><span class="o">=</span><span class="n">data_directory</span><span class="p">,</span>
+    <span class="n">src_directory</span><span class="o">=</span><span class="n">src_directory</span><span class="p">,</span>
     <span class="n">units</span> <span class="o">=</span> <span class="s2">&quot;J m-2&quot;</span><span class="p">,</span>
-    <span class="n">exposure_schedule</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span>
+    <span class="n">exposure_schedule</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span>
                          <span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span>  <span class="p">,</span>
                          <span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span>  <span class="p">,</span>
-                         <span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">]</span><span class="o">*</span><span class="n">ER</span><span class="p">,</span>
+                         <span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">,</span><span class="mi">0</span>  <span class="p">])</span><span class="o">*</span><span class="n">ER</span><span class="p">,</span>
     <span class="n">bin_width</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span>
-    <span class="n">date_selection</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s2">&quot;2005-01-01&quot;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s2">&quot;2014-12-31&quot;</span><span class="p">)</span>
+    <span class="n">date_selection</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s2">&quot;2005-01-01&quot;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s2">&quot;2014-12-31&quot;</span><span class="p">)</span>
 <span class="p">)</span>
 <span class="nb">map</span> <span class="o">=</span> <span class="nb">map</span><span class="o">.</span><span class="n">calculate_map</span><span class="p">(</span><span class="n">statistic</span> <span class="o">=</span> <span class="s2">&quot;mean&quot;</span><span class="p">)</span>
 <span class="nb">map</span><span class="o">.</span><span class="n">plot_map</span><span class="p">(</span><span class="n">map_options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Chronic daily UV dose for typical school children, 2005-2014&quot;</span><span class="p">,</span>
@@ -368,41 +371,41 @@ of the map field. Many aesthetic factors are accounted for, contained within the
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>map_options</strong> (<em>dict</em><em>, </em><em>optional</em>) – <p>A collection of many typical options such as image and font sizes, colormaps, etc.
 The full range of options is listed below with their default values.</p>
-<p>”title” : “Test map”,
+<p>”title” : “Test map”
 The title to be rendered above the map. Can be left blank for no title. Can be
 used to inform img_filename</p>
-<p>”save” : True,
+<p>”save” : True
 Boolean to declare whether the map should be saved as an image file or not.</p>
-<p>”img_size” : [20,15],
+<p>”img_size” : [20,15]
 The size [width,height] of the image in cm.</p>
-<p>”img_dpi” : 300,
+<p>”img_dpi” : 300
 The dots per inch of the saved image.</p>
-<p>”img_dir” : “”,
+<p>”img_dir” : “”
 The directory for the image to be saved in, leaving it blank should result
 in images being saved in the working directory.</p>
-<p>”img_filename” : “timestamp”,
+<p>”img_filename” : “timestamp”
 The image filename as a string. The default value of “timestamp” is a keyword
 indicating that the function should generate a filename based on the time at
 the moment of the calculation, specified with the format %Y%m%d_%H%M%S_%f
 which includes millisecond precision.</p>
-<p>”img_filetype” : “png”,
+<p>”img_filetype” : “png”
 The image filetype, must be acceptable to <cite>matplotlib.pyplot.savefig()</cite>.</p>
-<p>”brdr_nation” : True,
+<p>”brdr_nation” : True
 Boolean for drawing national borders on the map.</p>
-<p>”brdr_nation_rgba” : [0,0,0,0],
+<p>”brdr_nation_rgba” : [0,0,0,0]
 The red, green, blue, and alpha values for the national borders.</p>
-<p>”brdr_state” : False,
+<p>”brdr_state” : False
 Boolean for drawing state borders as defined by Natural Earth dataset.</p>
-<p>”brdr_state_rgba” : [0,0,0,0.67],
+<p>”brdr_state_rgba” : [0,0,0,0.67]
 The red, green, blue, and alpha values for the national borders.</p>
-<p>”cmap” : “jet”,
+<p>”cmap” : “jet”
 The name of the colourmap to be used when rendering the map.</p>
-<p>”cmap_limits” : None,
+<p>”cmap_limits” : None
 The numeric limits of the colourmap. Defaults to None, where the lower
 and upper limits of the plotted data are used as the colourmap limits.</p>
-<p>”cbar” : True,
+<p>”cbar” : True
 Boolean for rendering a colourbar.</p>
-<p>”cbar_limits” : None,
+<p>”cbar_limits” : None
 The numeric limits of the colourbar. Defaults to None, where the lower
 and upper limits of the plotted data are used as the colourbar limits.</p>
 </p>
@@ -420,9 +423,294 @@ field (if the user has specificied any changes to the default map_options).</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="python_tamer.ExposureMap.ExposureMapBatch">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">python_tamer.ExposureMap.</span></code><code class="sig-name descname"><span class="pre">ExposureMapBatch</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quick_selection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">units</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'SED'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exposure_schedule</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">statistic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date_selection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">climatology_years</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">src_filename_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'UVery.AS_ch02.lonlat_yyyy01010000.nc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'C:/Data/UV/'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/python_tamer/ExposureMap.html#ExposureMapBatch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#python_tamer.ExposureMap.ExposureMapBatch" title="Permalink to this definition">¶</a></dt>
+<dt id="python_tamer.ExposureMap.ExposureMapSequence">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">python_tamer.ExposureMap.</span></code><code class="sig-name descname"><span class="pre">ExposureMapSequence</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">src_filename_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'UVery.AS_ch02.lonlat_yyyy01010000.nc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">src_directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'C:/Data/UV/'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">units</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/python_tamer/ExposureMap.html#ExposureMapSequence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#python_tamer.ExposureMap.ExposureMapSequence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class for generating multiple Exposure Maps in a single operation</p>
+<p>The ExposureMapSequence class is a framework for generating multiple maps following
+a given sequence. The basic workflow begins by declaring an object of this class and
+collecting the data from the source NetCDF files. The process is designed with
+memory efficiency in mind, so data is loaded one year at a time and put into pixel
+histograms akin to the ExposureMap class behaviour. However, in this class we allow for
+multiple histograms to be stored within a single ExposureMapSequence object. Next,
+the maps are calculated by the calculate_maps function. Multiple maps can be calculated for each histogram if the user
+has specified multiple statistics that they want to calculate. Lastly, the maps are
+rendered and saved by the save_maps function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>src_filename_format</strong> (<em>str</em>) – Describes the filename of the netCDF files containing the data with ‘yyyy’ in place
+of the year.</p></li>
+<li><p><strong>src_directory</strong> (<em>str</em>) – The directory where the data is stored. Must end with a slash.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<p>In this example, we produce a basic sequence of monthly average doses for 2020:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">example</span> <span class="o">=</span> <span class="n">ExposureMapSequence</span><span class="p">()</span>
+<span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">collect_data</span><span class="p">(</span><span class="s1">&#39;monthly&#39;</span><span class="p">,</span><span class="n">year_selection</span><span class="o">=</span><span class="p">[</span><span class="mi">2020</span><span class="p">],</span><span class="n">units</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;SED&quot;</span><span class="p">])</span>
+<span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">calculate_maps</span><span class="p">(</span><span class="n">statistic</span><span class="o">=</span><span class="s1">&#39;Mean&#39;</span><span class="p">)</span>
+<span class="n">example</span><span class="o">.</span><span class="n">save_maps</span><span class="p">(</span><span class="n">save</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In this example, we produce a basic sequence of annual average doses for each year
+of the dataset:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">example</span> <span class="o">=</span> <span class="n">ExposureMapSequence</span><span class="p">()</span>
+<span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">collect_data</span><span class="p">([</span><span class="s1">&#39;annual&#39;</span><span class="p">],</span><span class="n">year_selection</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">units</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;SED&quot;</span><span class="p">])</span>
+<span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">calculate_maps</span><span class="p">(</span><span class="n">statistic</span><span class="o">=</span><span class="s1">&#39;Mean&#39;</span><span class="p">)</span>
+<span class="n">example</span><span class="o">.</span><span class="n">save_maps</span><span class="p">(</span><span class="n">save</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt id="python_tamer.ExposureMap.ExposureMapSequence.calculate_maps">
+<code class="sig-name descname"><span class="pre">calculate_maps</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">statistic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">titles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filenames</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/python_tamer/ExposureMap.html#ExposureMapSequence.calculate_maps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#python_tamer.ExposureMap.ExposureMapSequence.calculate_maps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calcualte the maps from the pixel histograms</p>
+<p>This function calculates maps from the pixel histograms and generates
+titles and filenames for each map. Note that the number of maps can
+be greater than the number of pixel histograms if more than one
+statistic is specified.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>statistic</strong> (<em>list</em><em>, </em><em>str</em>) – <p>The statistical descriptor to be calculated from the pixel histograms to be later
+represented on the rendered map. Must contain at least one of these keywords:
+“mean”, “median” or “med”, “sd” or “std” or “stdev”, “max” or “maximum”, “min” or
+“minimum”. The keyword “prct” or “percentile” is also accepted so long as it is
+preceded by a two-digit integer specifying the desired percentile from 01 to 99.</p>
+<p><em>Planned:</em> the string can be a formula using any of the keywords above, and
+basic mathematical operators (+, -, <em>, /, *</em>) and numeric factors.</p>
+</p></li>
+<li><p><strong>titles</strong> (<em>list</em><em>, </em><em>optional</em>) – If the user does not wish to use the automatically generated map titles,
+they can enter them with this parameter. This must be a list of strings
+with a length equal to the number of maps produced.</p></li>
+<li><p><strong>filenames</strong> (<em>str</em><em>, </em><em>optional</em>) – Filenames are generated to match the titles by default, but the user can
+alternatively enter them manually with this parameter.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The object is appended with maps, map_specs, and num_maps fields.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#python_tamer.ExposureMap.ExposureMapSequence" title="python_tamer.ExposureMap.ExposureMapSequence">ExposureMapSequence</a></p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<p>In this example, we produce a basic sequence of annual average doses for each year
+of the dataset:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">example</span> <span class="o">=</span> <span class="n">ExposureMapSequence</span><span class="p">()</span>
+<span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">collect_data</span><span class="p">([</span><span class="s1">&#39;annual&#39;</span><span class="p">],</span><span class="n">year_selection</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">units</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;SED&quot;</span><span class="p">])</span>
+<span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">calculate_maps</span><span class="p">(</span><span class="n">statistic</span><span class="o">=</span><span class="s1">&#39;Mean&#39;</span><span class="p">)</span>
+<span class="n">example</span><span class="o">.</span><span class="n">save_maps</span><span class="p">(</span><span class="n">save</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="python_tamer.ExposureMap.ExposureMapSequence.collect_data">
+<code class="sig-name descname"><span class="pre">collect_data</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">day_selection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exposure_schedule</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">year_selection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">units</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['SED']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/python_tamer/ExposureMap.html#ExposureMapSequence.collect_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#python_tamer.ExposureMap.ExposureMapSequence.collect_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads data into multiple pixel histograms</p>
+<p>This function loads all of the necessary data and compiles it into one or
+multiple histograms. All parameters are designed to be interpreted as lists
+of arrays or lists of strings, where each list entry corresponding to a
+different histogram in the sequence. So to create a sequence of maps
+corresponding to the months of the year, the day_selection input would be a
+list of 12 arrays, the first containing numbers from 1 to 31, the second
+containing numbers from 32 to 59, and so on.</p>
+<p>The user specifies the day_selection and the year_selection as two separate
+numerical inputs, rather than specifying dates. This make the interpretation
+of the sequence simpler. However, to simplify the user experience, the
+day_selection input can include keywords to be automatically interpreted as
+days of the year.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>day_selection</strong> (<em>list</em><em>, </em><em>str</em><em>, </em><em>array</em>) – <p>A list of arrays and/or strings. Keywords interpretable in such a list
+include the (english) names of the 12 months (at least the first three
+letters), the names of the four seasons (fall or autumn is accepted),
+or the words “year” or “annual” to indicate the full year. These
+keywords are replaced by the corresponding array of days in the year.
+Note that the 29th of February is removed from consideration should it
+arise. Note also that the seasons are the meteorological seasons, i.e.
+the three month blocks JJA, SON, DJF, and MAM for summer, autumn,
+winter, and spring respectively.</p>
+<p>The user can alternatively enter a special string instead of a list.
+The string “monthly” generates a list of 12 arrays according to the
+months whereas the string “seasons” generates a list of 4 arrays
+according to the four seasons.</p>
+</p></li>
+<li><p><strong>exposure_schedule</strong> (<em>list</em><em>, </em><em>float</em><em>, </em><em>int</em><em>, </em><em>dict</em><em>, </em><em>array</em>) – <p>If the user enters a float, this float value will be repeated across a
+length-24 array to make the exposure schedule. For example, entering
+1.0 (not 1) will generate an array of 24 ones.</p>
+<p>If the user enters an int, i, a length-24 array of zeroes will be
+generated with the ith entry being set to 1. For example, entering 1
+(not 1.0) will generate an array that reads [0,1,0,0…] (length 24).</p>
+<p>If the user enters a dict, they can specify the values of a few
+particular entries in a length-24 array where unspecified entries have
+a value of zero. For example, entering {0:0.5, 2:0.8, 3:1} will
+generate and array the reads [0.5, 0, 0.8, 1, 0…] (length 24).</p>
+<p>If the user enters an array, it must be 1 dimensional with length 24
+or 2 dimensional with the second dimension having length 24 (allowing
+the user to specify multiple schedules).</p>
+<p>If the user enters a list, each entry of that list is interpreted using
+the rules listed above, with the caveat that arrays within a list cannot
+be 2 dimensional.</p>
+</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="simple">
+<dt>year_selection<span class="classifier">list, array, int</span></dt><dd><p>The years across which the data should be pulled. Input should be a list
+of arrays of ints corresponding to years available in the dataset. Each
+list entry corresponds to a pixel histogram. The user can enter 0 as a
+shortcut for using all available years. For example, an input might be
+[numpy.arange(2010,2020),[0],0]. The first list entry is an array of a
+decade of years, straightforward enough. The second list entry is [0].
+This is equivalent to writing numpy.arange(2004,2021) i.e. it produces
+an array of the available years of the dataset. The last entry is 0,
+this produces a sequence of individual years. So the input could be
+equivalently written as [numpy.arange(2010,2020),numpy.arange(2004,2021),
+numpy.array([2004]),numpy.array([2005]),numpy.array([2006])…] and so
+on until 2020.</p>
+</dd>
+<dt>units<span class="classifier">list, optional</span></dt><dd><p>The list of units for each pixel histogram. Acceptable strings are “SED”,
+“J m-2”, “UVIh”, “UVI”, “W m-2”, and “mW m-2”. Defaults to SED.</p>
+</dd>
+<dt>bin_width<span class="classifier">list, optional</span></dt><dd><p>The bin width for each histogram. By default, these values are defined
+automatically according to the units input.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The object has the hist_specs and hists fields added detailing the pixel
+histograms.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#python_tamer.ExposureMap.ExposureMapSequence" title="python_tamer.ExposureMap.ExposureMapSequence">ExposureMapSequence</a></p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<p>In this example, we produce a basic sequence of monthly average doses for 2020:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">example</span> <span class="o">=</span> <span class="n">ExposureMapSequence</span><span class="p">()</span>
+<span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">collect_data</span><span class="p">(</span><span class="s1">&#39;monthly&#39;</span><span class="p">,</span><span class="n">year_selection</span><span class="o">=</span><span class="p">[</span><span class="mi">2020</span><span class="p">],</span><span class="n">units</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;SED&quot;</span><span class="p">])</span>
+<span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">calculate_maps</span><span class="p">(</span><span class="n">statistic</span><span class="o">=</span><span class="s1">&#39;Mean&#39;</span><span class="p">)</span>
+<span class="n">example</span><span class="o">.</span><span class="n">save_maps</span><span class="p">(</span><span class="n">save</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In this example, we produce a basic sequence of annual average doses for each year
+of the dataset:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">example</span> <span class="o">=</span> <span class="n">ExposureMapSequence</span><span class="p">()</span>
+<span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">collect_data</span><span class="p">([</span><span class="s1">&#39;annual&#39;</span><span class="p">],</span><span class="n">year_selection</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">units</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;SED&quot;</span><span class="p">])</span>
+<span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">calculate_maps</span><span class="p">(</span><span class="n">statistic</span><span class="o">=</span><span class="s1">&#39;Mean&#39;</span><span class="p">)</span>
+<span class="n">example</span><span class="o">.</span><span class="n">save_maps</span><span class="p">(</span><span class="n">save</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="python_tamer.ExposureMap.ExposureMapSequence.interpret_parameters">
+<code class="sig-name descname"><span class="pre">interpret_parameters</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/python_tamer/ExposureMap.html#ExposureMapSequence.interpret_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#python_tamer.ExposureMap.ExposureMapSequence.interpret_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interprets some parameter inputs and adjusts for consistency</p>
+<p>This function will check that parameters are correctly entered and do some basic interpretation.
+It checks the exposure_schedule, year_selection, units, and bin_width input. All input is converted
+to lists as required.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="python_tamer.ExposureMap.ExposureMapSequence.save_maps">
+<code class="sig-name descname"><span class="pre">save_maps</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">match_cmap_limits</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schedule_diagram</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/python_tamer/ExposureMap.html#ExposureMapSequence.save_maps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#python_tamer.ExposureMap.ExposureMapSequence.save_maps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Renders and saves the pre-calculated maps stored in the object</p>
+<p>With the maps calculated, this function renders the maps with broad flexibility on aesthetic
+options. It is mostly a wrapper for the render_map function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>map_options</strong> (<em>dict</em><em>, </em><em>optional</em>) – A dictionary containing options for the render map function.</p></li>
+<li><p><strong>save</strong> (<em>bool</em><em>, </em><em>optional</em>) – Although technically contained within map_options, this option is here so users can
+more easily say whether they want the images to be saved or not.</p></li>
+<li><p><strong>show</strong> (<em>bool</em><em>, </em><em>optional</em>) – An option to show the maps in a python figure window or not.</p></li>
+<li><p><strong>match_cmap_limits</strong> (<em>bool</em><em>, </em><em>optional</em>) – When producing multiple maps, it can sometimes be desirable for the colormap limits
+to be consistent across the set of images. This boolean enables that.</p></li>
+<li><p><strong>schedule_diagram</strong> (<em>bool</em><em>, </em><em>optional</em>) – If true, a circular diagram is rendered on the map illustrating the schedule that
+generated the map.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="python_tamer.ExposureMap.calculate_map_from_hists">
+<code class="sig-prename descclassname"><span class="pre">python_tamer.ExposureMap.</span></code><code class="sig-name descname"><span class="pre">calculate_map_from_hists</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pix_hist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">statistic</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_centers</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/python_tamer/ExposureMap.html#calculate_map_from_hists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#python_tamer.ExposureMap.calculate_map_from_hists" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="python_tamer.ExposureMap.gen_map_title">
+<code class="sig-prename descclassname"><span class="pre">python_tamer.ExposureMap.</span></code><code class="sig-name descname"><span class="pre">gen_map_title</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">statistic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exposure_schedule</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hour</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">units</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">year_selection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">day_selection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/python_tamer/ExposureMap.html#gen_map_title"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#python_tamer.ExposureMap.gen_map_title" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="python_tamer.ExposureMap.render_map">
+<code class="sig-prename descclassname"><span class="pre">python_tamer.ExposureMap.</span></code><code class="sig-name descname"><span class="pre">render_map</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schedule</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schedule_bbox</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(-</span> <span class="pre">0.03,</span> <span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">0.91)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[20,</span> <span class="pre">15]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_dpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_filetype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'png'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">brdr_nation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">brdr_nation_rgba</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">1]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">brdr_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">brdr_state_rgba</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0.75]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gist_ncar'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap_limits</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cbar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cbar_limits</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cbar_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">country_focus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'CHE'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gridlines</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gridlines_dms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mch_logo</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/python_tamer/ExposureMap.html#render_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#python_tamer.ExposureMap.render_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Renders and saves maps</p>
+<p>Renders and saves maps with a wide variety of aesthetic options.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>map</strong> (<em>array</em>) – The map to be rendered</p></li>
+<li><p><strong>lat</strong> (<em>[</em><em>type</em><em>]</em><em>, </em><em>optional</em>) – [description], by default None</p></li>
+<li><p><strong>lon</strong> (<em>[</em><em>type</em><em>]</em><em>, </em><em>optional</em>) – [description], by default None</p></li>
+<li><p><strong>title</strong> (<em>[</em><em>type</em><em>]</em><em>, </em><em>optional</em>) – [description], by default None</p></li>
+<li><p><strong>save</strong> (<em>bool</em><em>, </em><em>optional</em>) – [description], by default True</p></li>
+<li><p><strong>show</strong> (<em>bool</em><em>, </em><em>optional</em>) – [description], by default True</p></li>
+<li><p><strong>schedule</strong> (<em>[</em><em>type</em><em>]</em><em>, </em><em>optional</em>) – [description], by default None</p></li>
+<li><p><strong>schedule_bbox</strong> (<em>tuple</em><em>, </em><em>optional</em>) – [description], by default (-0.03,0,1,0.91)</p></li>
+<li><p><strong>img_filename</strong> (<em>[</em><em>type</em><em>]</em><em>, </em><em>optional</em>) – [description], by default None</p></li>
+<li><p><strong>img_dir</strong> (<em>str</em><em>, </em><em>optional</em>) – [description], by default “”</p></li>
+<li><p><strong>img_size</strong> (<em>list</em><em>, </em><em>optional</em>) – [description], by default [20,15]</p></li>
+<li><p><strong>img_dpi</strong> (<em>int</em><em>, </em><em>optional</em>) – [description], by default 300</p></li>
+<li><p><strong>img_filetype</strong> (<em>str</em><em>, </em><em>optional</em>) – [description], by default “png”</p></li>
+<li><p><strong>brdr_nation</strong> (<em>bool</em><em>, </em><em>optional</em>) – [description], by default True</p></li>
+<li><p><strong>brdr_nation_rgba</strong> (<em>list</em><em>, </em><em>optional</em>) – [description], by default [0,0,0,1]</p></li>
+<li><p><strong>brdr_state</strong> (<em>bool</em><em>, </em><em>optional</em>) – [description], by default True</p></li>
+<li><p><strong>brdr_state_rgba</strong> (<em>list</em><em>, </em><em>optional</em>) – [description], by default [0,0,0,0.75]</p></li>
+<li><p><strong>cmap</strong> (<em>str</em><em>, </em><em>optional</em>) – [description], by default “gist_ncar”</p></li>
+<li><p><strong>cmap_limits</strong> (<em>[</em><em>type</em><em>]</em><em>, </em><em>optional</em>) – [description], by default None</p></li>
+<li><p><strong>cbar</strong> (<em>bool</em><em>, </em><em>optional</em>) – [description], by default True</p></li>
+<li><p><strong>cbar_limits</strong> (<em>[</em><em>type</em><em>]</em><em>, </em><em>optional</em>) – [description], by default None</p></li>
+<li><p><strong>cbar_label</strong> (<em>[</em><em>type</em><em>]</em><em>, </em><em>optional</em>) – [description], by default None</p></li>
+<li><p><strong>country_focus</strong> (<em>str</em><em>, </em><em>optional</em>) – [description], by default “CHE”</p></li>
+<li><p><strong>gridlines</strong> (<em>bool</em><em>, </em><em>optional</em>) – [description], by default True</p></li>
+<li><p><strong>gridlines_dms</strong> (<em>bool</em><em>, </em><em>optional</em>) – [description], by default False</p></li>
+<li><p><strong>mch_logo</strong> (<em>bool</em><em>, </em><em>optional</em>) – [description], by default True</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="python_tamer.ExposureMap.schedule_clock">
+<code class="sig-prename descclassname"><span class="pre">python_tamer.ExposureMap.</span></code><code class="sig-name descname"><span class="pre">schedule_clock</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schedule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/python_tamer/ExposureMap.html#schedule_clock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#python_tamer.ExposureMap.schedule_clock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a clock-style representation of an exposure schedule</p>
+<p>[extended_summary]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>axes</strong> (<em>matplotlib.axes.Axes</em>) – The polar axes upon which the clock will be plotted</p></li>
+<li><p><strong>schedule</strong> (<em>list</em><em> or </em><em>numpy.ndarray</em>) – The exposure schedule - a length-24 vector of hourly exposure proportions</p></li>
+<li><p><strong>title</strong> (<em>str</em><em>, </em><em>optional</em>) – Title of the exposure clock</p></li>
+<li><p><strong>title_size</strong> (<em>int</em><em>, </em><em>optional</em>) – [description], by default 9</p></li>
+<li><p><strong>center</strong> (<em>float</em><em>, </em><em>optional</em>) – [description], by default 0.25</p></li>
+<li><p><strong>rmax</strong> (<em>int</em><em>, </em><em>optional</em>) – [description], by default 1</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>[description]</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[type]</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -445,7 +733,7 @@ for this class.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>src_filename_format</strong> (<em>str</em>) – Describes the filename of the netCDF files containing the UV data with ‘yyyy’ in place
 of the year.</p></li>
-<li><p><strong>data_directory</strong> (<em>str</em>) – The directory where the data is stored. Must end with a slash.</p></li>
+<li><p><strong>src_directory</strong> (<em>str</em>) – The directory where the data is stored. Must end with a slash.</p></li>
 </ul>
 </dd>
 </dl>
@@ -454,7 +742,7 @@ of the year.</p></li>
 and will likely be revised in a later update. For the time being, this means that the
 parameters cannot be set when initialising a <cite>SpecificDoses</cite> object, they must instead
 be adjusted after initialisation, like so:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ExistingExposureMapObject</span><span class="o">.</span><span class="n">data_directory</span> <span class="o">=</span> <span class="s2">&quot;/new/data/directory/&quot;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ExistingExposureMapObject</span><span class="o">.</span><span class="n">src_directory</span> <span class="o">=</span> <span class="s2">&quot;/new/data/directory/&quot;</span>
 </pre></div>
 </div>
 <p class="rubric">Example</p>
@@ -468,7 +756,7 @@ and one for actually loading the data and performing the dose calculations. See 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="n">example</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">SpecificDoses</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;atmosphere-12-00268-s001.xlsx&#39;</span><span class="p">,</span>
                                          <span class="n">header</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">usecols</span><span class="o">=</span><span class="s2">&quot;B:K&quot;</span><span class="p">))</span>
-<span class="n">example</span><span class="o">.</span><span class="n">data_directory</span> <span class="o">=</span> <span class="s1">&#39;C:/enter_the_directory_of_your_dataset_here&#39;</span>
+<span class="n">example</span><span class="o">.</span><span class="n">src_directory</span> <span class="o">=</span> <span class="s1">&#39;C:/enter_the_directory_of_your_dataset_here&#39;</span>
 <span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">standard_column_names</span><span class="p">()</span>
 <span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">schedule_constant_exposure</span><span class="p">()</span><span class="o">.</span><span class="n">ER_from_posture</span><span class="p">()</span>
 <span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">calculate_specific_dose</span><span class="p">()</span>
@@ -517,10 +805,63 @@ and one for actually loading the data and performing the dose calculations. See 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="n">example</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">SpecificDoses</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;atmosphere-12-00268-s001.xlsx&#39;</span><span class="p">,</span>
                                         <span class="n">header</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">usecols</span><span class="o">=</span><span class="s2">&quot;B:K&quot;</span><span class="p">))</span>
-<span class="n">example</span><span class="o">.</span><span class="n">data_directory</span> <span class="o">=</span> <span class="s1">&#39;C:/enter_the_directory_of_your_dataset_here&#39;</span>
+<span class="n">example</span><span class="o">.</span><span class="n">src_directory</span> <span class="o">=</span> <span class="s1">&#39;C:/enter_the_directory_of_your_dataset_here&#39;</span>
 <span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">standard_column_names</span><span class="p">()</span>
 <span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">schedule_constant_exposure</span><span class="p">()</span><span class="o">.</span><span class="n">ER_from_posture</span><span class="p">()</span>
 <span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">calculate_specific_dose</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="python_tamer.SpecificDoses.SpecificDoses.analyse_variable">
+<code class="sig-name descname"><span class="pre">analyse_variable</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'UV_AS'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">statistic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">src_filename_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">src_directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/python_tamer/SpecificDoses.html#SpecificDoses.analyse_variable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#python_tamer.SpecificDoses.SpecificDoses.analyse_variable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Basic calculations for specific exposure instances</p>
+<p>This function is for calculating information other than ambient and personal
+doses that corresponds to specific exposure instances.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>variable</strong> (<em>str</em><em>, </em><em>optional</em>) – The name of the variable to be analysed. This informs what data should be
+pulled from the source netCDF files. This also informs the name of the column(s)
+that will be created by this function. Defaults to “UV_AS”, i.e. the All-Sky
+UV data that is used in the calculate_specific_dose function.</p></li>
+<li><p><strong>statistic</strong> (<em>str</em><em> or </em><em>list</em><em>, </em><em>optional</em>) – The statistic to be calculated, options include: mean, median, stdev, variance,
+min, max, weighted_mean, and sum. Not case sensitive. Can be a single string or
+a list of strings whereby multiple columns will be calculated. Defaults to “Mean”.</p></li>
+<li><p><strong>src_filename_format</strong> (<em>str</em><em>, </em><em>optional</em>) – Allows the user to select different source data. This may be useful in cases where
+the user wants to compare doses calculated with one dataset to (say) cloud cover
+from another dataset. Defaults to None, where the function uses the source files
+specified by the object’s metadata.</p></li>
+<li><p><strong>src_directory</strong> (<em>str</em><em>, </em><em>optional</em>) – Allows the user to select different source data. This may be useful in cases where
+the user wants to compare doses calculated with one dataset to (say) cloud cover
+from another dataset. Defaults to None, where the function uses the source files
+specified by the object’s metadata.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The table is appended with new columns named [variable]_[statistic].</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#python_tamer.SpecificDoses.SpecificDoses" title="python_tamer.SpecificDoses.SpecificDoses">SpecificDoses</a></p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<p>In this example, we illustrate the process for calculating the doses in Harris et al. 2021
+(<a class="reference external" href="https://doi.org/10.3390/atmos12020268">https://doi.org/10.3390/atmos12020268</a>) from the spreadsheet supplied as supplementary
+data (<a class="reference external" href="https://www.mdpi.com/2073-4433/12/2/268/s1">https://www.mdpi.com/2073-4433/12/2/268/s1</a>). Note that results will differ as the
+spreadsheet contains only local Swiss time and not UTC time. Additionally, to demonstrate
+the analyse_variable function, we also calculate the weighted mean CMF assuming it to be
+an additional variable in the source data files. See below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">python_tamer</span> <span class="k">as</span> <span class="nn">pt</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="n">example</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">SpecificDoses</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;atmosphere-12-00268-s001.xlsx&#39;</span><span class="p">,</span>
+                                        <span class="n">header</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">usecols</span><span class="o">=</span><span class="s2">&quot;B:K&quot;</span><span class="p">))</span>
+<span class="n">example</span><span class="o">.</span><span class="n">src_directory</span> <span class="o">=</span> <span class="s1">&#39;C:/enter_the_directory_of_your_dataset_here&#39;</span>
+<span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">standard_column_names</span><span class="p">()</span>
+<span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">schedule_constant_exposure</span><span class="p">()</span><span class="o">.</span><span class="n">ER_from_posture</span><span class="p">()</span>
+<span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">calculate_specific_dose</span><span class="p">()</span>
+<span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">analyse_variable</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="s2">&quot;CMF&quot;</span><span class="p">,</span><span class="n">statistic</span><span class="o">=</span><span class="s2">&quot;weighted_mean&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -560,18 +901,13 @@ and one for actually loading the data and performing the dose calculations. See 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="n">example</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">SpecificDoses</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;atmosphere-12-00268-s001.xlsx&#39;</span><span class="p">,</span>
                                         <span class="n">header</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">usecols</span><span class="o">=</span><span class="s2">&quot;B:K&quot;</span><span class="p">))</span>
-<span class="n">example</span><span class="o">.</span><span class="n">data_directory</span> <span class="o">=</span> <span class="s1">&#39;C:/enter_the_directory_of_your_dataset_here&#39;</span>
+<span class="n">example</span><span class="o">.</span><span class="n">src_directory</span> <span class="o">=</span> <span class="s1">&#39;C:/enter_the_directory_of_your_dataset_here&#39;</span>
 <span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">standard_column_names</span><span class="p">()</span>
 <span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">schedule_constant_exposure</span><span class="p">()</span><span class="o">.</span><span class="n">ER_from_posture</span><span class="p">()</span>
 <span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">calculate_specific_dose</span><span class="p">()</span>
 </pre></div>
 </div>
 </dd></dl>
-
-<dl class="py attribute">
-<dt id="python_tamer.SpecificDoses.SpecificDoses.data_directory">
-<code class="sig-name descname"><span class="pre">data_directory</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'C:/Data/UV/'</span></em><a class="headerlink" href="#python_tamer.SpecificDoses.SpecificDoses.data_directory" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 <dl class="py method">
 <dt id="python_tamer.SpecificDoses.SpecificDoses.schedule_constant_exposure">
@@ -605,13 +941,18 @@ and one for actually loading the data and performing the dose calculations. See 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="n">example</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">SpecificDoses</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;atmosphere-12-00268-s001.xlsx&#39;</span><span class="p">,</span>
                                         <span class="n">header</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">usecols</span><span class="o">=</span><span class="s2">&quot;B:K&quot;</span><span class="p">))</span>
-<span class="n">example</span><span class="o">.</span><span class="n">data_directory</span> <span class="o">=</span> <span class="s1">&#39;C:/enter_the_directory_of_your_dataset_here&#39;</span>
+<span class="n">example</span><span class="o">.</span><span class="n">src_directory</span> <span class="o">=</span> <span class="s1">&#39;C:/enter_the_directory_of_your_dataset_here&#39;</span>
 <span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">standard_column_names</span><span class="p">()</span>
 <span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">schedule_constant_exposure</span><span class="p">()</span><span class="o">.</span><span class="n">ER_from_posture</span><span class="p">()</span>
 <span class="n">example</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">calculate_specific_dose</span><span class="p">()</span>
 </pre></div>
 </div>
 </dd></dl>
+
+<dl class="py attribute">
+<dt id="python_tamer.SpecificDoses.SpecificDoses.src_directory">
+<code class="sig-name descname"><span class="pre">src_directory</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'C:/Data/UV/'</span></em><a class="headerlink" href="#python_tamer.SpecificDoses.SpecificDoses.src_directory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="python_tamer.SpecificDoses.SpecificDoses.src_filename_format">
@@ -621,7 +962,20 @@ and one for actually loading the data and performing the dose calculations. See 
 <dl class="py method">
 <dt id="python_tamer.SpecificDoses.SpecificDoses.standard_column_names">
 <code class="sig-name descname"><span class="pre">standard_column_names</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/python_tamer/SpecificDoses.html#SpecificDoses.standard_column_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#python_tamer.SpecificDoses.SpecificDoses.standard_column_names" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Limited function to standardise column names</p>
+<p>When loading tables to use as the basis for a SpecificDoses table, some columns may have
+slightly names to what is expected. This function standardises the names but is very
+limited in terms of what it can recognise. The user is encourages to ensure the columns
+are correctly labelled themselves and not to rely on this function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The table has its column names modified.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#python_tamer.SpecificDoses.SpecificDoses" title="python_tamer.SpecificDoses.SpecificDoses">SpecificDoses</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -698,6 +1052,29 @@ given date and latitude. Can be calculated using the min_solar_zenith_angle func
 <dt id="python_tamer.subroutines.find_nearest">
 <code class="sig-prename descclassname"><span class="pre">python_tamer.subroutines.</span></code><code class="sig-name descname"><span class="pre">find_nearest</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/python_tamer/subroutines.html#find_nearest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#python_tamer.subroutines.find_nearest" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="py function">
+<dt id="python_tamer.subroutines.format_filename">
+<code class="sig-prename descclassname"><span class="pre">python_tamer.subroutines.</span></code><code class="sig-name descname"><span class="pre">format_filename</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/python_tamer/subroutines.html#format_filename"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#python_tamer.subroutines.format_filename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a string and return a valid filename constructed from the string.</p>
+<p>Uses a whitelist approach: any characters not present in valid_chars are
+removed. Also spaces are replaced with underscores.</p>
+<p>Note: this method may produce invalid filenames such as “”, “.” or “..”
+When using this method, prepend a date string like “<a href="#id1"><span class="problematic" id="id2">2009_01_15_19_46_32_</span></a>”
+and append a file extension like ‘.txt’, so to avoid the potential of using
+an invalid filename.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>s</strong> (<em>str</em>) – Input string to be converted to valid filename</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt id="python_tamer.subroutines.hist_max">
@@ -865,6 +1242,28 @@ we removed this calculation to optimise this function further.</p></li>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="python_tamer.subroutines.str2daysofyear">
+<code class="sig-prename descclassname"><span class="pre">python_tamer.subroutines.</span></code><code class="sig-name descname"><span class="pre">str2daysofyear</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/python_tamer/subroutines.html#str2daysofyear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#python_tamer.subroutines.str2daysofyear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interprets a string, list, or array into a list of arrays for days of the year</p>
+<p>An ExposureMapSequence object requires of a list of arrays describing the days of
+the year to be used in the creation of each histogram. This function simplifies the
+process of entering this information. The user can enter keywords to automatically
+generate the appropriate list of days.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>inp</strong> (<em>str</em><em> or </em><em>list</em><em> or </em><em>numpy.array</em>) – The input to be interpreted. Numeric entries should be included in the output
+unmodified, while string entries should be replaced by numeric arrays.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Produces a list of arrays that is interpretable by the ExposureMapSequence code.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
 </dd>
 </dl>
 </dd></dl>

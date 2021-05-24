@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>python_tamer.SpecificDoses &mdash; python-TAMER 0.3.0 documentation</title>
+  <title>python_tamer.SpecificDoses &mdash; python-TAMER 0.4.0 documentation</title>
   
 
   
@@ -175,7 +175,7 @@
 <span class="sd">        Describes the filename of the netCDF files containing the UV data with &#39;yyyy&#39; in place </span>
 <span class="sd">        of the year.</span>
 <span class="sd">    </span>
-<span class="sd">    data_directory : str</span>
+<span class="sd">    src_directory : str</span>
 <span class="sd">        The directory where the data is stored. Must end with a slash.</span>
 
 
@@ -187,7 +187,7 @@
 <span class="sd">    parameters cannot be set when initialising a `SpecificDoses` object, they must instead</span>
 <span class="sd">    be adjusted after initialisation, like so::</span>
 
-<span class="sd">        ExistingExposureMapObject.data_directory = &quot;/new/data/directory/&quot;</span>
+<span class="sd">        ExistingExposureMapObject.src_directory = &quot;/new/data/directory/&quot;</span>
 
 <span class="sd">    </span>
 <span class="sd">    Example</span>
@@ -204,7 +204,7 @@
 <span class="sd">        import pandas as pd</span>
 <span class="sd">        example = pt.SpecificDoses(pd.read_excel(r&#39;atmosphere-12-00268-s001.xlsx&#39;,</span>
 <span class="sd">                                                 header=2,index_col=0,usecols=&quot;B:K&quot;))</span>
-<span class="sd">        example.data_directory = &#39;C:/enter_the_directory_of_your_dataset_here&#39;</span>
+<span class="sd">        example.src_directory = &#39;C:/enter_the_directory_of_your_dataset_here&#39;</span>
 <span class="sd">        example = example.standard_column_names() </span>
 <span class="sd">        example = example.schedule_constant_exposure().ER_from_posture()</span>
 <span class="sd">        example = example.calculate_specific_dose()</span>
@@ -218,12 +218,24 @@
         <span class="k">return</span> <span class="n">SpecificDoses</span>
     
     <span class="c1"># This adds some useful metadata (self-explanatory)</span>
-    <span class="n">_metadata</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;src_filename_format&quot;</span><span class="p">,</span><span class="s2">&quot;data_directory&quot;</span><span class="p">]</span>
+    <span class="n">_metadata</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;src_filename_format&quot;</span><span class="p">,</span><span class="s2">&quot;src_directory&quot;</span><span class="p">]</span>
     <span class="n">src_filename_format</span> <span class="o">=</span> <span class="s1">&#39;UVery.AS_ch02.lonlat_yyyy01010000.nc&#39;</span>
-    <span class="n">data_directory</span> <span class="o">=</span> <span class="s1">&#39;C:/Data/UV/&#39;</span> <span class="c1"># TODO: set up __init__ for these options</span>
+    <span class="n">src_directory</span> <span class="o">=</span> <span class="s1">&#39;C:/Data/UV/&#39;</span> <span class="c1"># TODO: set up __init__ for these options</span>
     <span class="c1"># It feels like this should be declared with __init__ as well but idk</span>
 
 <div class="viewcode-block" id="SpecificDoses.standard_column_names"><a class="viewcode-back" href="../../code_reference.html#python_tamer.SpecificDoses.SpecificDoses.standard_column_names">[docs]</a>    <span class="k">def</span> <span class="nf">standard_column_names</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Limited function to standardise column names</span>
+
+<span class="sd">        When loading tables to use as the basis for a SpecificDoses table, some columns may have</span>
+<span class="sd">        slightly names to what is expected. This function standardises the names but is very</span>
+<span class="sd">        limited in terms of what it can recognise. The user is encourages to ensure the columns</span>
+<span class="sd">        are correctly labelled themselves and not to rely on this function.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        SpecificDoses</span>
+<span class="sd">            The table has its column names modified.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">legend_dict_reverse</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Point&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Lieu de mesure&#39;</span><span class="p">],</span>
             <span class="s1">&#39;Date&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">],</span>
             <span class="s1">&#39;Time_start&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Heure début&#39;</span><span class="p">,</span><span class="s1">&#39;Start_time&#39;</span><span class="p">,</span><span class="s1">&#39;Start time&#39;</span><span class="p">],</span>
@@ -277,7 +289,7 @@
 <span class="sd">            import pandas as pd</span>
 <span class="sd">            example = pt.SpecificDoses(pd.read_excel(r&#39;atmosphere-12-00268-s001.xlsx&#39;,</span>
 <span class="sd">                                                    header=2,index_col=0,usecols=&quot;B:K&quot;))</span>
-<span class="sd">            example.data_directory = &#39;C:/enter_the_directory_of_your_dataset_here&#39;</span>
+<span class="sd">            example.src_directory = &#39;C:/enter_the_directory_of_your_dataset_here&#39;</span>
 <span class="sd">            example = example.standard_column_names() </span>
 <span class="sd">            example = example.schedule_constant_exposure().ER_from_posture()</span>
 <span class="sd">            example = example.calculate_specific_dose()</span>
@@ -375,7 +387,7 @@
 <span class="sd">            import pandas as pd</span>
 <span class="sd">            example = pt.SpecificDoses(pd.read_excel(r&#39;atmosphere-12-00268-s001.xlsx&#39;,</span>
 <span class="sd">                                                    header=2,index_col=0,usecols=&quot;B:K&quot;))</span>
-<span class="sd">            example.data_directory = &#39;C:/enter_the_directory_of_your_dataset_here&#39;</span>
+<span class="sd">            example.src_directory = &#39;C:/enter_the_directory_of_your_dataset_here&#39;</span>
 <span class="sd">            example = example.standard_column_names() </span>
 <span class="sd">            example = example.schedule_constant_exposure().ER_from_posture()</span>
 <span class="sd">            example = example.calculate_specific_dose()</span>
@@ -442,6 +454,7 @@
         <span class="bp">self</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">replace</span><span class="p">({</span><span class="s1">&#39;Anatomic_zone&#39;</span> <span class="p">:</span> <span class="n">Anatomic_zone_synonyms</span><span class="p">})</span>
 
         <span class="c1"># With the correct anatomic zone names established, we can lookup the Vis values from the table</span>
+        <span class="c1"># TODO: lookup is being depreciated, must replace with something new</span>
         <span class="n">Vis</span> <span class="o">=</span> <span class="n">Vis_table</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;Anatomic_zone&#39;</span><span class="p">],</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;Posture&#39;</span><span class="p">])</span>
 
         <span class="c1"># Next we must calculate the minimal Solar Zenith Angle for the given date</span>
@@ -494,7 +507,7 @@
 <span class="sd">            import pandas as pd</span>
 <span class="sd">            example = pt.SpecificDoses(pd.read_excel(r&#39;atmosphere-12-00268-s001.xlsx&#39;,</span>
 <span class="sd">                                                    header=2,index_col=0,usecols=&quot;B:K&quot;))</span>
-<span class="sd">            example.data_directory = &#39;C:/enter_the_directory_of_your_dataset_here&#39;</span>
+<span class="sd">            example.src_directory = &#39;C:/enter_the_directory_of_your_dataset_here&#39;</span>
 <span class="sd">            example = example.standard_column_names() </span>
 <span class="sd">            example = example.schedule_constant_exposure().ER_from_posture()</span>
 <span class="sd">            example = example.calculate_specific_dose()</span>
@@ -512,7 +525,7 @@
         <span class="k">for</span> <span class="n">year</span> <span class="ow">in</span> <span class="n">unique_years</span> <span class="p">:</span>
             <span class="c1"># Load netCDF file</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Processing year &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">year</span><span class="p">))</span> 
-            <span class="n">dataset</span><span class="o">=</span><span class="n">nc</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_directory</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">src_filename_format</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;yyyy&#39;</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="n">year</span><span class="p">)))</span> 
+            <span class="n">dataset</span><span class="o">=</span><span class="n">nc</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">src_directory</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">src_filename_format</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;yyyy&#39;</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="n">year</span><span class="p">)))</span> 
             <span class="n">dataset</span><span class="o">.</span><span class="n">set_auto_mask</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span> <span class="c1"># This is important for nans to import correctly</span>
 
             <span class="c1"># Make temporary table for yearly subset</span>
@@ -567,9 +580,179 @@
         <span class="c1"># TODO: improve units options here</span>
         <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;Ambient_dose&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;Ambient_dose&#39;</span><span class="p">]</span><span class="o">/</span><span class="mi">40</span><span class="o">*</span><span class="mi">3600</span><span class="o">/</span><span class="mi">100</span> <span class="c1"># SED</span>
         <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;Personal_dose&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;Personal_dose&#39;</span><span class="p">]</span><span class="o">/</span><span class="mi">40</span><span class="o">*</span><span class="mi">3600</span><span class="o">/</span><span class="mi">100</span> <span class="c1"># SED</span>
+        <span class="k">return</span> <span class="bp">self</span>        </div>
+
+
+
+
+
+<div class="viewcode-block" id="SpecificDoses.analyse_variable"><a class="viewcode-back" href="../../code_reference.html#python_tamer.SpecificDoses.SpecificDoses.analyse_variable">[docs]</a>    <span class="k">def</span> <span class="nf">analyse_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+    <span class="n">variable</span><span class="o">=</span><span class="s2">&quot;UV_AS&quot;</span><span class="p">,</span>
+    <span class="n">statistic</span><span class="o">=</span><span class="s2">&quot;Mean&quot;</span><span class="p">,</span>
+    <span class="n">src_filename_format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">src_directory</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Basic calculations for specific exposure instances</span>
+
+<span class="sd">        This function is for calculating information other than ambient and personal</span>
+<span class="sd">        doses that corresponds to specific exposure instances. </span>
+
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        variable : str, optional</span>
+<span class="sd">            The name of the variable to be analysed. This informs what data should be</span>
+<span class="sd">            pulled from the source netCDF files. This also informs the name of the column(s)</span>
+<span class="sd">            that will be created by this function. Defaults to &quot;UV_AS&quot;, i.e. the All-Sky</span>
+<span class="sd">            UV data that is used in the calculate_specific_dose function.</span>
+
+<span class="sd">        statistic : str or list, optional</span>
+<span class="sd">            The statistic to be calculated, options include: mean, median, stdev, variance, </span>
+<span class="sd">            min, max, weighted_mean, and sum. Not case sensitive. Can be a single string or</span>
+<span class="sd">            a list of strings whereby multiple columns will be calculated. Defaults to &quot;Mean&quot;.</span>
+
+<span class="sd">        src_filename_format : str, optional</span>
+<span class="sd">            Allows the user to select different source data. This may be useful in cases where</span>
+<span class="sd">            the user wants to compare doses calculated with one dataset to (say) cloud cover</span>
+<span class="sd">            from another dataset. Defaults to None, where the function uses the source files</span>
+<span class="sd">            specified by the object&#39;s metadata.</span>
+
+<span class="sd">        src_directory : str, optional</span>
+<span class="sd">            Allows the user to select different source data. This may be useful in cases where</span>
+<span class="sd">            the user wants to compare doses calculated with one dataset to (say) cloud cover</span>
+<span class="sd">            from another dataset. Defaults to None, where the function uses the source files</span>
+<span class="sd">            specified by the object&#39;s metadata.</span>
+
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        SpecificDoses</span>
+<span class="sd">            The table is appended with new columns named [variable]_[statistic].</span>
+
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        In this example, we illustrate the process for calculating the doses in Harris et al. 2021</span>
+<span class="sd">        (https://doi.org/10.3390/atmos12020268) from the spreadsheet supplied as supplementary </span>
+<span class="sd">        data (https://www.mdpi.com/2073-4433/12/2/268/s1). Note that results will differ as the</span>
+<span class="sd">        spreadsheet contains only local Swiss time and not UTC time. Additionally, to demonstrate</span>
+<span class="sd">        the analyse_variable function, we also calculate the weighted mean CMF assuming it to be</span>
+<span class="sd">        an additional variable in the source data files. See below::</span>
+
+<span class="sd">            import python_tamer as pt</span>
+<span class="sd">            import pandas as pd</span>
+<span class="sd">            example = pt.SpecificDoses(pd.read_excel(r&#39;atmosphere-12-00268-s001.xlsx&#39;,</span>
+<span class="sd">                                                    header=2,index_col=0,usecols=&quot;B:K&quot;))</span>
+<span class="sd">            example.src_directory = &#39;C:/enter_the_directory_of_your_dataset_here&#39;</span>
+<span class="sd">            example = example.standard_column_names() </span>
+<span class="sd">            example = example.schedule_constant_exposure().ER_from_posture()</span>
+<span class="sd">            example = example.calculate_specific_dose()</span>
+<span class="sd">            example = example.analyse_variable(variable=&quot;CMF&quot;,statistic=&quot;weighted_mean&quot;)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># users have option to load different files, otherwise defaults to metadata</span>
+        <span class="k">if</span> <span class="n">src_filename_format</span> <span class="ow">is</span> <span class="kc">None</span> <span class="p">:</span>
+            <span class="n">src_filename_format</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">src_filename_format</span>
+        <span class="k">if</span> <span class="n">src_directory</span> <span class="ow">is</span> <span class="kc">None</span> <span class="p">:</span>
+            <span class="n">src_directory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">src_directory</span>
+
+        <span class="c1"># First step is find unique years to avoid loading unnecessary data</span>
+        <span class="n">years</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DatetimeIndex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Date</span><span class="p">)</span><span class="o">.</span><span class="n">year</span>
+        <span class="n">unique_years</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">years</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">statistic</span><span class="p">,</span><span class="nb">str</span><span class="p">)</span> <span class="p">:</span>
+            <span class="bp">self</span><span class="p">[</span><span class="n">variable</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">statistic</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+            <span class="c1"># convert to list to simplify code later</span>
+            <span class="n">statistic</span> <span class="o">=</span> <span class="p">[</span><span class="n">statistic</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">statistic</span><span class="p">,</span><span class="nb">list</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">statistic</span> <span class="p">:</span>
+                <span class="bp">self</span><span class="p">[</span><span class="n">variable</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">x</span><span class="p">]</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;statistic input must be str or list of str&quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">year</span> <span class="ow">in</span> <span class="n">unique_years</span> <span class="p">:</span>
+            <span class="c1"># Load netCDF file</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Processing year &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">year</span><span class="p">))</span> 
+            <span class="n">dataset</span><span class="o">=</span><span class="n">nc</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">src_directory</span><span class="o">+</span><span class="n">src_filename_format</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;yyyy&#39;</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="n">year</span><span class="p">)))</span> 
+            <span class="n">dataset</span><span class="o">.</span><span class="n">set_auto_mask</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span> <span class="c1"># This is important for nans to import correctly</span>
+
+            <span class="c1"># Make temporary table for yearly subset</span>
+            <span class="n">temp_table</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">years</span> <span class="o">==</span> <span class="n">year</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+            <span class="c1"># find all unique days in year to be loaded</span>
+            <span class="n">unique_days</span><span class="p">,</span><span class="n">unique_days_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DatetimeIndex</span><span class="p">(</span><span class="n">temp_table</span><span class="o">.</span><span class="n">Date</span><span class="p">)</span><span class="o">.</span><span class="n">dayofyear</span><span class="p">,</span>
+                <span class="n">return_inverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">temp_table</span><span class="p">[</span><span class="s1">&#39;unique_days_idx&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">unique_days_idx</span>
+
+            <span class="c1">#pd.DatetimeIndex(nc.num2date(dataset.variables[&quot;time&quot;][:],dataset.variables[&quot;time&quot;].units,only_use_cftime_datetimes=False))</span>
+
+            <span class="k">if</span> <span class="n">dataset</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">24</span> <span class="p">:</span>
+                <span class="c1"># needed if just a single day</span>
+                <span class="n">time_subset</span> <span class="o">=</span> <span class="p">[</span><span class="kc">True</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">)]</span>
+            <span class="k">else</span> <span class="p">:</span>
+                <span class="c1"># Next we pull a subset from the netCDF file</span>
+                <span class="c1"># declare false array with same length of time dimension from netCDF</span>
+                <span class="n">time_subset</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">)]</span> 
+                <span class="c1"># reshape false array to have first dimension 24 (hours in day)</span>
+                <span class="n">time_subset</span> <span class="o">=</span> <span class="n">assert_data_shape_24</span><span class="p">(</span><span class="n">time_subset</span><span class="p">)</span> 
+                <span class="c1"># set the appropriate days as true</span>
+                <span class="n">time_subset</span><span class="p">[:,</span><span class="n">unique_days</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span> 
+                <span class="c1"># flatten time_subset array back to one dimension</span>
+                <span class="n">time_subset</span> <span class="o">=</span> <span class="n">time_subset</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+
+            <span class="n">data</span> <span class="o">=</span> <span class="n">assert_data_shape_24</span><span class="p">(</span><span class="n">dataset</span><span class="p">[</span><span class="n">variable</span><span class="p">][</span><span class="n">time_subset</span><span class="p">,:,:])</span> 
+            <span class="c1"># TODO: improve comprehension of raw data units rather than assuming</span>
+
+            <span class="c1"># convert lat lon into pixel coordinates</span>
+            <span class="c1"># TODO: consider is necessary to load entire maps for just a few required pixels</span>
+            <span class="n">lat</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">][:]</span>
+            <span class="n">lon</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;lon&#39;</span><span class="p">][:]</span>
+            <span class="n">temp_table</span><span class="p">[</span><span class="s1">&#39;pixel_lat&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_table</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> 
+                <span class="n">find_nearest</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;Latitude&#39;</span><span class="p">]),</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">)</span>
+            <span class="n">temp_table</span><span class="p">[</span><span class="s1">&#39;pixel_lon&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_table</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> 
+                <span class="n">find_nearest</span><span class="p">(</span><span class="n">lon</span><span class="p">,</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;Longitude&#39;</span><span class="p">]),</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">)</span>
+
+            
+            <span class="c1"># calculate </span>
+            <span class="k">for</span> <span class="n">stat</span> <span class="ow">in</span> <span class="n">statistic</span> <span class="p">:</span>
+                <span class="c1"># mean</span>
+                <span class="k">if</span> <span class="n">stat</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span><span class="s1">&#39;average&#39;</span><span class="p">,</span><span class="s1">&#39;avg&#39;</span><span class="p">]</span> <span class="p">:</span>
+                    <span class="n">temp_table</span><span class="p">[</span><span class="n">variable</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">stat</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_table</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> 
+                        <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;Schedule&#39;</span><span class="p">]</span><span class="o">!=</span><span class="mi">0</span><span class="p">,</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;unique_days_idx&#39;</span><span class="p">],</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;pixel_lat&#39;</span><span class="p">],</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;pixel_lon&#39;</span><span class="p">]]</span> <span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">)</span>
+                <span class="c1"># median</span>
+                <span class="k">elif</span> <span class="n">stat</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;median&quot;</span><span class="p">,</span><span class="s2">&quot;med&quot;</span><span class="p">]</span> <span class="p">:</span>
+                    <span class="n">temp_table</span><span class="p">[</span><span class="n">variable</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">stat</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_table</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> 
+                        <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;Schedule&#39;</span><span class="p">]</span><span class="o">!=</span><span class="mi">0</span><span class="p">,</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;unique_days_idx&#39;</span><span class="p">],</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;pixel_lat&#39;</span><span class="p">],</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;pixel_lon&#39;</span><span class="p">]]</span> <span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">)</span>
+                <span class="c1"># stdev</span>
+                <span class="k">elif</span> <span class="n">stat</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;std&quot;</span><span class="p">,</span><span class="s2">&quot;sd&quot;</span><span class="p">,</span><span class="s2">&quot;stdev&quot;</span><span class="p">]</span> <span class="p">:</span>
+                    <span class="n">temp_table</span><span class="p">[</span><span class="n">variable</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">stat</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_table</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> 
+                        <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;Schedule&#39;</span><span class="p">]</span><span class="o">!=</span><span class="mi">0</span><span class="p">,</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;unique_days_idx&#39;</span><span class="p">],</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;pixel_lat&#39;</span><span class="p">],</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;pixel_lon&#39;</span><span class="p">]]</span> <span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">)</span>
+                <span class="c1"># variance</span>
+                <span class="k">elif</span> <span class="n">stat</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;var&quot;</span><span class="p">,</span><span class="s2">&quot;variance&quot;</span><span class="p">]</span> <span class="p">:</span>
+                    <span class="n">temp_table</span><span class="p">[</span><span class="n">variable</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">stat</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_table</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> 
+                        <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;Schedule&#39;</span><span class="p">]</span><span class="o">!=</span><span class="mi">0</span><span class="p">,</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;unique_days_idx&#39;</span><span class="p">],</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;pixel_lat&#39;</span><span class="p">],</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;pixel_lon&#39;</span><span class="p">]]</span> <span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">)</span>
+                <span class="c1"># minimum</span>
+                <span class="k">elif</span> <span class="n">stat</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;min&quot;</span><span class="p">,</span><span class="s1">&#39;minimum&#39;</span><span class="p">]</span> <span class="p">:</span>
+                    <span class="n">temp_table</span><span class="p">[</span><span class="n">variable</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">stat</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_table</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> 
+                        <span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;Schedule&#39;</span><span class="p">]</span><span class="o">!=</span><span class="mi">0</span><span class="p">,</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;unique_days_idx&#39;</span><span class="p">],</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;pixel_lat&#39;</span><span class="p">],</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;pixel_lon&#39;</span><span class="p">]]</span> <span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">)</span>
+                <span class="c1"># maximum</span>
+                <span class="k">elif</span> <span class="n">stat</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;max&quot;</span><span class="p">,</span><span class="s2">&quot;maximum&quot;</span><span class="p">]</span> <span class="p">:</span>
+                    <span class="n">temp_table</span><span class="p">[</span><span class="n">variable</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">stat</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_table</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> 
+                        <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;Schedule&#39;</span><span class="p">]</span><span class="o">!=</span><span class="mi">0</span><span class="p">,</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;unique_days_idx&#39;</span><span class="p">],</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;pixel_lat&#39;</span><span class="p">],</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;pixel_lon&#39;</span><span class="p">]]</span> <span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">)</span>
+                <span class="c1"># weighted mean</span>
+                <span class="k">elif</span> <span class="n">stat</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;weighted_mean&quot;</span><span class="p">,</span><span class="s2">&quot;weighted_average&quot;</span><span class="p">,</span><span class="s2">&quot;mean_weighted&quot;</span><span class="p">,</span><span class="s2">&quot;average_weighted&quot;</span><span class="p">,</span><span class="s2">&quot;avg_weighted&quot;</span><span class="p">]</span> <span class="p">:</span>
+                    <span class="n">temp_table</span><span class="p">[</span><span class="n">variable</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">stat</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_table</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> 
+                        <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;unique_days_idx&#39;</span><span class="p">],</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;pixel_lat&#39;</span><span class="p">],</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;pixel_lon&#39;</span><span class="p">]],</span><span class="n">weights</span><span class="o">=</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;Schedule&#39;</span><span class="p">]),</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">)</span>
+                <span class="c1"># sum</span>
+                <span class="k">elif</span> <span class="n">stat</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span><span class="s2">&quot;total&quot;</span><span class="p">]</span> <span class="p">:</span>
+                    <span class="n">temp_table</span><span class="p">[</span><span class="n">variable</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">stat</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_table</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> 
+                        <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;Schedule&#39;</span><span class="p">]</span><span class="o">!=</span><span class="mi">0</span><span class="p">,</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;unique_days_idx&#39;</span><span class="p">],</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;pixel_lat&#39;</span><span class="p">],</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;pixel_lon&#39;</span><span class="p">]]</span> <span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">)</span>
+
+                <span class="c1"># extra step necessary to ensure correct assignment</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">temp_table</span><span class="o">.</span><span class="n">index</span><span class="p">,</span><span class="n">variable</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">stat</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_table</span><span class="p">[</span><span class="n">variable</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">stat</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
         <span class="k">return</span> <span class="bp">self</span>        </div></div>
-
-
 </pre></div>
 
            </div>

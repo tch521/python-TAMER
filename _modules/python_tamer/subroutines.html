@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>python_tamer.subroutines &mdash; python-TAMER 0.3.0 documentation</title>
+  <title>python_tamer.subroutines &mdash; python-TAMER 0.4.0 documentation</title>
   
 
   
@@ -153,6 +153,7 @@
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">datetime</span> <span class="k">as</span> <span class="nn">dt</span>
+<span class="kn">import</span> <span class="nn">string</span>
 
 <div class="viewcode-block" id="assert_data_shape_24"><a class="viewcode-back" href="../../code_reference.html#python_tamer.subroutines.assert_data_shape_24">[docs]</a><span class="k">def</span> <span class="nf">assert_data_shape_24</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">reverse</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">force_second_dim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Simple function to check if first dimension is 24 hours and, if not, reshapes accordingly</span>
@@ -542,6 +543,140 @@
     <span class="n">ER</span> <span class="o">=</span> <span class="n">ER_Vernez_model_equation</span><span class="p">(</span><span class="n">Vis</span><span class="p">,</span><span class="n">mSZA</span><span class="p">)</span> <span class="o">/</span> <span class="mi">100</span>
 
     <span class="k">return</span> <span class="n">ER</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="format_filename"><a class="viewcode-back" href="../../code_reference.html#python_tamer.subroutines.format_filename">[docs]</a><span class="k">def</span> <span class="nf">format_filename</span><span class="p">(</span><span class="n">inp</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Takes a string and return a valid filename constructed from the string.</span>
+<span class="sd">    </span>
+<span class="sd">    Uses a whitelist approach: any characters not present in valid_chars are</span>
+<span class="sd">    removed. Also spaces are replaced with underscores.</span>
+<span class="sd">    </span>
+<span class="sd">    Note: this method may produce invalid filenames such as &quot;&quot;, &quot;.&quot; or &quot;..&quot;</span>
+<span class="sd">    When using this method, prepend a date string like &quot;2009_01_15_19_46_32_&quot;</span>
+<span class="sd">    and append a file extension like &#39;.txt&#39;, so to avoid the potential of using</span>
+<span class="sd">    an invalid filename.</span>
+
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    s : str</span>
+<span class="sd">        Input string to be converted to valid filename</span>
+
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">valid_chars</span> <span class="o">=</span> <span class="s2">&quot;-_.() </span><span class="si">%s%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">ascii_letters</span><span class="p">,</span> <span class="n">string</span><span class="o">.</span><span class="n">digits</span><span class="p">)</span>
+    <span class="n">inp_rpl</span> <span class="o">=</span> <span class="n">inp</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">,</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">inp_rpl</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">valid_chars</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">filename</span></div>
+
+<div class="viewcode-block" id="str2daysofyear"><a class="viewcode-back" href="../../code_reference.html#python_tamer.subroutines.str2daysofyear">[docs]</a><span class="k">def</span> <span class="nf">str2daysofyear</span><span class="p">(</span><span class="n">inp</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Interprets a string, list, or array into a list of arrays for days of the year</span>
+
+<span class="sd">    An ExposureMapSequence object requires of a list of arrays describing the days of</span>
+<span class="sd">    the year to be used in the creation of each histogram. This function simplifies the</span>
+<span class="sd">    process of entering this information. The user can enter keywords to automatically</span>
+<span class="sd">    generate the appropriate list of days.</span>
+
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    inp : str or list or numpy.array</span>
+<span class="sd">        The input to be interpreted. Numeric entries should be included in the output</span>
+<span class="sd">        unmodified, while string entries should be replaced by numeric arrays.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list</span>
+<span class="sd">        Produces a list of arrays that is interpretable by the ExposureMapSequence code.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">str2daysofyear_raw</span><span class="p">(</span><span class="n">inp</span><span class="p">)</span> <span class="p">:</span>
+
+        <span class="n">ayear</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s2">&quot;2010-01-01&quot;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s2">&quot;2010-12-31&quot;</span><span class="p">)</span>
+        <span class="n">winter</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">12</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">ayear</span><span class="p">[</span><span class="n">ayear</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">dayofyear</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">()]</span>
+        <span class="n">spring</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">ayear</span><span class="p">[</span><span class="n">ayear</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">dayofyear</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">()]</span>
+        <span class="n">summer</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">ayear</span><span class="p">[</span><span class="n">ayear</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">dayofyear</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">()]</span>
+        <span class="n">autumn</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">ayear</span><span class="p">[</span><span class="n">ayear</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">dayofyear</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">()]</span>
+
+        <span class="n">keys_ref</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;month&quot;</span>  <span class="p">:</span> <span class="p">[</span><span class="n">ayear</span><span class="p">[</span><span class="n">ayear</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">dayofyear</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">13</span><span class="p">)],</span>
+            <span class="s2">&quot;season&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="n">spring</span><span class="p">,</span><span class="n">summer</span><span class="p">,</span><span class="n">autumn</span><span class="p">,</span><span class="n">winter</span><span class="p">],</span>
+            <span class="s2">&quot;quarter&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">spring</span><span class="p">,</span><span class="n">summer</span><span class="p">,</span><span class="n">autumn</span><span class="p">,</span><span class="n">winter</span><span class="p">],</span>
+            <span class="s2">&quot;year&quot;</span>   <span class="p">:</span> <span class="n">ayear</span><span class="o">.</span><span class="n">dayofyear</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+            <span class="s2">&quot;annual&quot;</span> <span class="p">:</span> <span class="n">ayear</span><span class="o">.</span><span class="n">dayofyear</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+            <span class="s2">&quot;jan&quot;</span> <span class="p">:</span> <span class="n">ayear</span><span class="p">[</span><span class="n">ayear</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dayofyear</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+            <span class="s2">&quot;feb&quot;</span> <span class="p">:</span> <span class="n">ayear</span><span class="p">[</span><span class="n">ayear</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">dayofyear</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+            <span class="s2">&quot;mar&quot;</span> <span class="p">:</span> <span class="n">ayear</span><span class="p">[</span><span class="n">ayear</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">dayofyear</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+            <span class="s2">&quot;apr&quot;</span> <span class="p">:</span> <span class="n">ayear</span><span class="p">[</span><span class="n">ayear</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">dayofyear</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+            <span class="s2">&quot;may&quot;</span> <span class="p">:</span> <span class="n">ayear</span><span class="p">[</span><span class="n">ayear</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">dayofyear</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+            <span class="s2">&quot;jun&quot;</span> <span class="p">:</span> <span class="n">ayear</span><span class="p">[</span><span class="n">ayear</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="mi">6</span><span class="p">]</span><span class="o">.</span><span class="n">dayofyear</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+            <span class="s2">&quot;jul&quot;</span> <span class="p">:</span> <span class="n">ayear</span><span class="p">[</span><span class="n">ayear</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="mi">7</span><span class="p">]</span><span class="o">.</span><span class="n">dayofyear</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+            <span class="s2">&quot;aug&quot;</span> <span class="p">:</span> <span class="n">ayear</span><span class="p">[</span><span class="n">ayear</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="mi">8</span><span class="p">]</span><span class="o">.</span><span class="n">dayofyear</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+            <span class="s2">&quot;sep&quot;</span> <span class="p">:</span> <span class="n">ayear</span><span class="p">[</span><span class="n">ayear</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="mi">9</span><span class="p">]</span><span class="o">.</span><span class="n">dayofyear</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+            <span class="s2">&quot;oct&quot;</span> <span class="p">:</span> <span class="n">ayear</span><span class="p">[</span><span class="n">ayear</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="mi">10</span><span class="p">]</span><span class="o">.</span><span class="n">dayofyear</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+            <span class="s2">&quot;nov&quot;</span> <span class="p">:</span> <span class="n">ayear</span><span class="p">[</span><span class="n">ayear</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="mi">11</span><span class="p">]</span><span class="o">.</span><span class="n">dayofyear</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+            <span class="s2">&quot;dec&quot;</span> <span class="p">:</span> <span class="n">ayear</span><span class="p">[</span><span class="n">ayear</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="mi">12</span><span class="p">]</span><span class="o">.</span><span class="n">dayofyear</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+            <span class="s2">&quot;winter&quot;</span> <span class="p">:</span> <span class="n">winter</span><span class="p">,</span>
+            <span class="s2">&quot;autumn&quot;</span> <span class="p">:</span> <span class="n">autumn</span><span class="p">,</span>
+            <span class="s2">&quot;fall&quot;</span>   <span class="p">:</span> <span class="n">autumn</span><span class="p">,</span>
+            <span class="s2">&quot;spring&quot;</span> <span class="p">:</span> <span class="n">spring</span><span class="p">,</span>
+            <span class="s2">&quot;summer&quot;</span> <span class="p">:</span> <span class="n">summer</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">keys_ref</span><span class="p">[</span><span class="n">inp</span><span class="p">]</span>
+    
+    
+    <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;month&quot;</span><span class="p">,</span><span class="s2">&quot;season&quot;</span><span class="p">,</span><span class="s2">&quot;quarter&quot;</span><span class="p">,</span><span class="s2">&quot;year&quot;</span><span class="p">,</span><span class="s2">&quot;annual&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;jan&quot;</span><span class="p">,</span><span class="s2">&quot;feb&quot;</span><span class="p">,</span><span class="s2">&quot;mar&quot;</span><span class="p">,</span><span class="s2">&quot;apr&quot;</span><span class="p">,</span><span class="s2">&quot;may&quot;</span><span class="p">,</span><span class="s2">&quot;jun&quot;</span><span class="p">,</span><span class="s2">&quot;jul&quot;</span><span class="p">,</span><span class="s2">&quot;aug&quot;</span><span class="p">,</span><span class="s2">&quot;sep&quot;</span><span class="p">,</span><span class="s2">&quot;oct&quot;</span><span class="p">,</span><span class="s2">&quot;nov&quot;</span><span class="p">,</span><span class="s2">&quot;dec&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;winter&quot;</span><span class="p">,</span><span class="s2">&quot;autumn&quot;</span><span class="p">,</span><span class="s2">&quot;fall&quot;</span><span class="p">,</span><span class="s2">&quot;spring&quot;</span><span class="p">,</span><span class="s2">&quot;summer&quot;</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span><span class="nb">str</span><span class="p">)</span> <span class="p">:</span>
+        <span class="c1"># simple case, user has entered &quot;monthly&quot; or some such</span>
+
+        <span class="c1"># there should be only one result from the filter anyway</span>
+        <span class="n">inp_flt</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">inp</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">keys</span><span class="p">))</span>
+
+        <span class="n">out</span> <span class="o">=</span> <span class="n">str2daysofyear_raw</span><span class="p">(</span><span class="n">inp_flt</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="c1"># in case user hasn&#39;t selected one of the nice advanced options, must convert to list</span>
+        <span class="k">if</span> <span class="n">inp_flt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;month&quot;</span><span class="p">,</span><span class="s2">&quot;season&quot;</span><span class="p">,</span><span class="s2">&quot;quarter&quot;</span><span class="p">,</span><span class="s2">&quot;year&quot;</span><span class="p">,</span><span class="s2">&quot;annual&quot;</span><span class="p">]</span> <span class="p">:</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="p">[</span><span class="n">out</span><span class="p">]</span>
+
+        <span class="c1"># TODO: rewrite this function to do this first and then pass filtered input to raw</span>
+        <span class="k">if</span> <span class="n">inp_flt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;month&#39;</span> <span class="p">:</span>
+            <span class="n">inp_flt</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;jan&#39;</span><span class="p">,</span><span class="s1">&#39;feb&#39;</span><span class="p">,</span><span class="s1">&#39;mar&#39;</span><span class="p">,</span><span class="s1">&#39;apr&#39;</span><span class="p">,</span><span class="s1">&#39;may&#39;</span><span class="p">,</span><span class="s1">&#39;jun&#39;</span><span class="p">,</span><span class="s1">&#39;jul&#39;</span><span class="p">,</span><span class="s1">&#39;aug&#39;</span><span class="p">,</span><span class="s1">&#39;sep&#39;</span><span class="p">,</span><span class="s1">&#39;oct&#39;</span><span class="p">,</span><span class="s1">&#39;nov&#39;</span><span class="p">,</span><span class="s1">&#39;dec&#39;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">inp_flt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;season&#39;</span><span class="p">,</span><span class="s1">&#39;quarter&#39;</span><span class="p">]</span> <span class="p">:</span>
+            <span class="n">inp_flt</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;spring&#39;</span><span class="p">,</span><span class="s1">&#39;summer&#39;</span><span class="p">,</span><span class="s1">&#39;autumn&#39;</span><span class="p">,</span><span class="s1">&#39;winter&#39;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">inp_flt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;year&#39;</span> <span class="p">:</span>
+            <span class="n">inp_flt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;annual&#39;</span>
+
+        <span class="n">nonstrings</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">]</span>
+
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span><span class="nb">list</span><span class="p">)</span> <span class="p">:</span>
+        <span class="c1"># complex case, user has entered list </span>
+        <span class="c1"># [&quot;june&quot;,&quot;july&quot;,&quot;august&quot;,&quot;summer&quot;] or some such</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">inp_flt</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">nonstrings</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">inpx</span> <span class="ow">in</span> <span class="n">inp</span> <span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inpx</span><span class="p">,</span><span class="nb">str</span><span class="p">)</span> <span class="p">:</span> 
+                <span class="n">inp_flt_temp</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">inpx</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">keys</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">inp_flt</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">inp_flt_temp</span><span class="p">)</span>
+                <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">str2daysofyear_raw</span><span class="p">(</span><span class="n">inp_flt_temp</span><span class="p">))</span>
+                <span class="n">nonstrings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+            <span class="k">else</span> <span class="p">:</span>
+                <span class="n">inp_flt</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">inpx</span><span class="p">)</span>
+                <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">inpx</span><span class="p">)</span>
+                <span class="n">nonstrings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+    
+    <span class="c1"># convert list of lists to list of arrays for consistency</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="p">))</span> <span class="p">:</span>
+        <span class="n">out</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">out</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">out</span><span class="p">,</span> <span class="n">inp_flt</span><span class="p">,</span> <span class="n">nonstrings</span></div>
 </pre></div>
 
            </div>
