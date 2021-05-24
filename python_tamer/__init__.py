@@ -14,6 +14,6 @@ from .SpecificDoses import *
 
 __author__ = """Todd C. Harris"""
 __email__ = 'todd.harris@meteoswiss.ch'
-__version__ = "0.3.1"
+__version__ = "0.4.0"
 
 # CONFIG = Config(name='python_tamer.conf')

@@ -2,6 +2,15 @@
 History
 =======
 
+0.4.0 Open Alpha (2021-05-24)
+--------------------------------
+
+* Added the new ``ExposureMapSequence`` class providing much improved map making capabilities (this was the majority of the work)
+* Added the ``render_map()`` function to produce more beautiful maps across in a more versatile way
+* Added the ``str2daysofyear()`` function to interpret keywords like month names and produce the days of the year
+* Added the ``analyse_variable()`` function to the ``SpecificDoses`` class for more flexible analysis options
+
+
 0.3.1 Open Alpha (2021-03-29)
 ---------------------------------
 

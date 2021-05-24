@@ -36,3 +36,10 @@ def test_SpecificDoses():
 
     assert test['Ambient_dose'][0] == pytest.approx(8.08847 * 0.9, 0.05)
 
+def test_str2daysofyear_mix_type():
+    
+    a,b,c = str2daysofyear([np.arange(1,8),"January"])
+
+    assert all(a[1] == np.arange(1,32))
+    assert b[1] == 'jan'
+    assert c == [True, False]

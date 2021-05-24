@@ -24,11 +24,11 @@ packages = find_packages(include=['python_tamer'],exclude=['test','doc'])
 
 package_dir = {'python-TAMER': 'python_tamer'}
 
-package_data = {'test': ["UV_test_data_2018.nc"]}
+package_data = {'test': ["UV_test_data_2018.nc"],'python_tamer' : ["mch_logo.png"]}
 
 setup(
     name='python-TAMER',
-    version="0.3.1",
+    version="0.4.0",
     author="Todd C. Harris",
     author_email='todd.harris@meteoswiss.ch',
     description="Toolkit for Analysis and Maps of Exposure Risk",

@@ -23,7 +23,7 @@ class SpecificDoses(pd.DataFrame):
         Describes the filename of the netCDF files containing the UV data with 'yyyy' in place 
         of the year.
     
-    data_directory : str
+    src_directory : str
         The directory where the data is stored. Must end with a slash.
 
 
@@ -35,7 +35,7 @@ class SpecificDoses(pd.DataFrame):
     parameters cannot be set when initialising a `SpecificDoses` object, they must instead
     be adjusted after initialisation, like so::
 
-        ExistingExposureMapObject.data_directory = "/new/data/directory/"
+        ExistingExposureMapObject.src_directory = "/new/data/directory/"
 
     
     Example
@@ -52,7 +52,7 @@ class SpecificDoses(pd.DataFrame):
         import pandas as pd
         example = pt.SpecificDoses(pd.read_excel(r'atmosphere-12-00268-s001.xlsx',
                                                  header=2,index_col=0,usecols="B:K"))
-        example.data_directory = 'C:/enter_the_directory_of_your_dataset_here'
+        example.src_directory = 'C:/enter_the_directory_of_your_dataset_here'
         example = example.standard_column_names() 
         example = example.schedule_constant_exposure().ER_from_posture()
         example = example.calculate_specific_dose()
@@ -66,12 +66,24 @@ class SpecificDoses(pd.DataFrame):
         return SpecificDoses
     
     # This adds some useful metadata (self-explanatory)
-    _metadata = ["src_filename_format","data_directory"]
+    _metadata = ["src_filename_format","src_directory"]
     src_filename_format = 'UVery.AS_ch02.lonlat_yyyy01010000.nc'
-    data_directory = 'C:/Data/UV/' # TODO: set up __init__ for these options
+    src_directory = 'C:/Data/UV/' # TODO: set up __init__ for these options
     # It feels like this should be declared with __init__ as well but idk
 
     def standard_column_names(self) :
+        """Limited function to standardise column names
+
+        When loading tables to use as the basis for a SpecificDoses table, some columns may have
+        slightly names to what is expected. This function standardises the names but is very
+        limited in terms of what it can recognise. The user is encourages to ensure the columns
+        are correctly labelled themselves and not to rely on this function.
+
+        Returns
+        -------
+        SpecificDoses
+            The table has its column names modified.
+        """
         legend_dict_reverse = {'Point' : ['Lieu de mesure'],
             'Date' : ['Date'],
             'Time_start' : ['Heure début','Start_time','Start time'],
@@ -125,7 +137,7 @@ class SpecificDoses(pd.DataFrame):
             import pandas as pd
             example = pt.SpecificDoses(pd.read_excel(r'atmosphere-12-00268-s001.xlsx',
                                                     header=2,index_col=0,usecols="B:K"))
-            example.data_directory = 'C:/enter_the_directory_of_your_dataset_here'
+            example.src_directory = 'C:/enter_the_directory_of_your_dataset_here'
             example = example.standard_column_names() 
             example = example.schedule_constant_exposure().ER_from_posture()
             example = example.calculate_specific_dose()
@@ -223,7 +235,7 @@ class SpecificDoses(pd.DataFrame):
             import pandas as pd
             example = pt.SpecificDoses(pd.read_excel(r'atmosphere-12-00268-s001.xlsx',
                                                     header=2,index_col=0,usecols="B:K"))
-            example.data_directory = 'C:/enter_the_directory_of_your_dataset_here'
+            example.src_directory = 'C:/enter_the_directory_of_your_dataset_here'
             example = example.standard_column_names() 
             example = example.schedule_constant_exposure().ER_from_posture()
             example = example.calculate_specific_dose()
@@ -290,6 +302,7 @@ class SpecificDoses(pd.DataFrame):
         self = self.replace({'Anatomic_zone' : Anatomic_zone_synonyms})
 
         # With the correct anatomic zone names established, we can lookup the Vis values from the table
+        # TODO: lookup is being depreciated, must replace with something new
         Vis = Vis_table.lookup(self['Anatomic_zone'],self['Posture'])
 
         # Next we must calculate the minimal Solar Zenith Angle for the given date
@@ -342,7 +355,7 @@ class SpecificDoses(pd.DataFrame):
             import pandas as pd
             example = pt.SpecificDoses(pd.read_excel(r'atmosphere-12-00268-s001.xlsx',
                                                     header=2,index_col=0,usecols="B:K"))
-            example.data_directory = 'C:/enter_the_directory_of_your_dataset_here'
+            example.src_directory = 'C:/enter_the_directory_of_your_dataset_here'
             example = example.standard_column_names() 
             example = example.schedule_constant_exposure().ER_from_posture()
             example = example.calculate_specific_dose()
@@ -360,7 +373,7 @@ class SpecificDoses(pd.DataFrame):
         for year in unique_years :
             # Load netCDF file
             print("Processing year "+str(year)) 
-            dataset=nc.Dataset(self.data_directory+self.src_filename_format.replace('yyyy',str(year))) 
+            dataset=nc.Dataset(self.src_directory+self.src_filename_format.replace('yyyy',str(year))) 
             dataset.set_auto_mask(False) # This is important for nans to import correctly
 
             # Make temporary table for yearly subset
@@ -418,3 +431,173 @@ class SpecificDoses(pd.DataFrame):
         return self        
 
 
+
+
+
+    def analyse_variable(self,
+    variable="UV_AS",
+    statistic="Mean",
+    src_filename_format=None,
+    src_directory=None) :
+        """Basic calculations for specific exposure instances
+
+        This function is for calculating information other than ambient and personal
+        doses that corresponds to specific exposure instances. 
+
+
+        Parameters
+        ----------
+        variable : str, optional
+            The name of the variable to be analysed. This informs what data should be
+            pulled from the source netCDF files. This also informs the name of the column(s)
+            that will be created by this function. Defaults to "UV_AS", i.e. the All-Sky
+            UV data that is used in the calculate_specific_dose function.
+
+        statistic : str or list, optional
+            The statistic to be calculated, options include: mean, median, stdev, variance, 
+            min, max, weighted_mean, and sum. Not case sensitive. Can be a single string or
+            a list of strings whereby multiple columns will be calculated. Defaults to "Mean".
+
+        src_filename_format : str, optional
+            Allows the user to select different source data. This may be useful in cases where
+            the user wants to compare doses calculated with one dataset to (say) cloud cover
+            from another dataset. Defaults to None, where the function uses the source files
+            specified by the object's metadata.
+
+        src_directory : str, optional
+            Allows the user to select different source data. This may be useful in cases where
+            the user wants to compare doses calculated with one dataset to (say) cloud cover
+            from another dataset. Defaults to None, where the function uses the source files
+            specified by the object's metadata.
+
+
+        Returns
+        -------
+        SpecificDoses
+            The table is appended with new columns named [variable]_[statistic].
+
+
+        Example
+        -------
+
+        In this example, we illustrate the process for calculating the doses in Harris et al. 2021
+        (https://doi.org/10.3390/atmos12020268) from the spreadsheet supplied as supplementary 
+        data (https://www.mdpi.com/2073-4433/12/2/268/s1). Note that results will differ as the
+        spreadsheet contains only local Swiss time and not UTC time. Additionally, to demonstrate
+        the analyse_variable function, we also calculate the weighted mean CMF assuming it to be
+        an additional variable in the source data files. See below::
+
+            import python_tamer as pt
+            import pandas as pd
+            example = pt.SpecificDoses(pd.read_excel(r'atmosphere-12-00268-s001.xlsx',
+                                                    header=2,index_col=0,usecols="B:K"))
+            example.src_directory = 'C:/enter_the_directory_of_your_dataset_here'
+            example = example.standard_column_names() 
+            example = example.schedule_constant_exposure().ER_from_posture()
+            example = example.calculate_specific_dose()
+            example = example.analyse_variable(variable="CMF",statistic="weighted_mean")
+
+        """
+
+        # users have option to load different files, otherwise defaults to metadata
+        if src_filename_format is None :
+            src_filename_format = self.src_filename_format
+        if src_directory is None :
+            src_directory = self.src_directory
+
+        # First step is find unique years to avoid loading unnecessary data
+        years = pd.DatetimeIndex(self.Date).year
+        unique_years = sorted(set(years))
+
+        if isinstance(statistic,str) :
+            self[variable+"_"+statistic] = np.nan
+            # convert to list to simplify code later
+            statistic = [statistic]
+        elif isinstance(statistic,list) :
+            for x in statistic :
+                self[variable+"_"+x]=np.nan
+        else :
+            raise TypeError("statistic input must be str or list of str")
+
+        for year in unique_years :
+            # Load netCDF file
+            print("Processing year "+str(year)) 
+            dataset=nc.Dataset(src_directory+src_filename_format.replace('yyyy',str(year))) 
+            dataset.set_auto_mask(False) # This is important for nans to import correctly
+
+            # Make temporary table for yearly subset
+            temp_table = self[years == year].copy()
+
+            # find all unique days in year to be loaded
+            unique_days,unique_days_idx = np.unique(pd.DatetimeIndex(temp_table.Date).dayofyear,
+                return_inverse=True)
+            temp_table['unique_days_idx'] = unique_days_idx
+
+            #pd.DatetimeIndex(nc.num2date(dataset.variables["time"][:],dataset.variables["time"].units,only_use_cftime_datetimes=False))
+
+            if dataset.dimensions['time'].size == 24 :
+                # needed if just a single day
+                time_subset = [True for i in range(dataset.dimensions['time'].size)]
+            else :
+                # Next we pull a subset from the netCDF file
+                # declare false array with same length of time dimension from netCDF
+                time_subset = [False for i in range(dataset.dimensions['time'].size)] 
+                # reshape false array to have first dimension 24 (hours in day)
+                time_subset = assert_data_shape_24(time_subset) 
+                # set the appropriate days as true
+                time_subset[:,unique_days-1] = True 
+                # flatten time_subset array back to one dimension
+                time_subset = time_subset.flatten(order='F')
+
+            data = assert_data_shape_24(dataset[variable][time_subset,:,:]) 
+            # TODO: improve comprehension of raw data units rather than assuming
+
+            # convert lat lon into pixel coordinates
+            # TODO: consider is necessary to load entire maps for just a few required pixels
+            lat = dataset['lat'][:]
+            lon = dataset['lon'][:]
+            temp_table['pixel_lat'] = temp_table.apply(lambda x: 
+                find_nearest(lat,x['Latitude']),axis='columns')
+            temp_table['pixel_lon'] = temp_table.apply(lambda x: 
+                find_nearest(lon,x['Longitude']),axis='columns')
+
+            
+            # calculate 
+            for stat in statistic :
+                # mean
+                if stat.lower() in ["mean",'average','avg'] :
+                    temp_table[variable+"_"+stat] = temp_table.apply(lambda x: 
+                        np.mean(data[x['Schedule']!=0,x['unique_days_idx'],x['pixel_lat'],x['pixel_lon']] ),axis='columns')
+                # median
+                elif stat.lower() in ["median","med"] :
+                    temp_table[variable+"_"+stat] = temp_table.apply(lambda x: 
+                        np.median(data[x['Schedule']!=0,x['unique_days_idx'],x['pixel_lat'],x['pixel_lon']] ),axis='columns')
+                # stdev
+                elif stat.lower() in ["std","sd","stdev"] :
+                    temp_table[variable+"_"+stat] = temp_table.apply(lambda x: 
+                        np.std(data[x['Schedule']!=0,x['unique_days_idx'],x['pixel_lat'],x['pixel_lon']] ),axis='columns')
+                # variance
+                elif stat.lower() in ["var","variance"] :
+                    temp_table[variable+"_"+stat] = temp_table.apply(lambda x: 
+                        np.var(data[x['Schedule']!=0,x['unique_days_idx'],x['pixel_lat'],x['pixel_lon']] ),axis='columns')
+                # minimum
+                elif stat.lower() in ["min",'minimum'] :
+                    temp_table[variable+"_"+stat] = temp_table.apply(lambda x: 
+                        np.amin(data[x['Schedule']!=0,x['unique_days_idx'],x['pixel_lat'],x['pixel_lon']] ),axis='columns')
+                # maximum
+                elif stat.lower() in ["max","maximum"] :
+                    temp_table[variable+"_"+stat] = temp_table.apply(lambda x: 
+                        np.amax(data[x['Schedule']!=0,x['unique_days_idx'],x['pixel_lat'],x['pixel_lon']] ),axis='columns')
+                # weighted mean
+                elif stat.lower() in ["weighted_mean","weighted_average","mean_weighted","average_weighted","avg_weighted"] :
+                    temp_table[variable+"_"+stat] = temp_table.apply(lambda x: 
+                        np.average(data[:,x['unique_days_idx'],x['pixel_lat'],x['pixel_lon']],weights=x['Schedule']),axis='columns')
+                # sum
+                elif stat.lower() in ["sum","total"] :
+                    temp_table[variable+"_"+stat] = temp_table.apply(lambda x: 
+                        np.sum(data[x['Schedule']!=0,x['unique_days_idx'],x['pixel_lat'],x['pixel_lon']] ),axis='columns')
+
+                # extra step necessary to ensure correct assignment
+                self.loc[temp_table.index,variable+"_"+stat] = temp_table[variable+"_"+stat].values
+
+        return self        

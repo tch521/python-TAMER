@@ -66,7 +66,6 @@ In Development
 
 * Improved support for custom statistical descriptors
 * Custom area selection for the SpecificDoses class
-* Improved aesthetic options for ExposureMap class
 
 Future work
 -----------

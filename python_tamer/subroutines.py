@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import datetime as dt
+import string
 
 def assert_data_shape_24(data,reverse=False,force_second_dim=True) :
     """Simple function to check if first dimension is 24 hours and, if not, reshapes accordingly
@@ -390,3 +391,137 @@ Vis_table=None) :
     ER = ER_Vernez_model_equation(Vis,mSZA) / 100
 
     return ER.to_numpy()
+
+def format_filename(inp):
+    """Takes a string and return a valid filename constructed from the string.
+    
+    Uses a whitelist approach: any characters not present in valid_chars are
+    removed. Also spaces are replaced with underscores.
+    
+    Note: this method may produce invalid filenames such as ``, `.` or `..`
+    When using this method, prepend a date string like '2009_01_15_19_46_32_'
+    and append a file extension like '.txt', so to avoid the potential of using
+    an invalid filename.
+
+
+    Parameters
+    ----------
+    s : str
+        Input string to be converted to valid filename
+
+
+    Returns
+    -------
+    str
+        
+    """
+    valid_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
+    inp_rpl = inp.replace(' ','_').replace(':','-')
+    filename = ''.join(c for c in inp_rpl if c in valid_chars)
+    return filename
+
+def str2daysofyear(inp) :
+    """Interprets a string, list, or array into a list of arrays for days of the year
+
+    An ExposureMapSequence object requires of a list of arrays describing the days of
+    the year to be used in the creation of each histogram. This function simplifies the
+    process of entering this information. The user can enter keywords to automatically
+    generate the appropriate list of days.
+
+
+    Parameters
+    ----------
+    inp : str or list or numpy.array
+        The input to be interpreted. Numeric entries should be included in the output
+        unmodified, while string entries should be replaced by numeric arrays.
+
+    Returns
+    -------
+    list
+        Produces a list of arrays that is interpretable by the ExposureMapSequence code.
+    """
+
+    def str2daysofyear_raw(inp) :
+
+        ayear = pd.date_range(start="2010-01-01",end="2010-12-31")
+        winter = [x for i in [12,1,2] for x in ayear[ayear.month == i].dayofyear.values.tolist()]
+        spring = [x for i in [3,4,5] for x in ayear[ayear.month == i].dayofyear.values.tolist()]
+        summer = [x for i in [6,7,8] for x in ayear[ayear.month == i].dayofyear.values.tolist()]
+        autumn = [x for i in [9,10,11] for x in ayear[ayear.month == i].dayofyear.values.tolist()]
+
+        keys_ref = {
+            "month"  : [ayear[ayear.month == i].dayofyear.values.tolist() for i in range(1,13)],
+            "season" : [spring,summer,autumn,winter],
+            "quarter": [spring,summer,autumn,winter],
+            "year"   : ayear.dayofyear.values.tolist(),
+            "annual" : ayear.dayofyear.values.tolist(),
+            "jan" : ayear[ayear.month == 1].dayofyear.values.tolist(),
+            "feb" : ayear[ayear.month == 2].dayofyear.values.tolist(),
+            "mar" : ayear[ayear.month == 3].dayofyear.values.tolist(),
+            "apr" : ayear[ayear.month == 4].dayofyear.values.tolist(),
+            "may" : ayear[ayear.month == 5].dayofyear.values.tolist(),
+            "jun" : ayear[ayear.month == 6].dayofyear.values.tolist(),
+            "jul" : ayear[ayear.month == 7].dayofyear.values.tolist(),
+            "aug" : ayear[ayear.month == 8].dayofyear.values.tolist(),
+            "sep" : ayear[ayear.month == 9].dayofyear.values.tolist(),
+            "oct" : ayear[ayear.month == 10].dayofyear.values.tolist(),
+            "nov" : ayear[ayear.month == 11].dayofyear.values.tolist(),
+            "dec" : ayear[ayear.month == 12].dayofyear.values.tolist(),
+            "winter" : winter,
+            "autumn" : autumn,
+            "fall"   : autumn,
+            "spring" : spring,
+            "summer" : summer,
+        }
+
+        return keys_ref[inp]
+    
+    
+    keys = ["month","season","quarter","year","annual",
+            "jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec",
+            "winter","autumn","fall","spring","summer"]
+
+    if isinstance(inp,str) :
+        # simple case, user has entered "monthly" or some such
+
+        # there should be only one result from the filter anyway
+        inp_flt = list(filter(lambda x: x in inp.lower(), keys))
+
+        out = str2daysofyear_raw(inp_flt[0])
+
+        # in case user hasn't selected one of the nice advanced options, must convert to list
+        if inp_flt[0] not in ["month","season","quarter","year","annual"] :
+            out = [out]
+
+        # TODO: rewrite this function to do this first and then pass filtered input to raw
+        if inp_flt[0] == 'month' :
+            inp_flt = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec']
+        elif inp_flt[0] in ['season','quarter'] :
+            inp_flt = ['spring','summer','autumn','winter']
+        elif inp_flt[0] == 'year' :
+            inp_flt[0] = 'annual'
+
+        nonstrings = [False]
+
+    elif isinstance(inp,list) :
+        # complex case, user has entered list 
+        # ["june","july","august","summer"] or some such
+        out = []
+        inp_flt = []
+        nonstrings = []
+        for inpx in inp :
+            if isinstance(inpx,str) : 
+                inp_flt_temp = list(filter(lambda x: x in inpx.lower(), keys))[0]
+                inp_flt.append(inp_flt_temp)
+                out.append(str2daysofyear_raw(inp_flt_temp))
+                nonstrings.append(False)
+            else :
+                inp_flt.append(inpx)
+                out.append(inpx)
+                nonstrings.append(True)
+    
+    # convert list of lists to list of arrays for consistency
+    for i in range(len(out)) :
+        out[i] = np.array(out[i])
+
+    return out, inp_flt, nonstrings
