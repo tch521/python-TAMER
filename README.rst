@@ -2,13 +2,13 @@
 Introduction to python-TAMER
 ============================
 
-| Official documentation hosted at https://tch521.github.io/python-TAMER 
+| Official documentation hosted at https://meteoswiss.github.io/python-TAMER 
 
 Python-TAMER is a python package for performing advanced environmental exposure calculations in a simple and
 accessable way suitable for users with minimal python experience. To get started, check the `Installation`_
 tab.
 
-.. _Installation: https://tch521.github.io/python-TAMER/installation.html
+.. _Installation: https://meteoswiss.github.io/python-TAMER/installation.html
 
 * Free software: BSD-3-Clause licence
 
