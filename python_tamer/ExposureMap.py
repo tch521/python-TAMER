@@ -18,6 +18,7 @@ from matplotlib.ticker import MaxNLocator
 import matplotlib.dates as mdates
 import shapefile as shp
 from pyproj import Transformer
+import xarray as xr 
 
 
 
@@ -310,35 +311,39 @@ class ExposureMap:
         for i in range(len(list_of_years)) :
             year = list_of_years[i]
             print("Processing year "+str(year)) #should use logging, don't yet know how
-            dataset=nc.Dataset(self.src_directory+self.src_filename_format.replace('yyyy',str(year))) 
+            filename = self.src_directory+self.src_filename_format.replace('yyyy',str(year))
+            # xarray facilititate the data slicing, 
+            dataset = xr.open_dataset(filename)
+            '''
+            # deprecated method for time slicing
+            dataset=nc.Dataset(filename) 
             dataset.set_auto_mask(False) #to get normal arrays (faster than default masked arrays)
-
-            if dataset.dimensions['time'].size == 24 :
+            if len(dataset['time']) == 24 :
                 # needed if just a single day
-                time_subset = [True for i in range(dataset.dimensions['time'].size)]
+                time_subset = [True for i in range(len(dataset['time']))]
             else :
                 # Next we pull a subset from the netCDF file
                 # declare false array with same length of time dimension from netCDF
-                time_subset = [False for i in range(dataset.dimensions['time'].size)] 
+                time_subset = [False for i in range(len(dataset['time']))] 
                 # reshape false array to have first dimension 24 (hours in day)
                 time_subset = assert_data_shape_24(time_subset) 
                 # set the appropriate days as true
                 time_subset[:,date_selection[date_selection.year == year].dayofyear-1] = True 
                 # flatten time_subset array back to one dimension
                 time_subset = time_subset.flatten(order='F')
-
+            '''
              
             # load subset of data
-            print("   Slicing netcdf data with time subset and -if selected- also spatial subset")
+            print("Slicing netcdf data with time subset and -if selected- also spatial subset")
             #work in UVI by default because it's easy to read
-            if min_lon > 0:
-                data = dataset['UV_AS'][time_subset,
-                                    np.argmin(np.absolute(dataset.variables['lat'][:] - min_lat)):\
-                                    np.argmin(np.absolute(dataset.variables['lat'][:] - max_lat)),\
-                                    np.argmin(np.absolute(dataset.variables['lon'][:] - min_lon)):\
-                                    np.argmin(np.absolute(dataset.variables['lon'][:] - max_lon))] 
+            if min_lon > 0:   
+                data = dataset.sel(time = slice(date_selection[0], date_selection[1]),
+                                   lat  = slice(min_lat, max_lat),
+                                   lon  = slice(min_lon, max_lon)).UV_AS.to_numpy()
+                
             else:
-                data = dataset['UV_AS'][time_subset,:,:] 
+                data = dataset.sel(time = slice(date_selection[0], date_selection[1])).UV_AS.to_numpy()
+
             # TODO: check units of dataset files, CF conventions for UVI or W/m2
 
             # now to calculate doses if requested
