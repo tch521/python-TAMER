@@ -587,3 +587,14 @@ def select_box_canton(canton_abbr, canton_folder):
     # define the box enclosing the canton 
     box       = [min(longitude), min(latitude), max(longitude), max(latitude)] 
     return box, longitude, latitude
+
+
+def DayNumber_to_Date(day_num, year)
+    day_num.rjust(3 + len(day_num), '0')
+ 
+    # converting to date
+    date = datetime.strptime(year + "-" + day_num, "%Y-%j").strftime("%m-%d-%Y")
+ 
+    # printing result
+    print("Resolved date : " + str(res))
+    return date
