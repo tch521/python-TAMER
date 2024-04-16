@@ -590,11 +590,15 @@ def select_box_canton(canton_abbr, canton_folder):
 
 
 def DayNumber_to_Date(day_num, year):
+    if type(day_num) != string:
+        day_num = str(day_num)
+    if type(year) != string:
+        year = str(year)
     day_num.rjust(3 + len(day_num), '0')
  
     # converting to date
-    date = datetime.strptime(year + "-" + day_num, "%Y-%j").strftime("%m-%d-%Y")
+    date = dt.datetime.strptime(year + "-" + day_num, "%Y-%j").strftime("%Y-%m-%d")
  
     # printing result
-    print("Resolved date : " + str(res))
+    print("Resolved date : " + str(date))
     return date
