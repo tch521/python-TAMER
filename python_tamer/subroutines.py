@@ -589,7 +589,7 @@ def select_box_canton(canton_abbr, canton_folder):
     return box, longitude, latitude
 
 
-def DayNumber_to_Date(day_num, year)
+def DayNumber_to_Date(day_num, year):
     day_num.rjust(3 + len(day_num), '0')
  
     # converting to date
