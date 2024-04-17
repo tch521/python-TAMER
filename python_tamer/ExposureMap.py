@@ -1075,7 +1075,7 @@ class ExposureMapSequence :
 
         # declare empty hists
         self.hists      = [ None for x in range(self.num_hists)]
-        # AI 14th Feb 2024, declare empty radiation vectors to save time-traces with average over lat and long
+        # Declare empty vectors to save time-traces with average over lat and long
         self.trace_UV   = [[None for x in range(len(unique_years))] for j in range(self.num_hists)]
         self.trace_days = [ None for x in range(self.num_hists)]
 
@@ -1336,28 +1336,70 @@ class ExposureMapSequence :
         return self
 
 
-    def save_trace(self,trace_options=None,save=False,show=True,img_dir='',img_size=[20,15]) : 
-        """Calculate the trace: UV dose as a function of time averaged over all lat and long
+    def save_trace(self,save=False,show=True,img_dir='',img_size=[20,15]) : 
+        """Shows or saves a plot of the spatially averaged time evolution of UV radiation
 
-        This function calculates maps from the pixel histograms and generates
-        titles and filenames for each map. Note that the number of maps can
-        be greater than the number of pixel histograms if more than one 
-        statistic is specified."""
 
-        # also plot one year, each month
+        Parameters
+        ----------
+        save : bool, optional
+            Save or just show the image
+
+        show : bool, optional
+            An option to show the maps in a python figure window or not.
+
+        img_dir : string, optional
+            Directory where image will be saved. Per default saved in the current directory
+
+        img_size : list, optional
+            Size of figure
+
+            
+         Example
+        -------     
+
+        In this example, we produce a spatially averaged time evolution of 
+        the annual dose averaged over all available years
+            example = ExposureMapSequence()
+            example = example.collect_data(['annual'],year_selection=[0],units=["SED"])
+            example = example.calculate_maps(statistic='Mean')
+            example.save_trace(save=False,show=False)
+        """  
+
         for i in range(self.num_hists):
             plt.figure(figsize=(img_size[0]/2.54,img_size[1]/2.54))
             
+            # Convert days to dates
             X = daysofyear2date(self.trace_days[i],self.units[0],self.exposure_schedule)
             
-            plt.title(self.titles_trace[i])
-            plt.plot(X, np.nanmean(list(filter(lambda item: item is not None,self.trace_UV[i])),axis=0), 'o',color='blue')
-            plt.ylabel(self.units[0], fontsize=12)  # Add y-axis label with font size
+            # If units == UVI we show the daily may and mean
+            if self.units[0] == "UVI": 
+                # the UVI averaged over all latitudes and longitudes for each hour
+                UV_averaged = np.nanmean(list(filter(lambda item: item is not None,self.trace_UV[i])),axis=0)
+                nrow = np.size(self.exposure_schedule[0][self.exposure_schedule[0]!=0])
+                ncol = int(np.size(UV_averaged)/nrow)
+                UV_averaged = np.reshape(UV_averaged,[nrow,ncol],order='F')
+                X = np.reshape(X,[nrow,ncol],order='F')
 
+                plt.plot(X[0,:], np.nanmax(UV_averaged,axis=0), 'o',color='green',label="Daily maximum")
+                plt.plot(X[0,:], np.nanmean(UV_averaged,axis=0), 'o',color='red',label="Daily mean")
+                plt.legend(loc="upper left",frameon=False,fontsize=11) 
+
+            else:
+                # If units == SED show averaged over all latitudes and longitudes
+                plt.plot(X, np.nanmean(list(filter(lambda item: item is not None,self.trace_UV[i])),axis=0), 'o',color='blue')
+
+            plt.title(self.titles_trace[i])
+            plt.ylabel(self.units[0], fontsize=12)  # Add y-axis label with font size
+            
+            # Limit number of x ticks
             plt.gca().xaxis.set_major_locator(MaxNLocator(20))
             plt.grid(True)
+            # Limit date str to month name and day
             plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%b-%d'))
+            # Rotate x tick labels
             plt.xticks(rotation=45,ha='right')
+            plt.ylim([0,1.1*np.nanmax(UV_averaged)])
 
             if show: 
                 plt.tight_layout()
@@ -1369,8 +1411,8 @@ class ExposureMapSequence :
                 img_dpi = 300
                 plt.savefig(img_dir+img_filename+"."+img_filetype,
                         bbox_inches="tight",dpi=img_dpi)        
+      
         
-
 
     def save_maps(self,map_options=None,save=None,show=True,match_cmap_limits=True,schedule_diagram=True,img_dir = '') :
         """Renders and saves the pre-calculated maps stored in the object

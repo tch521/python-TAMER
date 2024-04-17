@@ -528,6 +528,39 @@ def str2daysofyear(inp) :
 
     return out, inp_flt, nonstrings
 
+def daysofyear2date(days,units,exposure_schedule):   
+    """converts days to datetime
+
+       The output includes year month and day. In the case of UVI 
+       (and similar) also outputs the hour
+
+    Args:
+        days (array): Days to be converted to dates
+        units (string): What unit is used
+        exposure_schedule (list): A list describing the time of radiation exposure 
+
+    Returns:
+        datetime object: days converted to dates
+    """     
+
+    # Days mapped on dates of year 2010
+    #TODO use actual years from files    
+    if units in ['SED','J m-2','UVIh']:
+            ayear = pd.date_range(start="2010-01-01",end="2010-12-31")
+            dates = np.empty([len(days),1],dtype=object)
+    else:
+            ayear = pd.date_range(start="2010-01-01",end="2010-12-31",freq='h')
+            dates = np.empty([len(days),np.sum(exposure_schedule[0] != 0)],dtype=object)            
+
+    for i,day in enumerate(days): 
+        desired_date = ayear[ayear.strftime('%j').astype(int) == day]
+        if len(desired_date) > 1:
+            # Do not include hour if not in exposure schedule
+            desired_date = desired_date[exposure_schedule[0] != 0]
+        dates[i][:] = desired_date
+
+    return dates.flatten()
+
 def select_box_canton(canton_abbr, canton_folder):
     ''' Return the latitude-longitude box containing the selected canton.
         Return also longitude and latitude coordinates for plotting purposes.
