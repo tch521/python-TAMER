@@ -96,18 +96,21 @@ class ExposureMap:
         import numpy as np
         src_directory = 'C:/enter_your_src_directory_here'
         ER = pt.ER_Vernez_2015("Forehead","Standing") # Long-term average ER for foreheads in standing posture
+        kt_folder = '/home/lmartinell/Desktop/Tamer-git-project/Meteoswiss/python-TAMER/test/'
+        kt_box, kt_lon, kt_lat = pt.select_box_canton('VS', kt_folder)
         map = pt.ExposureMap(
             src_directory=src_directory,
             units = "J m-2",
-            exposure_schedule = np.array([0  ,0  ,0  ,0  ,0  ,0  ,
-                                0  ,0  ,0.5,0  ,0.5,0  ,
-                                0.5,0.5,0  ,0  ,0.5,0  ,
-                                0  ,0  ,0  ,0  ,0  ,0  ])*ER,
+            exposure_schedule = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                                          0.0, 0.0, 0.5, 0.0, 0.5, 0.0,
+                                          0.5, 0.5, 0.0, 0.0, 0.5, 0.0,
+                                          0.0, 0.0, 0.0, 0.0, 0.0, 0.0])*ER,
             bin_width = 25,
-            date_selection = pd.date_range(start="2005-01-01",end="2014-12-31"),
+            date_selection = ["2010-01-01", "2012-12-31"],
             statistic = "mean",
             map_options={"title": "Chronic daily UV dose for typical school children, 2005-2014",
-                        "save": False})
+                        "save": False},
+            box = kt_box)
         map = map.collect_data().calculate_map()
         map.plot_map()
 
@@ -297,7 +300,7 @@ class ExposureMap:
         list_of_years = sorted(set(date_selection.year))
 
         # Condition on regional box for spatial slicing of data
-        if len(box) > 0:
+        if box is not None:
             # use box to define minimum values of latitude and longitude
             # enclosing the selected territory  
             min_lon = box[0]  
@@ -336,7 +339,7 @@ class ExposureMap:
             # load subset of data
             print("Slicing netcdf data with time subset and -if selected- also spatial subset")
             #work in UVI by default because it's easy to read
-            if min_lon > 0:   
+            if box is not None:   
                 data = dataset.sel(time = slice(date_selection[0], date_selection[1]),
                                    lat  = slice(min_lat, max_lat),
                                    lon  = slice(min_lon, max_lon)).UV_AS.to_numpy()
@@ -491,15 +494,15 @@ class ExposureMap:
 
         # Begin by defining the easy options that only require two inputs
         basic_descriptor_functions = {
-            "mean": hist_mean,
-            "median": lambda x,y: hist_percentile(x,y,0.5),
-            "med": lambda x,y: hist_percentile(x,y,0.5),
-            "sd": hist_stdev,
-            "std": hist_stdev,
-            "stdev": hist_stdev,
-            "max": hist_max,
+            "mean"   : hist_mean,
+            "median" : lambda x,y: hist_percentile(x,y,0.5),
+            "med"    : lambda x,y: hist_percentile(x,y,0.5),
+            "sd"     : hist_stdev,
+            "std"    : hist_stdev,
+            "stdev"  : hist_stdev,
+            "max"    : hist_max,
             "maximum": hist_max,
-            "min": hist_min,
+            "min"    : hist_min,
             "minimum":hist_min
         }
         # we can check if the chosen statistic is basic or advanced
@@ -668,9 +671,9 @@ class ExposureMapSequence :
     memory efficiency in mind, so data is loaded one year at a time and put into pixel
     histograms akin to the ExposureMap class behaviour. However, in this class we allow for
     multiple histograms to be stored within a single ExposureMapSequence object. Next,
-    the maps are calculated by the calculate_maps function. Multiple maps can be calculated for each histogram if the user
-    has specified multiple statistics that they want to calculate. Lastly, the maps are
-    rendered and saved by the save_maps function.
+    the maps are calculated by the calculate_maps function. Multiple maps can be calculated
+    for each histogram if the user has specified multiple statistics that they want to calculate. 
+    Lastly, the maps are rendered and saved by the save_maps function.
 
 
     Parameters
@@ -705,11 +708,12 @@ class ExposureMapSequence :
     """
 
     def __init__(self,
-    src_filename_format='UVery.AS_ch02.lonlat_yyyy01010000.nc',
-    src_directory='C:/Data/UV/',
-    units=None,
-    bin_width=None,
-    map_options=None,
+    src_filename_format = 'UVery.AS_ch02.lonlat_yyyy01010000.nc',
+    src_directory       = 'C:/Data/UV/',
+    units               = None,
+    bin_width           = None,
+    map_options         = None,
+    box                 = None
     ):
         # start with data location to quickly get some metadata
         self.src_filename_format = src_filename_format
@@ -738,9 +742,10 @@ class ExposureMapSequence :
     def interpret_parameters(self) :
         """Interprets some parameter inputs and adjusts for consistency
 
-        This function will check that parameters are correctly entered and do some basic interpretation.
-        It checks the exposure_schedule, year_selection, units, and bin_width input. All input is converted
-        to lists as required.
+        This function will check that parameters are correctly entered and do some 
+        basic interpretation.
+        It checks the exposure_schedule, year_selection, units, and bin_width input. 
+        All input is converted to lists as required.
         """
 
         if hasattr(self,'exposure_schedule') and self.exposure_schedule is not None :
@@ -883,11 +888,12 @@ class ExposureMapSequence :
 
 
     def collect_data(self,
-    day_selection,
-    exposure_schedule=[1.0],
-    year_selection=[0],
-    units=["SED"],
-    bin_width=None):
+                     day_selection,
+                     exposure_schedule = [1.0],
+                     year_selection    = [0],
+                     units             = ["SED"],
+                     bin_width         = None,
+                     box               = None):
         """Loads data into multiple pixel histograms
 
         This function loads all of the necessary data and compiles it into one or
@@ -968,6 +974,11 @@ class ExposureMapSequence :
             The bin width for each histogram. By default, these values are defined
             automatically according to the units input. 
 
+        box : list
+        A box defining the min and max latitude-longitude of a canton.
+        Used to select a spatial cut in the UV data.
+        If not passed as argument, consider a box enclosing all Switzerland.
+
 
         Returns
         -------
@@ -982,7 +993,9 @@ class ExposureMapSequence :
         In this example, we produce a basic sequence of monthly average doses for 2020::
 
             example = ExposureMapSequence()
-            example = example.collect_data('monthly',year_selection=[2020],units=["SED"])
+            kt_folder = '/home/lmartinell/Desktop/Tamer-git-project/Meteoswiss/python-TAMER/test/'
+            kt_box, kt_lon, kt_lat = pt.select_box_canton('VS', kt_folder)
+            example = example.collect_data('monthly',year_selection=[2020],units=["SED"], box = kt_box)
             example = example.calculate_maps(statistic='Mean')
             example.save_maps(save=True,show=True)
 
@@ -997,11 +1010,12 @@ class ExposureMapSequence :
         """
 
         # this subroutine handles keyword inputs (monthly, seasonal, etc)
+        # i.e., if argument is 'monthly', write the days of the year in self.day_selection
+        # grouped in 12 arrays   
         self.day_selection, self.day_input_flt, self.day_nonstring = str2daysofyear(day_selection)
 
-        self.exposure_schedule = exposure_schedule
-
-        self.year_selection = year_selection
+        self.exposure_schedule = exposure_schedule # set to [1.0]  
+        self.year_selection    = year_selection    # argument of this function 
 
         if units is not None :
             self.units = units
@@ -1012,34 +1026,46 @@ class ExposureMapSequence :
         self = self.interpret_parameters()
 
         ############################################################################
+        # April 2024  
+        # Condition on regional box for spatial slicing of data
+        if box is not None:
+            # use box to define minimum values of latitude and longitude
+            # enclosing the selected region of interest  
+            min_lon = box[0]  
+            min_lat = box[1]
+            max_lon = box[2]
+            max_lat = box[3]
+        else:
+            min_lon = 0
 
-        lengths = {'day_selection' : len(self.day_selection),
+        # set number of histograms equal to the max required 
+        # i.e. if day_selection = 'monthly' and only 1 year is selected -> num hist = 12  
+        lengths = {'day_selection'     : len(self.day_selection),
                    'exposure_schedule' : len(self.exposure_schedule),
-                   'year_selection' : len(self.year_selection),
-                   'units' : len(self.units),
-                   'bin_width' : len(self.bin_width)}
-
-        self.num_hists = max(lengths.items(), key=lambda x: x[1])[1]
+                   'year_selection'    : len(self.year_selection),
+                   'units'             : len(self.units),
+                   'bin_width'         : len(self.bin_width)}
+        
+        self.num_hists = max(lengths.items(), key=lambda x: x[1])[1]   
+        # check if condition is true, else print message 
         assert all(x == self.num_hists or x == 1 for x in lengths.values()), (
             "Inputs must be lists of length 1 or num_hists")
-        
+        # iterate over item defining the value of num_hist
         self.iterators = [x[0] for x in lengths.items() if x[1]==self.num_hists]
 
-
+        # define dictionary with histogram specifications 
         self.hist_specs = []
-
         for i in range(self.num_hists) :
             hist_spec = {
-                'day_selection' : self.day_selection[0],
+                'day_selection'     : self.day_selection[0],
                 'exposure_schedule' : self.exposure_schedule[0],
-                'year_selection' : self.year_selection[0],
-                'units' : self.units[0],
-                'bin_width' : self.bin_width[0]}
+                'year_selection'    : self.year_selection[0],
+                'units'             : self.units[0],
+                'bin_width'         : self.bin_width[0]}
             for x in self.iterators :
                 hist_spec[x] = self.__dict__[x][i]
             self.hist_specs = self.hist_specs + [hist_spec]
-            
-            
+                  
         # find unique years to be loaded (probably all years but have to check)
         unique_years = set(self.year_selection[0])
         if len(self.year_selection) > 1 :
@@ -1048,22 +1074,34 @@ class ExposureMapSequence :
         unique_years = sorted(unique_years)
 
         # declare empty hists
-        self.hists = [None for x in range(self.num_hists)]
+        self.hists      = [ None for x in range(self.num_hists)]
         # AI 14th Feb 2024, declare empty radiation vectors to save time-traces with average over lat and long
-        self.trace_UV = [[None for x in range(len(unique_years))] for j in range(self.num_hists)]
-        self.trace_days = [None for x in range(self.num_hists)]
+        self.trace_UV   = [[None for x in range(len(unique_years))] for j in range(self.num_hists)]
+        self.trace_days = [ None for x in range(self.num_hists)]
 
         for i in range(len(unique_years)) :
+            # load data year by year 
             year = unique_years[i]
             print("Processing year "+str(year)) #should use logging, don't yet know how
-            dataset=nc.Dataset(self.src_directory+self.src_filename_format.replace('yyyy',str(year))) 
-            dataset.set_auto_mask(False) #to get normal arrays (faster than default masked arrays)
+            # dataset=nc.Dataset(self.src_directory+self.src_filename_format.replace('yyyy',str(year))) 
+            # dataset.set_auto_mask(False) #to get normal arrays (faster than default masked arrays)
+
+            # use xarray to load data, facilitating data slicing
+            filename = self.src_directory+self.src_filename_format.replace('yyyy',str(year))
+            dataset  = xr.open_dataset(filename) 
 
             if i == 0 :
-                # TODO: this should also be done by some initial dataset analysis, but that's a drastic
-                # design overhaul
-                self.lat = dataset['lat'][:]
-                self.lon = dataset['lon'][:]
+                if box is not None :
+                    print('selecting data in the region of interest...')
+                    self.lat = dataset.sel(lat  = slice(min_lat, max_lat)).lat.to_numpy()
+                    self.lon = dataset.sel(lon  = slice(min_lon, max_lon)).lon.to_numpy()
+                else:
+                    # old method for netcdf arrays 
+                    # self.lat = dataset['lat'][:]
+                    # self.lon = dataset['lon'][:]
+                    self.lat = dataset.lat.to_numpy()
+                    self.lon = dataset.lon.to_numpy()
+                
 
             # now to determine the unique days for the specific year
             unique_days = set()
@@ -1086,14 +1124,31 @@ class ExposureMapSequence :
             # flatten time_subset array back to one dimension
             nc_day_sel = nc_day_sel.flatten(order='F')
 
-            #load data
-            data_year = assert_data_shape_24(dataset['UV_AS'][nc_day_sel,:,:])
+            # load data :
+            # netcdf version 
+            # data_year = assert_data_shape_24(dataset['UV_AS'][nc_day_sel,:,:])
+            # xarray version
+            # define first and last day of interest for data slicing, then convert to numpy arrays
+            date_start = DayNumber_to_Date(str(min(unique_days)), str(year))
+            if year % 4 == 0 :
+                date_end   = DayNumber_to_Date(str(max(unique_days)+1), str(year))
+            else :
+                date_end   = DayNumber_to_Date(str(max(unique_days)), str(year))
 
+            if box is not None:   
+                data_year = assert_data_shape_24(dataset.sel(time = slice(date_start, date_end),
+                                                             lat  = slice(min_lat, max_lat),
+                                                             lon  = slice(min_lon, max_lon)).UV_AS.to_numpy())
+            else: 
+                 data_year = assert_data_shape_24(dataset.sel(time = slice(date_start, date_end)).UV_AS.to_numpy())   
+            
             #sort data into histograms
             for j in range(self.num_hists) :
                 if year in self.hist_specs[j]['year_selection'] :
+                    # select days corresponding to the selected month  
                     sub_day_sel = [ True if x in self.hist_specs[j]['day_selection'] 
                         else False for x in unique_days ]
+                    # consider data for the given month (each 24 hours) 
                     temp_data = data_year[:,sub_day_sel,:,:]
 
                     # Apply the exposure schedule, differently for doses vs intensity
@@ -1114,30 +1169,25 @@ class ExposureMapSequence :
                             self.hist_specs[j]['exposure_schedule'] != 0]
                         # if any nonzero entries aren't 1, multiply data accordingly
                         if (exposure_schedule_nonzero != 1).any() :
-                            temp_data *= np.reshape(exposure_schedule_nonzero,[len(exposure_schedule_nonzero),1,1,1])
+                            temp_data *= np.reshape(exposure_schedule_nonzero,
+                                                    [len(exposure_schedule_nonzero),1,1,1])
                         # recombine first two dimensions (hour and day) back into time ready for histogram
                         temp_data = assert_data_shape_24(temp_data,reverse=True) 
 
                     # now multiply data by conversion factor according to desired untis
                     # TODO: Should expand upon this in reference files
-                    temp_data *= {"SED":0.9, "J m-2":90, "UVIh":1, "UVI":1, "W m-2":0.025, "mW m-2":25}[self.hist_specs[j]['units']]
+                    temp_data *= {"SED":0.9, "J m-2":90, "UVIh":1, "UVI":1, "W m-2":0.025,
+                                  "mW m-2":25}[self.hist_specs[j]['units']]
 
                     # AI feb 14th 2024 take mean over all latitudes and longitudes
-                   # if  self.num_hists == len(unique_years) or len(unique_years) == 1 or i == 0:
                     self.trace_UV[j][i] = np.nanmean(temp_data,(1,2))
-                     #   /len(self.hist_specs[0]['year_selection'])
-                    self.trace_days[j] = self.hist_specs[j]['day_selection']
-                   # else:
-                     #self.trace_UV[j] +=   np.nanmean(temp_data,(1,2))/len(self.hist_specs[0]['year_selection'])
-                    # self.trace_UV[j,i] =   np.append(self.trace_UV[j], np.nanmean(temp_data,(1,2))
-
-                     #self.trace_UV[j] =   np.append(self.trace_UV[j],(np.nanmean(temp_data,(1,2))))
-                     #self.trace_days[j] = np.append(self.trace_days[j],(self.hist_specs[j]['day_selection']))                       
-
+                    self.trace_days[j]  = self.hist_specs[j]['day_selection']
+                    
                     # if this is the first iteration, declare a hist
                     if 'num_bins' not in self.hist_specs[j] :
                         # seems like useful metadata to know bin n and edges
-                        self.hist_specs[j]['num_bins'] = int(np.nanmax(temp_data) // self.hist_specs[j]['bin_width'] ) + 2
+                        self.hist_specs[j]['num_bins']  = int(np.nanmax(temp_data) // 
+                                                              self.hist_specs[j]['bin_width'] ) + 2
                         self.hist_specs[j]['bin_edges'] = (np.array(range(self.hist_specs[j]['num_bins']+1))
                             - 0.5) * self.hist_specs[j]['bin_width'] 
                         # this form allows for weird custom bin edges, but probably will never use that
@@ -1146,7 +1196,9 @@ class ExposureMapSequence :
 
                         # TODO: think about possible cases where dimensions could differ
                         self.hists[j]=np.zeros([self.hist_specs[j]['num_bins'],
-                            np.shape(temp_data)[-2],np.shape(temp_data)[-1]], dtype=np.int16)
+                                                np.shape(temp_data)[-2],
+                                                np.shape(temp_data)[-1]], 
+                                                dtype=np.int16)
 
                     else :
                         new_num_bins = int(np.nanmax(temp_data) // self.hist_specs[j]['bin_width']) + 2 - self.hist_specs[j]['num_bins']
