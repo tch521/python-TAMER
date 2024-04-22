@@ -297,7 +297,8 @@ class ExposureMap:
             date_selection = self.date_selection # TODO: much more interpretation options here
 
         #now we find unique years 
-        list_of_years = sorted(set(date_selection.year))
+        years = range(int(date_selection[0][0:4]), int(date_selection[1][0:4])+1)
+        list_of_years = sorted(set(years))
 
         # Condition on regional box for spatial slicing of data
         if box is not None:
@@ -394,13 +395,11 @@ class ExposureMap:
                 # TODO: this should also be done by some initial dataset analysis, but that's a drastic
                 # design overhaul
                 if min_lon > 0:
-                    self.lat = dataset['lat'][np.argmin(np.absolute(dataset.variables['lat'][:] - min_lat)):\
-                                              np.argmin(np.absolute(dataset.variables['lat'][:] - max_lat))]
-                    self.lon = dataset['lon'][np.argmin(np.absolute(dataset.variables['lon'][:] - min_lon)):\
-                                              np.argmin(np.absolute(dataset.variables['lon'][:] - max_lon))]
+                    self.lat = dataset.sel(lat  = slice(min_lat, max_lat)).lat.to_numpy()
+                    self.lon = dataset.sel(lon  = slice(min_lon, max_lon)).lon.to_numpy()
                 else:
-                    self.lat = dataset['lat'][:]
-                    self.lon = dataset['lon'][:]
+                    self.lat = dataset.lat.to_numpy()
+                    self.lon = dataset.lon.to_numpy()
             else :
                 new_num_bins = int(np.nanmax(data) // self.bin_width) + 2 - self.num_bins
                 # check if new data requires extra bins in pix_hist
