@@ -74,6 +74,81 @@ def create_directory(path):
     else:
         print("Directory already exists!")
 
+def RasterisePointCloud(pc_dir, raster_dir, crs, project):
+
+    '''
+    pc_dir: folder containing point cloud files
+    i.e. pc_dir = /home/lmartinell/uv/data/GeoData/Lausanne/LidarData/
+    '''
+
+    # get file names in the directory 
+    names = os.listdir(pc_dir)
+    # sort to alphabetic order
+    names.sort()
+    for name in names:
+        if name.endswith(".las"):
+            file     = os.path.join(pc_dir, name)
+            # Load Point Cloud Layer (LiDAR data)
+            pc_layer = QgsPointCloudLayer(file, name, "pdal")
+
+            if not pc_layer.isValid():
+                print("Layer failed to load!")
+                return
+            
+            # Assign coordinate system to cloud point layer
+            pc_layer.setCrs(crs)
+            tile_ind = str(pc_layer.name().split('.')[0])
+            print("%s layer loaded" % tile_ind)
+
+            # According to swisstopo classification:
+            # ground           = 2
+            # small vegetation = 3
+            # buildings        = 6      
+            ground_building_filter = 'Classification = 2 OR Classification = 6'
+            ground_trees_filter    = 'Classification = 2 OR Classification = 3'
+            ground_filter          = 'Classification = 2'
+
+            # if not already done, create a folder for the output raster files  
+            output_dir = os.path.join(raster_dir, tile_ind)
+            create_directory(output_dir)
+
+            # Create dsm raster 
+            filter_params = {
+            'INPUT'            : 'pdal://' + file,  # file name
+            'RESOLUTION'       : 1,
+            'TILE_SIZE'        : 1000,
+            'FILTER_EXPRESSION': ground_building_filter,  # filter ground and building classification
+            'FILTER_EXTENT'    : None,
+            'ORIGIN_X'         : None,
+            'ORIGIN_Y'         : None,
+            'OUTPUT'           : os.path.join(output_dir, tile_ind + '_dsm.tif')
+            }
+            processing.run("pdal:exportrastertin", filter_params)
+            load_raster_layer(filter_params['OUTPUT'], crs, project)
+
+            # Update dictionary and create raster with trees and ground points
+            filter_params['FILTER_EXPRESSION'] = ground_trees_filter
+            filter_params['OUTPUT']            = os.path.join(output_dir, tile_ind + '_grd_trs.tif')
+            processing.run("pdal:exportrastertin", filter_params)
+            load_raster_layer(filter_params['OUTPUT'], crs, project)
+
+            # Export raster without interpolating the space left out by excluding the buildings 
+            # (different pdal function) 
+            filter_params['OUTPUT'] = os.path.join(output_dir, tile_ind + '_grd_nob.tif')        
+            processing.run("pdal:exportraster", filter_params)
+            load_raster_layer(filter_params['OUTPUT'], crs, project)
+
+            # Update dictionary and create raster with only ground points
+            filter_params['FILTER_EXPRESSION'] = ground_filter
+            filter_params['OUTPUT']            = os.path.join(output_dir, tile_ind + '_grd.tif')
+            processing.run("pdal:exportrastertin", filter_params)
+            load_raster_layer(filter_params['OUTPUT'], crs, project)
+
+            # make cdsm
+            make_cdsm(raster_dir, tile_ind, crs, project) 
+    return
+
+
 def make_cdsm(raster_dir, tile_index, crs, project):
     '''
     Build a Canopy Digital Surface Model (CDSM) for the selected tile.
