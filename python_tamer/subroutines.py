@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 import datetime as dt
 import string
+import shapefile as shp
+from pyproj import Transformer
 
 def assert_data_shape_24(data,reverse=False,force_second_dim=True) :
     """Simple function to check if first dimension is 24 hours and, if not, reshapes accordingly
@@ -525,3 +527,111 @@ def str2daysofyear(inp) :
         out[i] = np.array(out[i])
 
     return out, inp_flt, nonstrings
+
+def daysofyear2date(days,units,exposure_schedule):   
+    """converts days to datetime
+
+       The output includes year month and day. In the case of UVI 
+       (and similar) also outputs the hour
+
+    Args:
+        days (array): Days to be converted to dates
+        units (string): What unit is used
+        exposure_schedule (list): A list describing the time of radiation exposure 
+
+    Returns:
+        datetime object: days converted to dates
+    """     
+
+    # Days mapped on dates of year 2010
+    #TODO use actual years from files    
+    if units in ['SED','J m-2','UVIh']:
+            ayear = pd.date_range(start="2010-01-01",end="2010-12-31")
+            dates = np.empty([len(days),1],dtype=object)
+    else:
+            ayear = pd.date_range(start="2010-01-01",end="2010-12-31",freq='h')
+            dates = np.empty([len(days),np.sum(exposure_schedule[0] != 0)],dtype=object)            
+
+    for i,day in enumerate(days): 
+        desired_date = ayear[ayear.strftime('%j').astype(int) == day]
+        if len(desired_date) > 1:
+            # Do not include hour if not in exposure schedule
+            desired_date = desired_date[exposure_schedule[0] != 0]
+        dates[i][:] = desired_date
+
+    return dates.flatten()
+
+def select_box_canton(canton_abbr, canton_folder):
+    ''' Return the latitude-longitude box containing the selected canton.
+        Return also longitude and latitude coordinates for plotting purposes.
+        
+        Canton names input are in each canton's initials:
+    '''
+    # set path to file containing cantons data and shapes
+    canton_file = canton_folder + 'g2k16vz.shp'
+    # open file
+    sf   = shp.Reader(canton_file)
+    # Dictionary for canton assignment
+    canton_dict = {'ZH' : 'Zurich',
+                   'BE' : 'Bern / Berne',
+                   'LU' : 'Luzern',
+                   'UR' : 'Uri',
+                   'OW' : 'Obwalden',
+                   'NW' : 'Nidwalden',
+                   'SW' : 'Scwyz',
+                   'GL' : 'Glarus',
+                   'ZG' : 'Zug',
+                   'FR' : 'Fribourg / Freiburg', 
+                   'SO' : 'Solothurn', 
+                   'BS' : 'Basel-Stadt',
+                   'BL' : 'Basel-Landschaft',
+                   'SH' : 'Schaffhausen',
+                   'AR' : 'Appenzell Ausserrhoden',
+                   'AI' : 'Appenzell Innerrhoden',
+                   'SG' : 'St. Gallen',
+                   'GR' : 'Graubünden / Grigioni / Grischun',
+                   'AG' : 'Aargau',
+                   'TG' : 'Thurgau',
+                   'TI' : 'Ticino',
+                   'VD' : 'Vaud',
+                   'VS' : 'Valais / Wallis',
+                   'NE' : 'Neuchâtel',
+                   'GE' : 'Genève',
+                   'JU' : 'Jura'} 
+                    
+    for initials in canton_dict:
+        if initials == canton_abbr:
+            canton_name =  canton_dict[initials] 
+
+    # iterate over shapes and records - it should be the optimised iterator for shapefiles
+    for shapeRec in sf.iterShapeRecords():
+        if canton_name in shapeRec.record['KTNAME']:
+            coords    = shapeRec.shape.points 
+            # coord is a list of tuples
+            # access first and second element of all tuples in the list
+            s_longitude = list(zip(*coords))[0]
+            s_latitude  = list(zip(*coords))[1]
+    # convert swiss coordinates to latitude and longitude
+    # using Transformer from pyproj 
+    transformer = Transformer.from_crs("EPSG:21781", "EPSG:4326")
+    # transformer.transform(s_longitude, s_latitude)
+    latitude  = list(transformer.transform(s_longitude, s_latitude))[0]
+    longitude = list(transformer.transform(s_longitude, s_latitude))[1]
+    # define the box enclosing the canton 
+    box       = [min(longitude), min(latitude), max(longitude), max(latitude)] 
+    return box, longitude, latitude
+
+
+def DayNumber_to_Date(day_num, year):
+    if type(day_num) != string:
+        day_num = str(day_num)
+    if type(year) != string:
+        year = str(year)
+    day_num.rjust(3 + len(day_num), '0')
+ 
+    # converting to date
+    date = dt.datetime.strptime(year + "-" + day_num, "%Y-%j").strftime("%Y-%m-%d")
+ 
+    # printing result
+    print("Resolved date : " + str(date))
+    return date
