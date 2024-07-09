@@ -8,6 +8,18 @@ from   matplotlib import pyplot as plt
 from   qgis.core import QgsProject, QgsRasterLayer, QgsCoordinateReferenceSystem
 from   qgis.PyQt.QtCore import QDate, QTime
 
+'''
+Launch this script within QGIS console to avoid issues with processing tools libraries.
+
+Choose the corrisponding paths to your raster folders and to your output folders.
+
+This script requires 3 ingredients to be present in the input raster folder:
+    - ground + buildings digital surface model (dsm file)
+    - ground + trees and ground only digital surface model (for cdsm calculation)
+    - ground - buildings digital surface model for mask calculation
+These files are created from point cloud lidar data provided by SwissTopo
+    '''
+
 # Define the coordinate reference system (CRS) and create a QGIS project
 def set_crs(epsg_code="EPSG:2056"):
     """
@@ -566,13 +578,19 @@ def main():
     # and calculate average shading over the original tile
     date_data = apply_mask_and_analyze_shadows(input_mask, dir_out, crs, project, tile_ind)
 
+    # save output file
+    np.save(os.path.join(dir_out, tile_ind + '_DailyShadowing'), date_data) 
     # Plot average shading over time with thermal gradient colors
     plot_shading(date_data, tile_ind, dir_out)
 
     # Calculate and analyse sky view factor
     run_SkyViewFactor(input_dsm, input_cdsm, dir_out, crs, project)
-    veg_data = apply_mask_and_analyze_SkyViewFactor(input_mask, dir_out, crs, project, tile_ind)
-    plot_svf(veg_data, tile_ind, dir_out) 
+    svf_data = apply_mask_and_analyze_SkyViewFactor(input_mask, dir_out, crs, project, tile_ind)
+    # save output file
+    np.save(os.path.join(dir_out, tile_ind + '_SkyViewFactor'), svf_data) 
+    plot_svf(svf_data, tile_ind, dir_out) 
+
+
 
 if __name__ == "__main__":
     main()
