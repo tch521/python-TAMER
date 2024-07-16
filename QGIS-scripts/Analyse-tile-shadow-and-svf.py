@@ -17,7 +17,8 @@ This script requires 3 ingredients to be present in the input raster folder:
     - ground + buildings digital surface model (dsm file)
     - ground + trees and ground only digital surface model (for cdsm calculation)
     - ground - buildings digital surface model for mask calculation
-These files are created from point cloud lidar data provided by SwissTopo
+These files are created from point cloud lidar data provided by SwissTopo and processed by the
+RasterisePointCloud(pc_dir, raster_dir, crs, project) function
     '''
 
 # Define the coordinate reference system (CRS) and create a QGIS project
@@ -78,7 +79,10 @@ def RasterisePointCloud(pc_dir, raster_dir, crs, project):
 
     '''
     pc_dir: folder containing point cloud files
-    i.e. pc_dir = /home/lmartinell/uv/data/GeoData/Lausanne/LidarData/
+    i.e. pc_dir = '/home/lmartinell/uv/data/GeoData/Lausanne/LidarData/'
+
+    raster_dir: folder containing the output rasters
+    i.e. raster_dir   = '/home/lmartinell/uv/data/GeoData/Lausanne/Rasters/'
     '''
 
     # get file names in the directory 
